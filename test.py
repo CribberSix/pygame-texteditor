@@ -24,6 +24,6 @@ while True:
     TEC.display_CodeEditor()
     pygame.display.flip()
     clock.tick(FPS)
-    print(clock.get_fps())
+    #print(clock.get_fps())
 
 
