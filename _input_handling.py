@@ -1,12 +1,5 @@
 import pygame
 
-def get_showable_lines(self):
-    # if the text is longer than the possibly-to-display-lines, check which lines we show
-    if self.showable_line_numbers_in_editor + self.showStartLine < self.maxLines:
-        return self.showable_line_numbers_in_editor + self.showStartLine
-    else:
-        return self.maxLines
-
 
 def get_line_number_string(self, num):
     if num < 10:  # 1-digit numbers

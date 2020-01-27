@@ -13,6 +13,13 @@ def render_background_coloring(self):
     bg_height = self.codingAreaHeight
     pygame.draw.rect(self.screen, self.codingBackgroundColor, (bg_left, bg_top, bg_width, bg_height))
 
+def get_showable_lines(self):
+    # if the text is longer than the possibly-to-display-lines, check which lines we show
+    if self.showable_line_numbers_in_editor + self.showStartLine < self.maxLines:
+        return self.showable_line_numbers_in_editor + self.showStartLine
+    else:
+        return self.maxLines
+
 
 def render_line_numbers(self):
     # Line-Numbers

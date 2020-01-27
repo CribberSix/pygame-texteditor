@@ -3,9 +3,9 @@ import pygame
 import math
 
 class TextEditorClass:
-    from ._scrollbar_vertical import *
-    from ._input_handling import *
-    from ._rendering import *
+    from _scrollbar_vertical import render_scrollbar_vertical
+    from _input_handling import handle_input_mouse_clicks, handle_keyboard_input
+    from _rendering import render_background_coloring, render_background_objects, render_cursor, render_line_contents, render_line_numbers
 
     def __init__(self, offset_X, offset_Y, codingAreaWidth, codingAreaHeight, screen, lineNumbers=True):
 
@@ -134,6 +134,32 @@ class TextEditorClass:
 
 
 
+
+
+# pygame setup
+pygame.init()
+systemWidth = 900
+systemHeight = 600
+screen = pygame.display.set_mode((systemWidth, systemHeight))  #, pygame.FULLSCREEN)
+
+pygame.display.set_caption("TextEditor Setup")
+pygame.display.get_surface().fill((200, 200, 200))  # background
+
+# text editor setup
+offset_X = 50
+offset_Y = 100
+codingAreaHeight = 400
+codingAreaWidth = 700
+displayLineNumbers = True
+TEC = TextEditorClass(offset_X, offset_Y, codingAreaWidth, codingAreaHeight, screen, displayLineNumbers)
+# loop
+FPS = 30
+clock = pygame.time.Clock()
+while True:
+    TEC.display_CodeEditor()
+    pygame.display.flip()
+    clock.tick(FPS)
+    #print(clock.get_fps())
 
 
 
