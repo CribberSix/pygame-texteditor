@@ -22,27 +22,23 @@ def get_showable_lines(self):
 
 
 def render_line_numbers(self):
-    # Line-Numbers
-    if self.displayLineNumbers and self.rerenderLineNumbers:
-        self.rerenderLineNumbers = False
-        self.render_line_numbers()
-
-def render_line_numbers(self):
     '''
     While background rendering is done for all "line-slots" (to overpaint remaining "old" numbers without lines)
     we render line-numbers only for existing string-lines.
     '''
-    line_numbers_Y = self.editor_offset_Y  # init for first line
-    for x in range(self.showStartLine, self.showStartLine + self.showable_line_numbers_in_editor):
+    if self.displayLineNumbers and self.rerenderLineNumbers:
+        self.rerenderLineNumbers = False
+        line_numbers_Y = self.editor_offset_Y  # init for first line
+        for x in range(self.showStartLine, self.showStartLine + self.showable_line_numbers_in_editor):
 
-        # background
-        pygame.draw.rect(self.screen, self.lineNumberBackgroundColor, (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
-        # line number
-        if x < self.get_showable_lines():
-            text = self.Courier_Text_15.render(self.get_line_number_string(x), 1, self.lineNumberColor)
-            self.screen.blit(text, (self.editor_offset_X + 5, line_numbers_Y + 3))  # center of bg block
+            # background
+            pygame.draw.rect(self.screen, self.lineNumberBackgroundColor, (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
+            # line number
+            if x < self.get_showable_lines():
+                text = self.Courier_Text_15.render(self.get_line_number_string(x), 1, self.lineNumberColor)
+                self.screen.blit(text, (self.editor_offset_X + 5, line_numbers_Y + 3))  # center of bg block
 
-        line_numbers_Y += self.line_gap
+            line_numbers_Y += self.line_gap
 
 def render_line_contents(self):
     # TODO: Color-coding would be applied here #

@@ -63,7 +63,7 @@ class LearningEnvironment_Class():
 
             ####_________CURRICULUM_LESSON__________####
             # Contains all introductions, an example, the "Instruction-Header + Icon" and instructions
-            self.Lesson.display() # line-length + line-amount + header&icon are dynamically regulated.
+            self.Lesson.display()  # line-length + line-amount + header&icon are dynamically regulated.
 
             ####_________TEXTBOX__________####
             self.TX.display_CodeEditor()

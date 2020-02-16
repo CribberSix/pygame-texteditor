@@ -1,5 +1,5 @@
 import pygame
-
+from sys import exit
 
 def get_line_number_string(self, num):
     if num < 10:  # 1-digit numbers
@@ -7,34 +7,27 @@ def get_line_number_string(self, num):
     else:  # 2-digit numbers
         return str(num)
 
-
 def check_if_mouse_within_texteditor(self, mouse_x, mouse_y):
     return (mouse_x > self.editor_offset_X + self.lineNumberWidth) and (
             mouse_x < (self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth)) and (
                    mouse_y > self.editor_offset_Y) and (
                    mouse_y < (self.codingAreaHeight + self.editor_offset_Y - self.conclusionBarHeight))
 
-
 def check_if_mouse_within_existing_lines(self, mouse_y):
     return mouse_y < self.editor_offset_Y + (self.lineHeight * self.maxLines)
-
 
 def get_line_index(self, mouse_y):
     return int(((mouse_y - self.editor_offset_Y) / self.line_gap) + (self.showStartLine))
 
-
 def get_letter_index(self, mouse_x):
     return int((mouse_x - self.editor_offset_X - self.xline_start_offset) / self.letter_size_X)
-
 
 def get_number_of_letters_in_line_by_mouse(self, mouse_y):
     line_index = self.get_line_index(mouse_y)
     return self.get_number_of_letters_in_line_by_index(line_index)
 
-
 def get_number_of_letters_in_line_by_index(self, index):
     return len(self.line_String_array[index])
-
 
 def set_cursor_x_position(self, mouse_x, mouse_y):
     # end of line
@@ -49,14 +42,12 @@ def set_cursor_x_position(self, mouse_x, mouse_y):
         self.drag_cursor_X_start = self.editor_offset_X + self.xline_start_offset + (
                 self.drag_chosen_LetterIndex_start * self.letter_size_X)
 
-
 def set_cursor_y_position(self, mouse_y):
     self.drag_chosen_LineIndex_start = self.get_line_index(mouse_y)
     self.drag_cursor_Y_start = self.editor_offset_Y + (self.drag_chosen_LineIndex_start * self.line_gap) - (
                 self.showStartLine * self.lineHeight)
 
-
-def set_cursor_after_last_line(self, mouse_y):
+def set_cursor_after_last_line(self):
     self.drag_chosen_LineIndex_start = self.maxLines - 1  # go to the end of the last line
     self.drag_cursor_Y_start = self.editor_offset_Y + (self.drag_chosen_LineIndex_start * self.line_gap)
     # Last letter of the line
@@ -76,7 +67,7 @@ def handle_input_mouse_clicks(self, mouse_x, mouse_y):
                 self.set_cursor_y_position(mouse_y)
                 self.set_cursor_x_position(mouse_x, mouse_y)
             else:  # clicked below the existing lines
-                self.set_cursor_after_last_line(mouse_y)
+                self.set_cursor_after_last_line()
 
 
 def handle_keyboard_input(self, mouse_x, mouse_y):
@@ -108,8 +99,7 @@ def handle_keyboard_input(self, mouse_x, mouse_y):
         len(self.line_String_array[self.chosen_LineIndex])):  # mid-line (Cursor stays on point)
             self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex][
                                                             :(self.chosen_LetterIndex)] + self.line_String_array[
-                                                                                              self.chosen_LineIndex][(
-                                                                                                                                 self.chosen_LetterIndex + 1):]
+                                                                                              self.chosen_LineIndex][(self.chosen_LetterIndex + 1):]
 
     if Xkeys[pygame.K_BACKSPACE] and self.deleteCounter == 0:
         self.chosen_LetterIndex = int(self.chosen_LetterIndex)
@@ -152,7 +142,7 @@ def handle_keyboard_input(self, mouse_x, mouse_y):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()  # Fixes the bug that pygame takes up space in the RAM when game is just closed by sys.exit()
-            sys.exit()
+            exit()
 
         # ___ MOUSE SCROLLING ___ #
         # Mouse scrolling wheel should only work if it is within the coding area.

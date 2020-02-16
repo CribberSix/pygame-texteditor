@@ -1,4 +1,5 @@
 import pygame
+import sys
 from __init__.py import TextEditorClass
 
 # pygame setup
@@ -25,5 +26,7 @@ while True:
     pygame.display.flip()
     clock.tick(FPS)
     #print(clock.get_fps())
+
+
 
 
