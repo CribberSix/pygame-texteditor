@@ -1,6 +1,6 @@
 import pygame
 import sys
-from __init__.py import TextEditorClass
+from TextEditor import TextEditor
 
 # pygame setup
 pygame.init()
@@ -17,15 +17,19 @@ offset_Y = 100
 codingAreaHeight = 400
 codingAreaWidth = 700
 displayLineNumbers = True
-TEC = TextEditorClass(offset_X, offset_Y, codingAreaWidth, codingAreaHeight, screen, displayLineNumbers)
+texteditor = TextEditor(offset_X, offset_Y, codingAreaWidth, codingAreaHeight, screen, displayLineNumbers)
 # loop
 FPS = 30
 clock = pygame.time.Clock()
+
+########################
+# Editor game-loop
 while True:
-    TEC.display_CodeEditor()
+    texteditor.display_CodeEditor()
     pygame.display.flip()
     clock.tick(FPS)
-    #print(clock.get_fps())
+    print(clock.get_fps())
+########################
 
 
 

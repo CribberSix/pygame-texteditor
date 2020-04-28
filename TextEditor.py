@@ -1,7 +1,7 @@
 import pygame
 import math
 
-class TextEditorClass:
+class TextEditor:
     from _scrollbar_vertical import render_scrollbar_vertical, scrollButton, scrollDown, scrollUp
     from _input_handling import handle_input_mouse_clicks, handle_keyboard_input, get_line_number_string, get_letter_index, get_line_index, get_number_of_letters_in_line_by_index, get_number_of_letters_in_line_by_mouse, check_if_mouse_within_existing_lines, check_if_mouse_within_texteditor, set_cursor_after_last_line, set_cursor_x_position, set_cursor_y_position
     from _rendering import render_background_coloring, render_background_objects, get_showable_lines, render_cursor, render_line_contents, render_line_numbers
@@ -85,7 +85,7 @@ class TextEditorClass:
         self.drag_chosen_LetterIndex_end = 0
         self.last_clickup_cycle = 0
 
-        # Colors etc
+        # Colors
         self.codingBackgroundColor = (40, 44, 52) # (40, 44, 52)
         self.codingScrollBarBackgroundColor = (40, 44, 52)
         self.textColor = (171, 178, 191)
@@ -130,37 +130,4 @@ class TextEditorClass:
         self.render_cursor()
 
         self.render_scrollbar_vertical()
-
-
-
-
-
-# pygame setup
-pygame.init()
-systemWidth = 900
-systemHeight = 600
-screen = pygame.display.set_mode((systemWidth, systemHeight))  #, pygame.FULLSCREEN)
-
-pygame.display.set_caption("TextEditor Setup")
-pygame.display.get_surface().fill((200, 200, 200))  # background
-
-# text editor setup
-offset_X = 50
-offset_Y = 100
-codingAreaHeight = 400
-codingAreaWidth = 700
-displayLineNumbers = True
-TEC = TextEditorClass(offset_X, offset_Y, codingAreaWidth, codingAreaHeight, screen, displayLineNumbers)
-# loop
-FPS = 30
-clock = pygame.time.Clock()
-while True:
-    TEC.display_CodeEditor()
-    pygame.display.flip()
-    clock.tick(FPS)
-    #print(clock.get_fps())
-
-
-
-
 
