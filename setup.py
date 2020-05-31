@@ -5,7 +5,7 @@ setup(
     packages=['pygametexteditor'],
     license='MIT',
     description='A simple WYSIWYG-texteditor based on pygame.',
-    version='0.0.41',
+    version='0.0.42',
     python_requires=">=3.5",
     url='https://github.com/CribberSix/pygame-texteditor',
     author='CribberSix',
