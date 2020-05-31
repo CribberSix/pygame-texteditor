@@ -41,7 +41,6 @@ def render_scrollbar_vertical(self):
                                              (self.codingAreaHeight - (2 * self.scrollBarButtonHeight)) * (
                                                          (self.showStartLine * 1.0) / (self.maxLines)))))
 
-
 def scrollButton(self, x, y, action):
     # Description: Creates a button for rendering/blitting and offers action
 

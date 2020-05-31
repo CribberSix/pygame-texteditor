@@ -1,6 +1,6 @@
 import pygame
 from sys import exit
-
+from ._scrollbar_vertical import scrollDown, scrollUp
 
 def check_if_mouse_within_texteditor(self, mouse_x, mouse_y):
     return (mouse_x > self.editor_offset_X + self.lineNumberWidth) and (
@@ -143,9 +143,9 @@ def handle_keyboard_input(self, mouse_x, mouse_y):
         # Mouse scrolling wheel should only work if it is within the coding area.
         if event.type == pygame.MOUSEBUTTONDOWN and mouse_x > self.editor_offset_X and mouse_x < self.editor_offset_X + self.codingAreaWidth and mouse_y > self.editor_offset_Y and mouse_y < self.editor_offset_Y + self.codingAreaHeight:
             if event.button == 4 and self.showStartLine > 0:
-                self.scrollUp()
+                scrollUp(self)
             elif event.button == 5 and self.showStartLine + self.showable_line_numbers_in_editor < self.maxLines:
-                self.scrollDown()
+                scrollDown(self)
 
         # ___ MOUSE DRAGGING ___ #
         # MOUSEBUTTONDOWN is handled previously in the mouse input.

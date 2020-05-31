@@ -3,7 +3,7 @@ import math
 import os
 
 class TextEditor:
-    from ._scrollbar_vertical import render_scrollbar_vertical
+    from ._scrollbar_vertical import render_scrollbar_vertical, scrollDown, scrollUp
     from ._input_handling import handle_input_mouse_clicks, handle_keyboard_input
     from ._rendering import render_background_objects, render_cursor, render_line_contents
 
