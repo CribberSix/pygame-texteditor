@@ -1,5 +1,5 @@
 import pygame
-from pygame_texteditor import TextEditor
+from pygametexteditor import TextEditor
 
 # Pygame window setup
 pygame.init()

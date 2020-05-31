@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(
-    name='pygame_texteditor',
-    packages=['pygame_texteditor'],
+    name='pygametexteditor',
+    packages=['pygametexteditor'],
     description='A simple WYSIWYG-texteditor based on pygame.',
     version='0.1',
     url='https://github.com/CribberSix/pygame-texteditor',
