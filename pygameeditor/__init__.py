@@ -2,9 +2,9 @@ import pygame
 import math
 
 class TextEditor:
-    from _scrollbar_vertical import render_scrollbar_vertical, scrollButton, scrollDown, scrollUp
-    from _input_handling import handle_input_mouse_clicks, handle_keyboard_input, get_line_number_string, get_letter_index, get_line_index, get_number_of_letters_in_line_by_index, get_number_of_letters_in_line_by_mouse, check_if_mouse_within_existing_lines, check_if_mouse_within_texteditor, set_cursor_after_last_line, set_cursor_x_position, set_cursor_y_position
-    from _rendering import render_background_coloring, render_background_objects, get_showable_lines, render_cursor, render_line_contents, render_line_numbers
+    from ._scrollbar_vertical import render_scrollbar_vertical
+    from ._input_handling import handle_input_mouse_clicks, handle_keyboard_input
+    from ._rendering import render_background_objects, render_cursor, render_line_contents
 
     def __init__(self, offset_X, offset_Y, codingAreaWidth, codingAreaHeight, screen, lineNumbers=True):
 

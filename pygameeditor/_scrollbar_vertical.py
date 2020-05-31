@@ -8,9 +8,9 @@ def render_scrollbar_vertical(self):
     self.editor_offset_Y + self.scrollBarButtonHeight, self.scrollBarWidth,
     self.codingAreaHeight - self.scrollBarButtonHeight * 2))  # Separator Coloring (below the coding area)
     # Scroll Buttons
-    self.scrollButton(self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth, self.editor_offset_Y,
+    scrollButton(self, self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth, self.editor_offset_Y,
                       "ScrollUp")  # Scroll Up Button
-    self.scrollButton(self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
+    scrollButton(self, self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
                       self.editor_offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight,
                       "ScrollDown")  # Scroll Down Button
     # self.offset_X+self.codingAreaWidth -self.scrollBarWidth, self.offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight
@@ -29,7 +29,7 @@ def render_scrollbar_vertical(self):
         self.editor_offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight))  # Scroll Down (deactivated Button image)
     else:
         self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
-                                                    self.editor_offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight))  # Scroll DownB utton (active)
+           self.editor_offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight))  # Scroll DownButton (active)
 
     # Scroll Bar
     if len(self.line_String_array) >= self.showable_line_numbers_in_editor:
@@ -47,15 +47,15 @@ def scrollButton(self, x, y, action):
 
     mouse = pygame.mouse.get_pos()
     # Mouse coordinates checking (on-button)
-    if x + self.scrollBarWidth > mouse[0] > x and y + self.scrollBarWidth > mouse[1] > y and pygame.mouse.get_pressed()[
-        0] == 1:
-        pygame.time.delay(
-            100)  # we dont want to click multiple times # TODO: replace with mod counter as counter does not hinder performance?
+    if x + self.scrollBarWidth > mouse[0] > x and y + self.scrollBarWidth > mouse[1] > y and pygame.mouse.get_pressed()[0] == 1:
+        pygame.time.delay(100)
+        # we dont want to click multiple times
+        # TODO: replace with mod counter as counter does not hinder performance?
 
         if action == "ScrollUp" and self.showStartLine > 0:
-            self.scrollUp()
+            scrollUp(self)
         elif action == "ScrollDown" and self.showStartLine + self.showable_line_numbers_in_editor < self.maxLines:
-            self.scrollDown()
+            scrollDown(self)
         self.rerenderLineNumbers = True
     return None  # Button is not clicked.
 

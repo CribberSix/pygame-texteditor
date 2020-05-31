@@ -1,11 +1,6 @@
 import pygame
 from sys import exit
 
-def get_line_number_string(self, num):
-    if num < 10:  # 1-digit numbers
-        return " " + str(num)
-    else:  # 2-digit numbers
-        return str(num)
 
 def check_if_mouse_within_texteditor(self, mouse_x, mouse_y):
     return (mouse_x > self.editor_offset_X + self.lineNumberWidth) and (
@@ -23,15 +18,15 @@ def get_letter_index(self, mouse_x):
     return int((mouse_x - self.editor_offset_X - self.xline_start_offset) / self.letter_size_X)
 
 def get_number_of_letters_in_line_by_mouse(self, mouse_y):
-    line_index = self.get_line_index(mouse_y)
-    return self.get_number_of_letters_in_line_by_index(line_index)
+    line_index = get_line_index(self, mouse_y)
+    return get_number_of_letters_in_line_by_index(self, line_index)
 
 def get_number_of_letters_in_line_by_index(self, index):
     return len(self.line_String_array[index])
 
 def set_cursor_x_position(self, mouse_x, mouse_y):
     # end of line
-    if self.get_number_of_letters_in_line_by_mouse(mouse_y) < self.get_letter_index(mouse_x):
+    if get_number_of_letters_in_line_by_mouse(self, mouse_y) < get_letter_index(self, mouse_x):
         self.drag_chosen_LetterIndex_start = len(self.line_String_array[self.drag_chosen_LineIndex_start])
         self.drag_cursor_X_start = self.xline_start + (
                 len(self.line_String_array[self.drag_chosen_LineIndex_start]) * self.letter_size_X)
@@ -43,7 +38,7 @@ def set_cursor_x_position(self, mouse_x, mouse_y):
                 self.drag_chosen_LetterIndex_start * self.letter_size_X)
 
 def set_cursor_y_position(self, mouse_y):
-    self.drag_chosen_LineIndex_start = self.get_line_index(mouse_y)
+    self.drag_chosen_LineIndex_start = get_line_index(self, mouse_y)
     self.drag_cursor_Y_start = self.editor_offset_Y + (self.drag_chosen_LineIndex_start * self.line_gap) - (
                 self.showStartLine * self.lineHeight)
 
@@ -62,12 +57,12 @@ def handle_input_mouse_clicks(self, mouse_x, mouse_y):
     if click[0] and not self.click_hold:  # left click and is not already being held
         self.last_clickdown_cycle = self.cycleCounter
         self.click_hold = True  # in order not to have the mouse move around after a click, we need to disable this function until we RELEASE it.
-        if self.check_if_mouse_within_texteditor(mouse_x, mouse_y):
-            if self.check_if_mouse_within_existing_lines(mouse_y):
-                self.set_cursor_y_position(mouse_y)
-                self.set_cursor_x_position(mouse_x, mouse_y)
+        if check_if_mouse_within_texteditor(self, mouse_x, mouse_y):
+            if check_if_mouse_within_existing_lines(self, mouse_y):
+                set_cursor_y_position(self, mouse_y)
+                set_cursor_x_position(self, mouse_x, mouse_y)
             else:  # clicked below the existing lines
-                self.set_cursor_after_last_line()
+                set_cursor_after_last_line(self)
 
 
 def handle_keyboard_input(self, mouse_x, mouse_y):

@@ -1,10 +1,15 @@
 import pygame
 
 
-def render_background_objects(self):
-    self.render_background_coloring()
-    self.render_line_numbers()
+def get_line_number_string(num):
+    if num < 10:  # 1-digit numbers
+        return " " + str(num)
+    else:  # 2-digit numbers
+        return str(num)
 
+def render_background_objects(self):
+    render_background_coloring(self)
+    render_line_numbers(self)
 
 def render_background_coloring(self):
     bg_left = self.editor_offset_X + self.lineNumberWidth
@@ -34,8 +39,8 @@ def render_line_numbers(self):
             # background
             pygame.draw.rect(self.screen, self.lineNumberBackgroundColor, (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
             # line number
-            if x < self.get_showable_lines():
-                text = self.Courier_Text_15.render(self.get_line_number_string(x), 1, self.lineNumberColor)
+            if x < get_showable_lines(self):
+                text = self.Courier_Text_15.render(get_line_number_string(x), 1, self.lineNumberColor)
                 self.screen.blit(text, (self.editor_offset_X + 5, line_numbers_Y + 3))  # center of bg block
 
             line_numbers_Y += self.line_gap
