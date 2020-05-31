@@ -4,4 +4,5 @@ __pycache__/
 venv/
 dist/
 pygame_texteditor.egg-info/
+*.egg-info/
 # Files
