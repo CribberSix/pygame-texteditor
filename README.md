@@ -1,6 +1,6 @@
 # A WYSIWYG-texteditor based on pygame
 
-
+Currently under development. 
 
 ## Usage
 
