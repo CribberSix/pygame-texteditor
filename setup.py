@@ -5,7 +5,7 @@ setup(
     packages=['pygametexteditor'],
     license='MIT',
     description='A simple WYSIWYG-texteditor based on pygame.',
-    version='0.0.31',
+    version='0.0.32',
     python_requires=">=3.5",
     url='https://github.com/CribberSix/pygame-texteditor',
     author='CribberSix',
@@ -22,6 +22,8 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Intended Audience :: Developers',
     ],
-    keywords=['pygame','texteditor']
+    keywords=['pygame','texteditor'],
+    package_data={'pygametexteditor': ['pygametexteditor/elements/*.png', 'pygametexteditor/elements/*.ttf']},
+    include_package_data=True,
 )
 
