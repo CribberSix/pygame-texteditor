@@ -6,8 +6,7 @@
 
 The text editor can be inserted into any existing pygame window. Here is a minimal example of it being activated within a 
 
-
-´´´
+```
 screen = 
 offset_X = 50
 offset_Y = 50
@@ -25,5 +24,4 @@ while True:
     pygame.display.flip()
     clock.tick(FPS)
     print(clock.get_fps())
-########################
-´´´
+```
