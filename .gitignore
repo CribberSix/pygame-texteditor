@@ -2,4 +2,6 @@
 .idea/
 __pycache__/
 venv/
+dist/
+pygame_texteditor.egg-info/
 # Files
