@@ -1,6 +1,9 @@
 # A WYSIWYG-texteditor based on pygame
 
-Currently under development. 
+## Project status
+
+The texteditor is currently under development. More features (e.g. copy-paste, shift+strg+arrow highlighting and other common texteditor functions) will be implemented in the future.
+Additional parameters and customization options for the editor are planned. 
 
 ## Usage
 
@@ -9,15 +12,15 @@ A minimal example of it being activated within an existing pygame window can be 
 
 The texteditor takes 5 obligatory parameters and 1 optional parameter.
 
-##### Obligatory
-- offset_X : integer (offset from the left border of the pygame screen)
-- offset_y : integer (offset from the top border of the pygame screen)
-- textAreaWidth : integer (width of texteditor area)
-- textAreaHeight : integer (height of texteditor area)
-- screen : pygame display surface (on which the texteditor is to be displayed)
+##### Obligatory parameters
+- ```offset_X``` : integer (offset from the left border of the pygame screen)
+- ```offset_y``` : integer (offset from the top border of the pygame screen)
+- ```textAreaWidth``` : integer (width of texteditor area)
+- ```textAreaHeight``` : integer (height of texteditor area)
+- ```screen``` : pygame display surface (on which the texteditor is to be displayed)
 
-##### Optional
-- lineNumbers : boolean (if true, display linenumbers)
+##### Optional parameters
+- ```lineNumbers``` : boolean (display linenumbers if true, default = true)
 
 ```
 
@@ -34,7 +37,21 @@ TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, lineN
 
 # TextEditor in the pygame-loop
 while True:
-    TX.display_CodeEditor()  # has to be called once per loop to capture input
+    TX.display_CodeEditor()  # has to be called once per loop to capture input accurately
     pygame.display.flip()
 
 ```
+
+##### Retrieving text from the editor
+
+The editor offers the function ```get_text()``` to retrieve the text from the editor. Lines are separated by the new line character ```\n```.
+
+##### Color-scheme customization
+
+The editor offers various methods to customize the color-scheme. All methods take three parameters for the traditional rgb code (red, green, blue). Below are the methods and the default color values.
+
+- ```set_color_background``` (40, 44, 52)
+- ```set_color_Scrollbarbackground``` (40, 44, 52)
+- ```set_color_text``` (171, 178, 191)
+- ```set_color_lineNumber``` (73, 81, 97)
+- ```set_color_lineNumberBackground``` (40, 44, 52) 

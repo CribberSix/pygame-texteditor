@@ -12,7 +12,7 @@ setup(
     description='A simple WYSIWYG-texteditor based on pygame.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    version='0.0.43',
+    version='0.0.44',
     python_requires=">=3.5",
     url='https://github.com/CribberSix/pygame-texteditor',
     author='CribberSix',

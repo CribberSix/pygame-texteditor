@@ -3,9 +3,13 @@ import math
 import os
 
 class TextEditor:
+    # files for core-functionality
     from ._scrollbar_vertical import render_scrollbar_vertical, scrollDown, scrollUp
     from ._input_handling import handle_input_mouse_clicks, handle_keyboard_input
     from ._rendering import render_background_objects, render_cursor, render_line_contents
+    # files to customize:
+    from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, set_color_lineNumber, set_color_lineNumberBackground
+    from ._usage import get_text
 
     def __init__(self, offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, lineNumbers=True):
 
