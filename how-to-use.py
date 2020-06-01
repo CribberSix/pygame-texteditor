@@ -1,23 +1,28 @@
 import pygame
 from pygametexteditor import TextEditor
 
+# minimal pygame setup
 pygame.init()
-systemHeight = 600
-systemWidth = 900
-screen = pygame.display.set_mode((systemWidth, systemHeight))
-pygame.display.set_caption("TextEditor Setup")
-pygame.display.get_surface().fill((200, 200, 200))  # background
+screenHeight = 600
+screenWidth = 900
+screen = pygame.display.set_mode((screenWidth, screenHeight))
+pygame.display.set_caption("Pygame")
+pygame.display.get_surface().fill((200, 200, 200))  # background coloring
 
-# TextEditor setup + parameters
-myscreen = pygame.display.get_surface()
-offset_X = 50
-offset_Y = 50
+# parameters
+screen = pygame.display.get_surface()  # get existing pygame window/screen
+offset_X = 50  # offset from the left border of the pygame window
+offset_Y = 50  # offset from the top border of the pygame window
 textAreaHeight = 500
 textAreaWidth = 800
-displayLineNumbers = True
-TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, myscreen, displayLineNumbers)
+lineNumbers = True
 
-# Editor loop
+# instantiation
+TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, lineNumbers)
+
+# TextEditor in the pygame-loop
 while True:
-    TX.display_CodeEditor()  # has to be called once per loop to capture input
-    pygame.display.flip()
+    # the method display_editor() has to be called once per loop to capture input accurately
+    TX.display_editor()
+
+    pygame.display.flip() # updates pygame window

@@ -107,7 +107,7 @@ class TextEditor:
 
         self.cycleCounter = 0
 
-    def display_CodeEditor(self):
+    def display_editor(self):
         # needs to be called within a while loop to be able to catch key/mouse input and update visuals throughout use.
 
         self.cycleCounter = self.cycleCounter + 1

@@ -8,7 +8,7 @@ Additional parameters and customization options for the editor are planned.
 ## Usage
 
 The text editor can be inserted into any existing pygame window. 
-A minimal example of it being activated within an existing pygame window can be found in the file how-to-use.py, or below.
+A minimal example of it being activated within an existing pygame window can be found below.
 
 The texteditor takes 5 obligatory parameters and 1 optional parameter.
 
@@ -20,11 +20,26 @@ The texteditor takes 5 obligatory parameters and 1 optional parameter.
 - ```screen``` : pygame display surface (on which the texteditor is to be displayed)
 
 ##### Optional parameters
-- ```lineNumbers``` : boolean (display linenumbers if true, default = true)
+- ```lineNumbers``` : boolean (display line numbers if true, default = true)
+
+
+###### Minimal pygame setup
 
 ```
+import pygame
+from pygametexteditor import TextEditor
 
-# TextEditor parameters
+pygame.init()
+screenHeight = 600
+screenWidth = 900
+screen = pygame.display.set_mode((screenWidth, screenHeight))
+pygame.display.set_caption("Pygame")
+pygame.display.get_surface().fill((200, 200, 200))  # background coloring
+
+```
+###### Minimal texteditor setup
+```
+# parameters
 screen = pygame.display.get_surface()  # get existing pygame window/screen
 offset_X = 50  # offset from the left border of the pygame window
 offset_Y = 50  # offset from the top border of the pygame window
@@ -32,19 +47,21 @@ textAreaHeight = 500
 textAreaWidth = 800
 lineNumbers = True
 
-# TextEditor setup
+# instantiation
 TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, lineNumbers)
 
 # TextEditor in the pygame-loop
 while True:
-    TX.display_CodeEditor()  # has to be called once per loop to capture input accurately
-    pygame.display.flip()
+    # the method display_editor() has to be called once per loop to capture input accurately
+    TX.display_editor()  
+
+    pygame.display.flip() # updates pygame window
 
 ```
 
 ##### Retrieving text from the editor
 
-The editor offers the function ```get_text()``` to retrieve the text from the editor. Lines are separated by the new line character ```\n```.
+The editor offers the function ```get_text()``` to retrieve the entire text including empty lines as a String from the editor. Lines are separated by the new line character ```\n```.
 
 ##### Color-scheme customization
 
