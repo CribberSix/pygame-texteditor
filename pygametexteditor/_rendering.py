@@ -14,8 +14,8 @@ def render_background_objects(self):
 def render_background_coloring(self):
     bg_left = self.editor_offset_X + self.lineNumberWidth
     bg_top = self.editor_offset_Y
-    bg_width = self.codingAreaWidth - self.scrollBarWidth - self.lineNumberWidth
-    bg_height = self.codingAreaHeight
+    bg_width = self.textAreaWidth - self.scrollBarWidth - self.lineNumberWidth
+    bg_height = self.textAreaHeight
     pygame.draw.rect(self.screen, self.codingBackgroundColor, (bg_left, bg_top, bg_width, bg_height))
 
 def get_showable_lines(self):

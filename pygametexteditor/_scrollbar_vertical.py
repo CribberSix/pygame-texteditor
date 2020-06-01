@@ -4,41 +4,41 @@ def render_scrollbar_vertical(self):
     # _________RENDER_THE_SCROLLBAR_________#
     # Scrollbar Background
     pygame.draw.rect(self.screen, self.codingScrollBarBackgroundColor, (
-    self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
+    self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
     self.editor_offset_Y + self.scrollBarButtonHeight, self.scrollBarWidth,
-    self.codingAreaHeight - self.scrollBarButtonHeight * 2))  # Separator Coloring (below the coding area)
+    self.textAreaHeight - self.scrollBarButtonHeight * 2))  # Separator Coloring (below the coding area)
     # Scroll Buttons
-    scrollButton(self, self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth, self.editor_offset_Y,
+    scrollButton(self, self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y,
                       "ScrollUp")  # Scroll Up Button
-    scrollButton(self, self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
-                      self.editor_offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight,
+    scrollButton(self, self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
+                      self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight,
                       "ScrollDown")  # Scroll Down Button
-    # self.offset_X+self.codingAreaWidth -self.scrollBarWidth, self.offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight
+    # self.offset_X+self.textAreaWidth -self.scrollBarWidth, self.offset_Y + self.textAreaHeight - self.scrollBarButtonHeight
     # Scrollbar Buttons
     if self.showStartLine == 0:
         self.screen.blit(self.scrollUpButtonImg_Deactivated, (
-        self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
+        self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
         self.editor_offset_Y))  # Scroll Up (deactivated Button image)
     else:
-        self.screen.blit(self.scrollUpButtonImg, (self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
+        self.screen.blit(self.scrollUpButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
                                                   self.editor_offset_Y))  # Scroll Up Button (active)
 
     if self.maxLines <= self.showStartLine + self.showable_line_numbers_in_editor:
         self.screen.blit(self.scrollDownButtonImg_Deactivated, (
-        self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
-        self.editor_offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight))  # Scroll Down (deactivated Button image)
+        self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
+        self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight))  # Scroll Down (deactivated Button image)
     else:
-        self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
-           self.editor_offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight))  # Scroll DownButton (active)
+        self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
+           self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight))  # Scroll DownButton (active)
 
     # Scroll Bar
     if len(self.line_String_array) >= self.showable_line_numbers_in_editor:
-        self.scrollBarHeight = int((self.codingAreaHeight - (2 * self.scrollBarButtonHeight)) * (
+        self.scrollBarHeight = int((self.textAreaHeight - (2 * self.scrollBarButtonHeight)) * (
                     (self.showable_line_numbers_in_editor * 1.0) / self.maxLines))
     self.scrollBarImg = pygame.transform.scale(self.scrollBarImg, (self.scrollBarWidth, self.scrollBarHeight))
-    self.screen.blit(self.scrollBarImg, (self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth,
+    self.screen.blit(self.scrollBarImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
                                          self.editor_offset_Y + self.scrollBarButtonHeight + int(
-                                             (self.codingAreaHeight - (2 * self.scrollBarButtonHeight)) * (
+                                             (self.textAreaHeight - (2 * self.scrollBarButtonHeight)) * (
                                                          (self.showStartLine * 1.0) / (self.maxLines)))))
 
 def scrollButton(self, x, y, action):

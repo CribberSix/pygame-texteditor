@@ -7,13 +7,13 @@ class TextEditor:
     from ._input_handling import handle_input_mouse_clicks, handle_keyboard_input
     from ._rendering import render_background_objects, render_cursor, render_line_contents
 
-    def __init__(self, offset_X, offset_Y, codingAreaWidth, codingAreaHeight, screen, lineNumbers=True):
+    def __init__(self, offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, lineNumbers=True):
 
         self.screen = screen
         self.editor_offset_X = offset_X
         self.editor_offset_Y = offset_Y
-        self.codingAreaWidth = codingAreaWidth
-        self.codingAreaHeight = codingAreaHeight
+        self.textAreaWidth = textAreaWidth
+        self.textAreaHeight = textAreaHeight
 
         self.letter_size_Y = 15
         cdir = os.path.dirname(__file__)
@@ -26,8 +26,8 @@ class TextEditor:
         self.line_String_array = []
         self.line_Text_array = []
         self.lineHeight = 18
-        self.showable_line_numbers_in_editor = int(math.floor(codingAreaHeight / self.lineHeight))
-        self.maxLines = int(math.floor(codingAreaHeight / self.lineHeight))
+        self.showable_line_numbers_in_editor = int(math.floor(textAreaHeight / self.lineHeight))
+        self.maxLines = int(math.floor(textAreaHeight / self.lineHeight))
         self.showStartLine = 0  # first line (shown at the top of the editor) <- must be zero during init!
         self.line_gap = 3 + self.letter_size_Y
 
@@ -44,7 +44,7 @@ class TextEditor:
         self.scrollBarWidth = 20
         self.scrollBarButtonHeight = 17
         self.conclusionBarHeight =18
-        self.scrollBarHeight = (self.codingAreaHeight-self.scrollBarButtonHeight*2 -2) * self.showable_line_numbers_in_editor / len(self.line_String_array)
+        self.scrollBarHeight = (self.textAreaHeight-self.scrollBarButtonHeight*2 -2) * self.showable_line_numbers_in_editor / len(self.line_String_array)
 
         # LINE NUMBERS
         self.displayLineNumbers = lineNumbers
@@ -109,9 +109,9 @@ class TextEditor:
         self.cycleCounter = self.cycleCounter + 1
         # first iteration
         if self.firstiteration_boolean:
-            pygame.draw.rect(self.screen, self.codingBackgroundColor, (self.editor_offset_X, self.editor_offset_Y, self.codingAreaWidth, self.codingAreaHeight))  # paint entire area to avoid pixel error beneath line numbers
-            self.screen.blit(self.scrollUpButtonImg, (self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth, self.editor_offset_Y))  # Scroll Up Image
-            self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth, self.editor_offset_Y + self.codingAreaHeight - self.scrollBarButtonHeight))  # Scroll DownImage
+            pygame.draw.rect(self.screen, self.codingBackgroundColor, (self.editor_offset_X, self.editor_offset_Y, self.textAreaWidth, self.textAreaHeight))  # paint entire area to avoid pixel error beneath line numbers
+            self.screen.blit(self.scrollUpButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y))  # Scroll Up Image
+            self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight))  # Scroll DownImage
             self.firstiteration_boolean = False
 
         # RENDERING 1 - Background objects

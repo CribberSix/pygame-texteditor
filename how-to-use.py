@@ -12,10 +12,10 @@ pygame.display.get_surface().fill((200, 200, 200))  # background
 myscreen = pygame.display.get_surface()
 offset_X = 50
 offset_Y = 50
-codingAreaHeight = 500
-codingAreaWidth = 800
+textAreaHeight = 500
+textAreaWidth = 800
 displayLineNumbers = True
-TX = TextEditor(offset_X, offset_Y, codingAreaWidth, codingAreaHeight, myscreen, displayLineNumbers)
+TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, myscreen, displayLineNumbers)
 
 # Editor loop
 while True:

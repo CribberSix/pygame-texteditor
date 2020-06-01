@@ -4,9 +4,9 @@ from ._scrollbar_vertical import scrollDown, scrollUp
 
 def check_if_mouse_within_texteditor(self, mouse_x, mouse_y):
     return (mouse_x > self.editor_offset_X + self.lineNumberWidth) and (
-            mouse_x < (self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth)) and (
+            mouse_x < (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth)) and (
                    mouse_y > self.editor_offset_Y) and (
-                   mouse_y < (self.codingAreaHeight + self.editor_offset_Y - self.conclusionBarHeight))
+                   mouse_y < (self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight))
 
 def check_if_mouse_within_existing_lines(self, mouse_y):
     return mouse_y < self.editor_offset_Y + (self.lineHeight * self.maxLines)
@@ -46,7 +46,7 @@ def set_cursor_after_last_line(self):
     self.drag_chosen_LineIndex_start = self.maxLines - 1  # go to the end of the last line
     self.drag_cursor_Y_start = self.editor_offset_Y + (self.drag_chosen_LineIndex_start * self.line_gap)
     # Last letter of the line
-    self.drag_chosen_LetterIndex_start = self.get_number_of_letters_in_line_by_index(self.drag_chosen_LineIndex_start)
+    self.drag_chosen_LetterIndex_start = get_number_of_letters_in_line_by_index(self, self.drag_chosen_LineIndex_start)
     self.drag_cursor_X_start = self.editor_offset_X + self.xline_start_offset + (
                 self.drag_chosen_LetterIndex_start * self.letter_size_X)
 
@@ -141,7 +141,7 @@ def handle_keyboard_input(self, mouse_x, mouse_y):
 
         # ___ MOUSE SCROLLING ___ #
         # Mouse scrolling wheel should only work if it is within the coding area.
-        if event.type == pygame.MOUSEBUTTONDOWN and mouse_x > self.editor_offset_X and mouse_x < self.editor_offset_X + self.codingAreaWidth and mouse_y > self.editor_offset_Y and mouse_y < self.editor_offset_Y + self.codingAreaHeight:
+        if event.type == pygame.MOUSEBUTTONDOWN and mouse_x > self.editor_offset_X and mouse_x < self.editor_offset_X + self.textAreaWidth and mouse_y > self.editor_offset_Y and mouse_y < self.editor_offset_Y + self.textAreaHeight:
             if event.button == 4 and self.showStartLine > 0:
                 scrollUp(self)
             elif event.button == 5 and self.showStartLine + self.showable_line_numbers_in_editor < self.maxLines:
@@ -154,9 +154,9 @@ def handle_keyboard_input(self, mouse_x, mouse_y):
             self.click_hold = False
             # check if I clicked into the text area:
             if (mouse_x > self.editor_offset_X + self.lineNumberWidth) and (
-                    mouse_x < (self.editor_offset_X + self.codingAreaWidth - self.scrollBarWidth)) and (
+                    mouse_x < (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth)) and (
                     mouse_y > self.editor_offset_Y) and (
-                    mouse_y < (self.codingAreaHeight + self.editor_offset_Y - self.conclusionBarHeight)):
+                    mouse_y < (self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight)):
 
                 # Check if I clicked into the existing Lines
                 if (mouse_y < self.editor_offset_Y + (

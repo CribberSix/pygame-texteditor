@@ -1,10 +1,17 @@
 from setuptools import setup
+from os import path
+
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='pygametexteditor',
     packages=['pygametexteditor'],
     license='MIT',
     description='A simple WYSIWYG-texteditor based on pygame.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     version='0.0.42',
     python_requires=">=3.5",
     url='https://github.com/CribberSix/pygame-texteditor',
