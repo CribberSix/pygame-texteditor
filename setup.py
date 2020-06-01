@@ -12,12 +12,12 @@ setup(
     description='A simple WYSIWYG-texteditor based on pygame.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    version='0.0.42',
+    version='0.0.43',
     python_requires=">=3.5",
     url='https://github.com/CribberSix/pygame-texteditor',
     author='CribberSix',
     author_email='cribbersix@gmail.com',
-    install_requires=['pygame'],
+    install_requires=['pygame', 'math', 'os', 'sys'],
     classifiers=[
         # Trove classifiers
         # (https://pypi.python.org/pypi?%3Aaction=list_classifiers)
