@@ -1,5 +1,4 @@
 include ./pygametexteditor/elements/fonts/*.ttf
 include ./pygametexteditor/elements/graphics/*.png
-recursive-include elements *.png
-include *.py
+
 include LICENSE
