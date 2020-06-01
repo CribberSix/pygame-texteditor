@@ -1,8 +1,8 @@
-# Folders
+# Project folders & files
 .idea/
 __pycache__/
 venv/
+# package folders & files
 dist/
 build/
-pygame_texteditor.egg-info/
 *.egg-info/
