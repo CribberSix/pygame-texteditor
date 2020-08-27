@@ -1,7 +1,7 @@
 import pygame
 from ._scrollbar_vertical import scrollDown, scrollUp
 
-from ._input_handling import get_line_index, get_letter_index, get_number_of_letters_in_line_by_mouse, \
+from ._line_getters import get_line_index, get_letter_index, get_number_of_letters_in_line_by_mouse, \
     get_number_of_letters_in_line_by_index
 
 
