@@ -40,14 +40,14 @@ def render_line_numbers(self):
             pygame.draw.rect(self.screen, self.lineNumberBackgroundColor, (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
             # line number
             if x < get_showable_lines(self):
-                text = self.Courier_Text_15.render(get_line_number_string(x), 1, self.lineNumberColor)
+                text = self.courier_font.render(get_line_number_string(x), 1, self.lineNumberColor)
                 self.screen.blit(text, (self.editor_offset_X + 5, line_numbers_Y + 3))  # center of bg block
 
             line_numbers_Y += self.line_gap
 
 def render_line_contents(self):
     # TODO: Color-coding would be applied here #
-    self.line_Text_array[self.chosen_LineIndex] = self.Courier_Text_15.render(self.line_String_array[self.chosen_LineIndex], 1, self.textColor)
+    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(self.line_String_array[self.chosen_LineIndex], 1, self.textColor)
     self.yline = self.yline_start
 
     first_line = self.showStartLine

@@ -2,26 +2,36 @@ import pygame
 import math
 import os
 
+
 class TextEditor:
-    # files for core-functionality
+    # files for scrollfunctionality
     from ._scrollbar_vertical import render_scrollbar_vertical, scrollDown, scrollUp
-    from ._input_handling import handle_input_mouse_clicks, handle_keyboard_input
+
+    # files for input handling
+    from ._input_handling import handle_keyboard_input, mouse_within_texteditor, mouse_inside_text_area
+    from ._input_handling_keyboard import handle_keyboard_delete, handle_keyboard_backspace, \
+        handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, \
+        handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down
+
+    # rendering
     from ._rendering import render_background_objects, render_cursor, render_line_contents
-    # files to customize:
-    from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, set_color_lineNumber, set_color_lineNumberBackground
+
+    # files for customization of the editor:
+    from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
+        set_color_lineNumber, set_color_lineNumberBackground
     from ._usage import get_text
 
-    def __init__(self, offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, lineNumbers=True):
+    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, line_numbers=True):
 
         self.screen = screen
-        self.editor_offset_X = offset_X
-        self.editor_offset_Y = offset_Y
-        self.textAreaWidth = textAreaWidth
-        self.textAreaHeight = textAreaHeight
+        self.editor_offset_X = offset_x
+        self.editor_offset_Y = offset_y
+        self.textAreaWidth = text_area_width
+        self.textAreaHeight = text_area_height
 
         self.letter_size_Y = 15
         cdir = os.path.dirname(__file__)
-        self.Courier_Text_15 = pygame.font.Font(os.path.join(cdir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
+        self.courier_font = pygame.font.Font(os.path.join(cdir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
         self.trennzeichen_image = pygame.image.load(os.path.join(cdir, "elements/graphics/Trennzeichen.png")).convert_alpha()
 
         # LINES AND CURSOR
@@ -30,14 +40,14 @@ class TextEditor:
         self.line_String_array = []
         self.line_Text_array = []
         self.lineHeight = 18
-        self.showable_line_numbers_in_editor = int(math.floor(textAreaHeight / self.lineHeight))
-        self.maxLines = int(math.floor(textAreaHeight / self.lineHeight))
+        self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.lineHeight))
+        self.maxLines = int(math.floor(self.textAreaHeight / self.lineHeight))
         self.showStartLine = 0  # first line (shown at the top of the editor) <- must be zero during init!
         self.line_gap = 3 + self.letter_size_Y
 
         for i in range(self.maxLines):  # from 0 to maxLines:
             self.line_String_array.append("")  # Add a line
-            self.line_Text_array.append(self.Courier_Text_15.render("", 1, (160, 160, 160)))
+            self.line_Text_array.append(self.courier_font.render("", 1, (160, 160, 160)))
 
         # SCROLLBAR
         self.scrollDownButtonImg = pygame.image.load(os.path.join(cdir, "elements/graphics/Scroll_Down.png")).convert()
@@ -51,8 +61,8 @@ class TextEditor:
         self.scrollBarHeight = (self.textAreaHeight-self.scrollBarButtonHeight*2 -2) * self.showable_line_numbers_in_editor / len(self.line_String_array)
 
         # LINE NUMBERS
-        self.displayLineNumbers = lineNumbers
-        if lineNumbers:
+        self.displayLineNumbers = line_numbers
+        if self.displayLineNumbers:
             self.lineNumberWidth = 27  # line number background width and also offset for text!
         else:
             self.lineNumberWidth = 0
@@ -62,8 +72,8 @@ class TextEditor:
         self.line_numbers_Y = self.editor_offset_Y
 
         # TEXT COORDINATES
-        self.yline_start = offset_Y + 3
-        self.yline = offset_Y
+        self.yline_start = self.editor_offset_Y + 3
+        self.yline = self.editor_offset_Y
         self.xline_start_offset = 28
         if self.displayLineNumbers:
             self.xline_start = self.xline_start_offset+self.editor_offset_X
@@ -113,9 +123,14 @@ class TextEditor:
         self.cycleCounter = self.cycleCounter + 1
         # first iteration
         if self.firstiteration_boolean:
-            pygame.draw.rect(self.screen, self.codingBackgroundColor, (self.editor_offset_X, self.editor_offset_Y, self.textAreaWidth, self.textAreaHeight))  # paint entire area to avoid pixel error beneath line numbers
-            self.screen.blit(self.scrollUpButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y))  # Scroll Up Image
-            self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight))  # Scroll DownImage
+            # paint entire area to avoid pixel error beneath line numbers
+            pygame.draw.rect(self.screen, self.codingBackgroundColor,
+                             (self.editor_offset_X, self.editor_offset_Y, self.textAreaWidth, self.textAreaHeight))
+            # Scroll Up Image
+            self.screen.blit(self.scrollUpButtonImg,
+                             (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y))
+            # Scroll DownImage
+            self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight))
             self.firstiteration_boolean = False
 
         # RENDERING 1 - Background objects
@@ -123,8 +138,7 @@ class TextEditor:
 
         # INPUT - Mouse + Keyboard
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        self.handle_input_mouse_clicks(mouse_x, mouse_y)
-        self.handle_keyboard_input(mouse_x, mouse_y)
+        self.handle_keyboard_input(mouse_x, mouse_y)  # also handles mouse clicks! # TODO separate from mouse handling
 
         # RENDERING 2 - Highlights
         # TODO - calculate the correct area for the highlight

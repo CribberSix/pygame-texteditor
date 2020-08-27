@@ -14,7 +14,6 @@ setup(
     long_description_content_type='text/markdown',
     version='0.0.45',
     python_requires=">=3.5",
-    #url='https://github.com/CribberSix/pygametexteditor', # private
     author='CribberSix',
     author_email='cribbersix@gmail.com',
     install_requires=['pygame', 'math', 'os', 'sys'],
