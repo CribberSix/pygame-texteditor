@@ -1,3 +1,54 @@
+import pygame
+
+def handle_keyboard_input(self, pygame_events):
+    self.deleteCounter += 1
+    self.deleteCounter = self.deleteCounter % 2
+    # TODO: find a good option here. If FPS_max = 30; then we can delete 15 characters each second
+
+    # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
+    pressed_keys = pygame.key.get_pressed()
+    if pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
+        self.handle_keyboard_delete()
+    if pressed_keys[pygame.K_BACKSPACE] and self.deleteCounter == 0:
+        self.handle_keyboard_backspace()
+
+    # ___ OTHER KEYS ___ #
+    for event in pygame_events:
+        if event.type == pygame.QUIT:
+            pygame.quit()  # Fixes the bug that pygame takes up space in the RAM when game is just closed by sys.exit()
+            exit()
+        if event.type == pygame.KEYDOWN:
+            key = pygame.key.name(event.key)  # Returns string id of pressed key.
+
+            if len(key) == 1:  # This covers all letters and numbers not on numpad.
+                self.chosen_LetterIndex = int(self.chosen_LetterIndex)
+                self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex][
+                                                                :self.chosen_LetterIndex] + event.unicode + \
+                                                                self.line_String_array[self.chosen_LineIndex][
+                                                                self.chosen_LetterIndex:]
+                self.cursor_X += self.letter_size_X
+                self.chosen_LetterIndex += 1
+
+            # ___ SPECIAL KEYS ___
+            elif event.key == pygame.K_TAB:  # ___TABULATOR
+                self.handle_keyboard_tab()
+            elif event.key == pygame.K_SPACE:  # ___SPACEBAR
+                self.handle_keyboard_space()
+            elif event.key == pygame.K_RETURN:  # ___RETURN
+                self.handle_keyboard_return()
+            elif event.key == pygame.K_UP and self.chosen_LineIndex > 0:  # ___ARROW_UP
+                self.handle_keyboard_arrow_up()
+            elif event.key == pygame.K_DOWN:  # ___ARROW_DOWN
+                self.handle_keyboard_arrow_down()
+            elif event.key == pygame.K_RIGHT:  # ___ARROW_RIGHT
+                self.handle_keyboard_arrow_right()
+            elif event.key == pygame.K_LEFT:  # ___ARROW_LEFT
+                self.handle_keyboard_arrow_left()
+            else:
+                if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_DELETE,
+                                     pygame.K_BACKSPACE]:  # we handled those separately
+                    raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
+
 
 def handle_keyboard_backspace(self):
     self.chosen_LetterIndex = int(self.chosen_LetterIndex)  # TODO: Why would it not be of type integer?
@@ -166,14 +217,15 @@ def handle_keyboard_return(self):
     self.line_String_array[self.chosen_LineIndex] = \
         self.line_String_array[self.chosen_LineIndex][:self.chosen_LetterIndex]
 
-    self.line_Text_array[self.chosen_LineIndex] = self.Courier_Text_15.render(
+    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(
         self.line_String_array[self.chosen_LineIndex], 1, self.textColor)  # formatting the line
+
     self.chosen_LineIndex += 1
     self.chosen_LetterIndex = 0
     self.maxLines += 1
     self.cursor_X = self.xline_start
     self.line_String_array.insert(self.chosen_LineIndex, "")
-    self.line_Text_array.insert(self.chosen_LineIndex, self.Courier_Text_15.render("", 1, (10, 10, 10)))
+    self.line_Text_array.insert(self.chosen_LineIndex, self.courier_font.render("", 1, (10, 10, 10)))
 
     # EDIT new line with transfer letters
     self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex] + transferString

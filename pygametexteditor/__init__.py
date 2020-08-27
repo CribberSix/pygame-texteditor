@@ -8,10 +8,12 @@ class TextEditor:
     from ._scrollbar_vertical import render_scrollbar_vertical, scrollDown, scrollUp
 
     # files for input handling
-    from ._input_handling import handle_keyboard_input, mouse_within_texteditor, mouse_inside_text_area
-    from ._input_handling_keyboard import handle_keyboard_delete, handle_keyboard_backspace, \
+    from ._input_handling import mouse_within_texteditor,  mouse_within_existing_lines
+    from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
         handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, \
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down
+
+    from ._input_handling_mouse import handle_mouse_input
 
     # rendering
     from ._rendering import render_background_objects, render_cursor, render_line_contents
@@ -57,7 +59,7 @@ class TextEditor:
         self.scrollBarImg = pygame.image.load(os.path.join(cdir, "elements/graphics/Scroll_Bar.png")).convert()
         self.scrollBarWidth = 20
         self.scrollBarButtonHeight = 17
-        self.conclusionBarHeight =18
+        self.conclusionBarHeight = 18
         self.scrollBarHeight = (self.textAreaHeight-self.scrollBarButtonHeight*2 -2) * self.showable_line_numbers_in_editor / len(self.line_String_array)
 
         # LINE NUMBERS
@@ -117,9 +119,10 @@ class TextEditor:
 
         self.cycleCounter = 0
 
+        self.c = 0
+
     def display_editor(self):
         # needs to be called within a while loop to be able to catch key/mouse input and update visuals throughout use.
-
         self.cycleCounter = self.cycleCounter + 1
         # first iteration
         if self.firstiteration_boolean:
@@ -137,8 +140,16 @@ class TextEditor:
         self.render_background_objects()
 
         # INPUT - Mouse + Keyboard
+        pygame_events = pygame.event.get()
+
+        for event in pygame_events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        self.handle_keyboard_input(mouse_x, mouse_y)  # also handles mouse clicks! # TODO separate from mouse handling
+        self.handle_keyboard_input(pygame_events)
+        self.handle_mouse_input(pygame_events, mouse_x, mouse_y)
 
         # RENDERING 2 - Highlights
         # TODO - calculate the correct area for the highlight
