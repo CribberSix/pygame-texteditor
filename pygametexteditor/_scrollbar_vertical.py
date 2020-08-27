@@ -62,10 +62,11 @@ def scrollButton(self, x, y, action):
 def scrollUp(self):
     self.showStartLine -= 1
     self.cursor_Y += self.line_gap
-
+    self.rerenderLineNumbers = True  # TODO: enhance performance - only rerender if necessary
 
 def scrollDown(self):
     self.showStartLine += 1
     self.cursor_Y -= self.line_gap
+    self.rerenderLineNumbers = True  # TODO: enhance performance - only rerender if necessary
 
 

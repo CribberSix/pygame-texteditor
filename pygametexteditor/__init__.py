@@ -4,16 +4,16 @@ import os
 
 
 class TextEditor:
+
     # files for scrollfunctionality
-    from ._scrollbar_vertical import render_scrollbar_vertical, scrollDown, scrollUp
+    from ._scrollbar_vertical import render_scrollbar_vertical
 
     # files for input handling
-    from ._input_handling import mouse_within_texteditor,  mouse_within_existing_lines
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
         handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, \
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down
 
-    from ._input_handling_mouse import handle_mouse_input
+    from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # rendering
     from ._rendering import render_background_objects, render_cursor, render_line_contents
