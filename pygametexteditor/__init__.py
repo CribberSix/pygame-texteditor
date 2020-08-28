@@ -5,14 +5,13 @@ import os
 
 class TextEditor:
 
-    # files for scrollfunctionality
+    # scrollfunctionality
     from ._scrollbar_vertical import render_scrollbar_vertical
 
-    # files for input handling
+    # input handling KEYBOARD + MOUSE
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
         handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, \
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down
-
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # rendering
@@ -21,6 +20,7 @@ class TextEditor:
     # files for customization of the editor:
     from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
         set_color_lineNumber, set_color_lineNumberBackground
+
     from ._usage import get_text
 
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, line_numbers=True):
@@ -39,8 +39,8 @@ class TextEditor:
         # LINES AND CURSOR
         self.Trenn_counter = 0
         self.MaxLinecounter = 0
-        self.line_String_array = []
-        self.line_Text_array = []
+        self.line_String_array = []  # LOGIC: Array of actual Strings
+        self.line_Text_array = []  # VISUAL: Array of the rendered surfaces of the Strings
         self.lineHeight = 18
         self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.lineHeight))
         self.maxLines = int(math.floor(self.textAreaHeight / self.lineHeight))
@@ -118,8 +118,8 @@ class TextEditor:
         self.click_hold = False
 
         self.cycleCounter = 0
-
-        self.c = 0
+        self.clock = pygame.time.Clock()
+        self.FPS = 60  # we need to limit the FPS so we don't trigger the same actions to often (e.g. deletions)
 
     def display_editor(self):
         # needs to be called within a while loop to be able to catch key/mouse input and update visuals throughout use.
@@ -161,4 +161,7 @@ class TextEditor:
         self.render_cursor()
 
         self.render_scrollbar_vertical()
+        self.clock.tick(self.FPS)
+
+
 
