@@ -7,9 +7,11 @@ def get_line_number_string(num):
     else:  # 2-digit numbers
         return str(num)
 
+
 def render_background_objects(self):
     render_background_coloring(self)
     render_line_numbers(self)
+
 
 def render_background_coloring(self):
     bg_left = self.editor_offset_X + self.lineNumberWidth
@@ -17,6 +19,7 @@ def render_background_coloring(self):
     bg_width = self.textAreaWidth - self.scrollBarWidth - self.lineNumberWidth
     bg_height = self.textAreaHeight
     pygame.draw.rect(self.screen, self.codingBackgroundColor, (bg_left, bg_top, bg_width, bg_height))
+
 
 def get_showable_lines(self):
     # if the text is longer than the possibly-to-display-lines, check which lines we show
@@ -27,17 +30,18 @@ def get_showable_lines(self):
 
 
 def render_line_numbers(self):
-    '''
+    """
     While background rendering is done for all "line-slots" (to overpaint remaining "old" numbers without lines)
     we render line-numbers only for existing string-lines.
-    '''
+    """
     if self.displayLineNumbers and self.rerenderLineNumbers:
         self.rerenderLineNumbers = False
         line_numbers_Y = self.editor_offset_Y  # init for first line
         for x in range(self.showStartLine, self.showStartLine + self.showable_line_numbers_in_editor):
 
             # background
-            pygame.draw.rect(self.screen, self.lineNumberBackgroundColor, (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
+            pygame.draw.rect(self.screen, self.lineNumberBackgroundColor,
+                             (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
             # line number
             if x < get_showable_lines(self):
                 text = self.courier_font.render(get_line_number_string(x), 1, self.lineNumberColor)
@@ -45,9 +49,23 @@ def render_line_numbers(self):
 
             line_numbers_Y += self.line_gap
 
+
 def render_line_contents(self):
-    # TODO: Color-coding would be applied here #
-    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(self.line_String_array[self.chosen_LineIndex], 1, self.textColor)
+    """
+    Called every frame. Renders all visible lines.
+    Renders highlighted area and actual letters
+    """
+    # RENDERING 2 - Highlights
+    # TODO - render while mouse is pressed, not only after dragged and dropped
+    # TODO - calculate the correct area for the highlight
+    # TODO - loop for highlighting multiple lines correctly
+    if self.dragged_active:  # render highlighted area
+        pygame.draw.rect(self.screen, (0, 0, 0), (
+            self.drag_cursor_X_start, self.drag_cursor_Y_start, self.drag_cursor_X_end - self.drag_cursor_X_start,
+            self.drag_cursor_Y_end - self.drag_cursor_Y_start + self.lineHeight))  # width, height
+
+    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(
+        self.line_String_array[self.chosen_LineIndex], 1, self.textColor)
     self.yline = self.yline_start
 
     first_line = self.showStartLine
@@ -57,17 +75,19 @@ def render_line_contents(self):
     else:
         last_line = self.maxLines
 
+    # render all visible lines once per Frame based on the visual array of surfaces
     for line in self.line_Text_array[first_line: last_line]:
         self.screen.blit(line, (self.xline, self.yline))
         self.yline += self.line_gap
 
+
 def render_cursor(self):
-    '''
+    """
     Called every frame. Displays a cursor for 10 frames, then none for 10 frames.
     Creates 'blinking' animation
-    '''
+    """
+    # TODO: change > 10 and adapt dependent on FPS
     self.Trenn_counter += 1
     if self.Trenn_counter > 10:
         self.screen.blit(self.trennzeichen_image, (self.cursor_X, self.cursor_Y))
         self.Trenn_counter = self.Trenn_counter % 20
-

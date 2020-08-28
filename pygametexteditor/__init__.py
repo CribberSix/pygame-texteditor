@@ -151,11 +151,6 @@ class TextEditor:
         self.handle_keyboard_input(pygame_events)
         self.handle_mouse_input(pygame_events, mouse_x, mouse_y)
 
-        # RENDERING 2 - Highlights
-        # TODO - calculate the correct area for the highlight
-        if self.dragged_active:  # render highlighted area
-            pygame.draw.rect(self.screen, (0, 0, 0), (self.drag_cursor_X_start, self.drag_cursor_Y_start,  self.drag_cursor_X_end - self.drag_cursor_X_start,  self.drag_cursor_Y_end - self.drag_cursor_Y_start + self.lineHeight)) # width, height
-
         # RENDERING 3 - Lines
         self.render_line_contents()
         self.render_cursor()
