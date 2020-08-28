@@ -1,0 +1,2 @@
+###### Requirements with Version Specifiers ######`
+pygame == 1.9.6
