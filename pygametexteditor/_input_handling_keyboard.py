@@ -1,5 +1,6 @@
 import pygame
 
+
 def handle_keyboard_input(self, pygame_events):
     self.deleteCounter += 1
     self.deleteCounter = self.deleteCounter % 4

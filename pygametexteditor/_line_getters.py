@@ -1,5 +1,4 @@
 import pygame
-from sys import exit
 
 
 def get_line_index(self, mouse_y):
