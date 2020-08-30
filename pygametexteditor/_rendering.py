@@ -81,13 +81,26 @@ def render_line_contents(self):
         self.yline += self.line_gap
 
 
-def render_cursor(self):
+def render_caret(self):
     """
-    Called every frame. Displays a cursor for 10 frames, then none for 10 frames.
+    Called every frame. Displays a cursor for x frames, then none for x frames.
+    Dependent on FPS -> 5 intervalls per second
     Creates 'blinking' animation
     """
-    # TODO: change > 10 and adapt dependent on FPS
     self.Trenn_counter += 1
-    if self.Trenn_counter > 10:
+    if self.Trenn_counter > (self.FPS / 5) and self.caret_within_texteditor():
+
+
         self.screen.blit(self.trennzeichen_image, (self.cursor_X, self.cursor_Y))
-        self.Trenn_counter = self.Trenn_counter % 20
+        self.Trenn_counter = self.Trenn_counter % ((self.FPS / 5)*2)
+
+
+def caret_within_texteditor(self):
+    """
+    Tests whether the caret's coordinates are within the visible text area.
+    If the caret can possibly be in a line which is not currently displayed after using the mouse wheel for scrolling.
+    Test for 'self.editor_offset_Y <= self.cursor_Y' as the caret can have the exact same Y-coordinate as the offset if
+    the caret is in the first line.
+    """
+    return self.editor_offset_X + self.lineNumberWidth < self.cursor_X < (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth) \
+           and self.editor_offset_Y <= self.cursor_Y < (self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight)

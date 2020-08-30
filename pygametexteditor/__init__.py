@@ -15,13 +15,13 @@ class TextEditor:
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # rendering
-    from ._rendering import render_background_objects, render_cursor, render_line_contents
+    from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor
 
     # files for customization of the editor:
     from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
         set_color_lineNumber, set_color_lineNumberBackground
 
-    from ._usage import get_text
+    from ._usage import get_text_as_array, get_text_as_string
 
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, line_numbers=True):
 
@@ -153,10 +153,7 @@ class TextEditor:
 
         # RENDERING 3 - Lines
         self.render_line_contents()
-        self.render_cursor()
+        self.render_caret()
 
         self.render_scrollbar_vertical()
         self.clock.tick(self.FPS)
-
-
-

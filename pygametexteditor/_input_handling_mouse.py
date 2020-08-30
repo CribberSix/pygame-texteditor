@@ -29,7 +29,8 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y):
 
         # ___ MOUSE DRAGGING ___ #
         # MOUSEBUTTONDOWN is handled previously in the mouse input.
-        if event.type == pygame.MOUSEBUTTONUP:
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:  # mouse dragging only with left mouse up
+            print("Left mouse button up")
             self.last_clickup_cycle = self.cycleCounter
             self.click_hold = False
 
@@ -101,6 +102,7 @@ def mouse_within_texteditor(self, mouse_x, mouse_y):
 def mouse_within_existing_lines(self, mouse_y):
     return mouse_y < self.editor_offset_Y + (self.lineHeight * self.maxLines)
 
+
 def set_cursor_x_position(self, mouse_x, mouse_y):
     # end of line
     if get_number_of_letters_in_line_by_mouse(self, mouse_y) < get_letter_index(self, mouse_x):
@@ -113,14 +115,14 @@ def set_cursor_x_position(self, mouse_x, mouse_y):
             (mouse_x - self.editor_offset_X - self.xline_start_offset) / self.letter_size_X)
         self.drag_cursor_X_start = self.editor_offset_X + self.xline_start_offset + (
                 self.drag_chosen_LetterIndex_start * self.letter_size_X)
-    print("self.drag_chosen_LetterIndex_start: " + str(self.drag_chosen_LetterIndex_start))
+    #print("self.drag_chosen_LetterIndex_start: " + str(self.drag_chosen_LetterIndex_start))
 
 
 def set_cursor_y_position(self, mouse_y):
     self.drag_chosen_LineIndex_start = get_line_index(self, mouse_y)
     self.drag_cursor_Y_start = self.editor_offset_Y + (self.drag_chosen_LineIndex_start * self.line_gap) - (
                 self.showStartLine * self.lineHeight)
-    print("self.drag_chosen_LineIndex_start: " + str(self.drag_chosen_LineIndex_start))
+    #print("self.drag_chosen_LineIndex_start: " + str(self.drag_chosen_LineIndex_start))
 
 
 def set_cursor_after_last_line(self):
