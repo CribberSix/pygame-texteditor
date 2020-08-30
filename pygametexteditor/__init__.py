@@ -15,8 +15,8 @@ class TextEditor:
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # caret
-    from ._caret import set_caret_x_position_by_mouse, set_caret_y_position_by_mouse, set_caret_after_last_line, \
-        update_caret_coordinates
+    from ._caret import set_caret_x_position_by_mouse, set_caret_y_position_by_mouse, update_caret_coordinates, \
+        set_caret_end_after_last_line, set_caret_start_after_last_line
 
     # rendering
     from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor, \
@@ -83,25 +83,25 @@ class TextEditor:
         self.yline = self.editor_offset_Y
         self.xline_start_offset = 28
         if self.displayLineNumbers:
-            self.xline_start = self.xline_start_offset+self.editor_offset_X
-            self.xline = self.xline_start_offset + self.editor_offset_X
+            self.xline_start = self.editor_offset_X + self.xline_start_offset
+            self.xline = self.editor_offset_X + self.xline_start_offset
         else:
             self.xline_start = self.editor_offset_X
             self.xline = self.editor_offset_X
 
-        # CURSOR
+        # CURSOR - coordinates for displaying the caret while typing
         self.cursor_Y = self.yline_start - 3
         self.cursor_X = self.xline_start
         self.dragged_active = False
 
-        # click down
+        # click down - coordinates used to identify start-point of drag
         self.drag_cursor_X_start = 0
         self.drag_cursor_Y_start = 0
         self.drag_chosen_LineIndex_start = 0
         self.drag_chosen_LetterIndex_start = 0
         self.last_clickdown_cycle = 0
 
-        # click up
+        # click up  - coordinates used to identify end-point of drag
         self.drag_cursor_X_end = 0
         self.drag_cursor_Y_end = 0
         self.drag_chosen_LineIndex_end = 0
@@ -109,11 +109,11 @@ class TextEditor:
         self.last_clickup_cycle = 0
 
         # Colors
-        self.codingBackgroundColor = (40, 44, 52) # (40, 44, 52)
-        self.codingScrollBarBackgroundColor = (40, 44, 52)
-        self.textColor = (171, 178, 191)
-        self.lineNumberColor = (73, 81, 97)
-        self.lineNumberBackgroundColor = (40, 44, 52)  # (0, 0, 0) # 0, 51, 102
+        self.codingBackgroundColor = (40, 44, 52)  # (40, 44, 52)
+        self.codingScrollBarBackgroundColor = (40, 44, 52)  # (40, 44, 52)
+        self.textColor = (171, 178, 191)  # (171, 178, 191)
+        self.lineNumberColor = (73, 81, 97)  # (73, 81, 97)
+        self.lineNumberBackgroundColor = (40, 44, 52)  # (0, 0, 0) # (0, 51, 102)
 
         self.deleteCounter = 0
 
@@ -124,7 +124,7 @@ class TextEditor:
 
         self.cycleCounter = 0
         self.clock = pygame.time.Clock()
-        self.FPS = 60  # we need to limit the FPS so we don't trigger the same actions to often (e.g. deletions)
+        self.FPS = 60  # we need to limit the FPS so we don't trigger the same actions too often (e.g. deletions)
 
     def display_editor(self):
         # needs to be called within a while loop to be able to catch key/mouse input and update visuals throughout use.
