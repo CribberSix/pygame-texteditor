@@ -11,7 +11,8 @@ class TextEditor:
     # input handling KEYBOARD + MOUSE
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
         handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, \
-        handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down
+        handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down, \
+        handle_input_with_highlight
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # caret
@@ -21,13 +22,15 @@ class TextEditor:
 
     # rendering
     from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor, \
-        reset_text_area_to_caret, render_highlight
+        reset_text_area_to_caret, render_highlight, get_rect_coord_from_indizes, get_rect_coord_from_mouse
 
     # files for customization of the editor:
     from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
         set_color_lineNumber, set_color_lineNumberBackground
 
     from ._usage import get_text_as_array, get_text_as_string
+
+    from ._line_getters import get_line_index, get_letter_index
 
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, line_numbers=True):
 
@@ -100,6 +103,7 @@ class TextEditor:
 
         # click down - coordinates used to identify start-point of drag
         self.dragged_active = False
+        self.dragged_finished = True
         self.drag_chosen_LineIndex_start = 0
         self.drag_chosen_LetterIndex_start = 0
         self.last_clickdown_cycle = 0
@@ -159,7 +163,7 @@ class TextEditor:
         self.handle_mouse_input(pygame_events, mouse_x, mouse_y)
 
         # RENDERING 3 - Lines
-        self.render_highlight()
+        self.render_highlight(mouse_x, mouse_y)
         self.render_line_contents()
         self.render_caret()
 

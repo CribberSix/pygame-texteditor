@@ -31,6 +31,7 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y):
                     self.last_clickdown_cycle = self.cycleCounter
                     self.click_hold = True
                     self.dragged_active = True
+                    self.dragged_finished = False
                     if self.mouse_within_texteditor(mouse_x, mouse_y):  # editor area
                         if self.mouse_within_existing_lines(mouse_y):  # in area of existing lines
                             self.set_drag_start_by_mouse(mouse_x, mouse_y)
@@ -61,11 +62,11 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y):
             # but if the down-click is on the same letter and line as the up-click!
             if self.drag_chosen_LineIndex_end == self.drag_chosen_LineIndex_start and \
                     self.drag_chosen_LetterIndex_end == self.drag_chosen_LetterIndex_start:
-                self.dragged_active = False
+                self.dragged_active = False  # no letters are actually selected
             else:
-                self.dragged_active = True
-                # depending on the next action (e.g. KEYDOWN handled in keybaord.py) we do something with
-                # the selected area (for instance upon keydown, the selected characters/lines get removed!)
+                self.dragged_active = True  # remains the same
+
+            self.dragged_finished = True  # we don't have to blit the rect while moving the mouse anymore
 
             self.chosen_LineIndex = self.drag_chosen_LineIndex_end
             self.chosen_LetterIndex = self.drag_chosen_LetterIndex_end

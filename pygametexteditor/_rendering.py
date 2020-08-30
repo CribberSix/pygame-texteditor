@@ -50,21 +50,40 @@ def render_line_numbers(self) -> None:
             line_numbers_Y += self.line_gap
 
 
-def render_highlight(self) -> None:
-    # RENDERING 2 - Highlights
-    # TODO - render while mouse is pressed, not only after dragged and dropped
-    # TODO - calculate the correct area for the highlight
-    # TODO - loop for highlighting multiple lines correctly
-    #if self.dragged_active:  # render highlighted area
-    #    pygame.draw.rect(self.screen, (0, 0, 0), (
-    #        self.drag_cursor_X_start, self.drag_cursor_Y_start, self.drag_cursor_X_end - self.drag_cursor_X_start,
-    #        self.drag_cursor_Y_end - self.drag_cursor_Y_start + self.lineHeight))  # width, height
+def render_highlight(self, mouse_x, mouse_y) -> None:
+    """
+    Renders highlighted area:
+    1. during drag-action (area follows mouse)
+    2. after drag-action (area stays confined to selected area by drag_start / drag_end)
+    """
 
-    if self.dragged_active:
-        print("Mouse dragging is ACTIVE.")
-    else:
-        print("inactive...")
-    pass
+    if self.dragged_active:  # area always starts at drag__start
+        x1, y1 = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start, self.drag_chosen_LetterIndex_start)
+
+        if self.dragged_finished:  # area confined by drag__end
+            x2, y2 = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_end, self.drag_chosen_LetterIndex_end)
+            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.letter_size_Y))
+
+        else:  # area follows mouse
+            x2, y2 = self.get_rect_coord_from_mouse(mouse_x, mouse_y)  # single-line select
+            if y1 == y2:
+                pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.letter_size_Y))
+            else:
+                print("Multi-line select not yet implemented")
+                pass  # TODO: multi-line select
+
+
+
+def get_rect_coord_from_mouse(self, mouse_x, mouse_y):
+    line = self.get_line_index(mouse_y)
+    letter = self.get_letter_index(mouse_x)
+    return self.get_rect_coord_from_indizes(line, letter)
+
+
+def get_rect_coord_from_indizes(self, line, letter) -> (int, int):
+    line_coord = self.editor_offset_Y + (self.line_gap * (line - self.showStartLine))
+    letter_coord = self.xline_start + (letter * self.letter_size_X)
+    return letter_coord, line_coord
 
 
 def render_line_contents(self) -> None:
@@ -91,12 +110,13 @@ def render_line_contents(self) -> None:
 
 def render_caret(self) -> None:
     """
-    Called every frame. Displays a cursor for x frames, then none for x frames.
+    Called every frame. Displays a cursor for x frames, then none for x frames. Only displayed if line in which
+    caret resides is visible and there is no active dragging operation going on.
     Dependent on FPS -> 5 intervalls per second
     Creates 'blinking' animation
     """
     self.Trenn_counter += 1
-    if self.Trenn_counter > (self.FPS / 5) and self.caret_within_texteditor():
+    if self.Trenn_counter > (self.FPS / 5) and self.caret_within_texteditor() and self.dragged_finished:
         self.screen.blit(self.trennzeichen_image, (self.cursor_X, self.cursor_Y))
         self.Trenn_counter = self.Trenn_counter % ((self.FPS / 5)*2)
 

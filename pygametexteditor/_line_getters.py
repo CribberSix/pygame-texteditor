@@ -1,12 +1,20 @@
 import pygame
 
 
-def get_line_index(self, mouse_y):
+def get_line_index(self, mouse_y) -> int:
+    """
+    Returns possible line-position of mouse -> does not take into account
+    how many lines there actually are!
+    """
     return int(((mouse_y - self.editor_offset_Y) / self.line_gap) + (self.showStartLine))
 
 
-def get_letter_index(self, mouse_x):
-    return int((mouse_x - self.editor_offset_X - self.xline_start_offset) / self.letter_size_X)
+def get_letter_index(self, mouse_x) -> int:
+    """
+    Returns possible letter-position of mouse -> does not take into account
+    how many letters there actually are in the line!
+    """
+    return int((mouse_x - self.xline_start) / self.letter_size_X)
 
 
 def get_number_of_letters_in_line_by_mouse(self, mouse_y):

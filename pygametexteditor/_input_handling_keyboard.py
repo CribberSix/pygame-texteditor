@@ -17,9 +17,11 @@ def handle_keyboard_input(self, pygame_events):
     # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
     pressed_keys = pygame.key.get_pressed()
     if pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
+        self.handle_input_with_highlight()
         self.handle_keyboard_delete()  # handle input
         self.reset_text_area_to_caret()  # reset caret if necessary
     if pressed_keys[pygame.K_BACKSPACE] and self.deleteCounter == 0:
+        self.handle_input_with_highlight()
         self.handle_keyboard_backspace()  # handle input
         self.reset_text_area_to_caret()  # reset caret if necessary
 
@@ -30,6 +32,7 @@ def handle_keyboard_input(self, pygame_events):
             pygame.quit()  # Fixes the bug that pygame takes up space in the RAM when game is just closed by sys.exit()
             exit()
         elif event.type == pygame.KEYDOWN:
+            self.handle_input_with_highlight()
             self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessaryss
 
             key = pygame.key.name(event.key)  # Returns string id of pressed key.
