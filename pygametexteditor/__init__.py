@@ -15,12 +15,13 @@ class TextEditor:
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # caret
-    from ._caret import set_caret_x_position_by_mouse, set_caret_y_position_by_mouse, update_caret_coordinates, \
-        set_caret_end_after_last_line, set_caret_start_after_last_line
+    from ._caret import update_caret_position, update_caret_position_by_drag_end, update_caret_position_by_drag_start, \
+        set_drag_start_after_last_line, set_drag_end_after_last_line, \
+        set_drag_start_by_mouse, set_drag_end_by_mouse
 
     # rendering
     from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor, \
-        reset_text_area_to_caret
+        reset_text_area_to_caret, render_highlight
 
     # files for customization of the editor:
     from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
@@ -49,6 +50,9 @@ class TextEditor:
         self.line_Text_array = []  # VISUAL: Array of the rendered surfaces of the Strings
         self.lineHeight = 18
         self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.lineHeight))
+
+        # self.maxLines is the variable keeping count how many lines we currently have -
+        # in the beginning we fill the entire editor with empty lines.
         self.maxLines = int(math.floor(self.textAreaHeight / self.lineHeight))
         self.showStartLine = 0  # first line (shown at the top of the editor) <- must be zero during init!
         self.line_gap = 3 + self.letter_size_Y
@@ -93,18 +97,14 @@ class TextEditor:
         # CURSOR - coordinates for displaying the caret while typing
         self.cursor_Y = self.yline_start - 3
         self.cursor_X = self.xline_start
-        self.dragged_active = False
 
         # click down - coordinates used to identify start-point of drag
-        self.drag_cursor_X_start = 0
-        self.drag_cursor_Y_start = 0
+        self.dragged_active = False
         self.drag_chosen_LineIndex_start = 0
         self.drag_chosen_LetterIndex_start = 0
         self.last_clickdown_cycle = 0
 
         # click up  - coordinates used to identify end-point of drag
-        self.drag_cursor_X_end = 0
-        self.drag_cursor_Y_end = 0
         self.drag_chosen_LineIndex_end = 0
         self.drag_chosen_LetterIndex_end = 0
         self.last_clickup_cycle = 0
@@ -123,7 +123,8 @@ class TextEditor:
         self.rerenderLineNumbers = True
         self.click_hold = False
 
-        self.cycleCounter = 0
+        self.cycleCounter = 0  # Used to be able to tell whether a mouse-drag action has been handled already or not.
+
         self.clock = pygame.time.Clock()
         self.FPS = 60  # we need to limit the FPS so we don't trigger the same actions too often (e.g. deletions)
 
@@ -158,6 +159,7 @@ class TextEditor:
         self.handle_mouse_input(pygame_events, mouse_x, mouse_y)
 
         # RENDERING 3 - Lines
+        self.render_highlight()
         self.render_line_contents()
         self.render_caret()
 

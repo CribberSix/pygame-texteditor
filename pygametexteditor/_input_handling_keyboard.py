@@ -1,6 +1,15 @@
 import pygame
 
 
+def handle_input_with_highlight(self):
+    if self.dragged_active:
+        self.dragged_active = False
+        # TODO: if we type a letter / return / backspace / del we delete the marked area.
+        # TODO: if we type an arrow we jump in front of or at the backend of the area.
+        # print("Something with mouse dragging should be happening here.")
+        pass
+
+
 def handle_keyboard_input(self, pygame_events):
     self.deleteCounter += 1
     self.deleteCounter = self.deleteCounter % 4  # If FPS = 60; then we can delete 15 characters each second
@@ -53,7 +62,7 @@ def handle_keyboard_input(self, pygame_events):
                 if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_DELETE,
                                      pygame.K_BACKSPACE, pygame.K_CAPSLOCK]:
                     # we handled the separately, Capslock is apparently implicitly handled when using it
-                    
+
                     # disabled for smooth development:
                     # raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
                     print("No key implementation: " + str(pygame.key.name(event.key)))

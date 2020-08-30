@@ -50,20 +50,28 @@ def render_line_numbers(self) -> None:
             line_numbers_Y += self.line_gap
 
 
+def render_highlight(self) -> None:
+    # RENDERING 2 - Highlights
+    # TODO - render while mouse is pressed, not only after dragged and dropped
+    # TODO - calculate the correct area for the highlight
+    # TODO - loop for highlighting multiple lines correctly
+    #if self.dragged_active:  # render highlighted area
+    #    pygame.draw.rect(self.screen, (0, 0, 0), (
+    #        self.drag_cursor_X_start, self.drag_cursor_Y_start, self.drag_cursor_X_end - self.drag_cursor_X_start,
+    #        self.drag_cursor_Y_end - self.drag_cursor_Y_start + self.lineHeight))  # width, height
+
+    if self.dragged_active:
+        print("Mouse dragging is ACTIVE.")
+    else:
+        print("inactive...")
+    pass
+
+
 def render_line_contents(self) -> None:
     """
     Called every frame. Renders all visible lines.
     Renders highlighted area and actual letters
     """
-    # RENDERING 2 - Highlights
-    # TODO - render while mouse is pressed, not only after dragged and dropped
-    # TODO - calculate the correct area for the highlight
-    # TODO - loop for highlighting multiple lines correctly
-    if self.dragged_active:  # render highlighted area
-        pygame.draw.rect(self.screen, (0, 0, 0), (
-            self.drag_cursor_X_start, self.drag_cursor_Y_start, self.drag_cursor_X_end - self.drag_cursor_X_start,
-            self.drag_cursor_Y_end - self.drag_cursor_Y_start + self.lineHeight))  # width, height
-
     self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(
         self.line_String_array[self.chosen_LineIndex], 1, self.textColor)
     self.yline = self.yline_start
@@ -89,8 +97,6 @@ def render_caret(self) -> None:
     """
     self.Trenn_counter += 1
     if self.Trenn_counter > (self.FPS / 5) and self.caret_within_texteditor():
-
-
         self.screen.blit(self.trennzeichen_image, (self.cursor_X, self.cursor_Y))
         self.Trenn_counter = self.Trenn_counter % ((self.FPS / 5)*2)
 
@@ -109,17 +115,16 @@ def caret_within_texteditor(self) -> bool:
 def reset_text_area_to_caret(self) -> None:
     """
     Reset visual area to include the line of caret if it is currently not visible. This function ensures
-    that whenever we type, the line in which the caret resides is visible, even after scrolling.
+    that whenever we type, the line in which the caret resides becomes visible, even after scrolling.
     """
-
     if self.chosen_LineIndex < self.showStartLine:  # above visible area
         self.showStartLine = self.chosen_LineIndex
         self.rerenderLineNumbers = True
-        self.update_caret_coordinates()
+        self.update_caret_position()
     elif self.chosen_LineIndex > (self.showStartLine + self.showable_line_numbers_in_editor - 1):  # below visible area
         self.showStartLine = self.chosen_LineIndex - self.showable_line_numbers_in_editor + 1
         self.rerenderLineNumbers = True
-        self.update_caret_coordinates()
+        self.update_caret_position()
     # TODO: set cursor coordinates
 
 
