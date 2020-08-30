@@ -51,7 +51,9 @@ def handle_keyboard_input(self, pygame_events):
                 self.handle_keyboard_arrow_left()
             else:
                 if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_DELETE,
-                                     pygame.K_BACKSPACE]:  # we handled those separately
+                                     pygame.K_BACKSPACE, pygame.K_CAPSLOCK]:
+                    # we handled the separately, Capslock is apparently implicitly handled when using it
+                    
                     # disabled for smooth development:
                     # raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
                     print("No key implementation: " + str(pygame.key.name(event.key)))
