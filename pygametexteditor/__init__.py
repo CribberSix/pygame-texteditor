@@ -31,15 +31,16 @@ class TextEditor:
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, line_numbers=True):
 
         self.screen = screen
+
+        # VISUALS
         self.editor_offset_X = offset_x
         self.editor_offset_Y = offset_y
         self.textAreaWidth = text_area_width
         self.textAreaHeight = text_area_height
-
         self.letter_size_Y = 15
-        cdir = os.path.dirname(__file__)
-        self.courier_font = pygame.font.Font(os.path.join(cdir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
-        self.trennzeichen_image = pygame.image.load(os.path.join(cdir, "elements/graphics/Trennzeichen.png")).convert_alpha()
+        current_dir = os.path.dirname(__file__)
+        self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
+        self.trennzeichen_image = pygame.image.load(os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
 
         # LINES
         self.Trenn_counter = 0
@@ -57,11 +58,11 @@ class TextEditor:
             self.line_Text_array.append(self.courier_font.render("", 1, (160, 160, 160)))
 
         # SCROLLBAR
-        self.scrollDownButtonImg = pygame.image.load(os.path.join(cdir, "elements/graphics/Scroll_Down.png")).convert()
-        self.scrollDownButtonImg_Deactivated = pygame.image.load(os.path.join(cdir, "elements/graphics/Scroll_Down_deactivated.png")).convert()
-        self.scrollUpButtonImg = pygame.image.load(os.path.join(cdir, "elements/graphics/Scroll_up.png")).convert()
-        self.scrollUpButtonImg_Deactivated = pygame.image.load(os.path.join(cdir, "elements/graphics/Scroll_Up_deactivated.png")).convert()
-        self.scrollBarImg = pygame.image.load(os.path.join(cdir, "elements/graphics/Scroll_Bar.png")).convert()
+        self.scrollDownButtonImg = pygame.image.load(os.path.join(current_dir, "elements/graphics/Scroll_Down.png")).convert()
+        self.scrollDownButtonImg_Deactivated = pygame.image.load(os.path.join(current_dir, "elements/graphics/Scroll_Down_deactivated.png")).convert()
+        self.scrollUpButtonImg = pygame.image.load(os.path.join(current_dir, "elements/graphics/Scroll_up.png")).convert()
+        self.scrollUpButtonImg_Deactivated = pygame.image.load(os.path.join(current_dir, "elements/graphics/Scroll_Up_deactivated.png")).convert()
+        self.scrollBarImg = pygame.image.load(os.path.join(current_dir, "elements/graphics/Scroll_Bar.png")).convert()
         self.scrollBarWidth = 20
         self.scrollBarButtonHeight = 17
         self.conclusionBarHeight = 18
