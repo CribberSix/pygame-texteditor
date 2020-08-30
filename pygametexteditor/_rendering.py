@@ -104,3 +104,23 @@ def caret_within_texteditor(self) -> bool:
     """
     return self.editor_offset_X + self.lineNumberWidth < self.cursor_X < (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth) \
            and self.editor_offset_Y <= self.cursor_Y < (self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight)
+
+
+def reset_text_area_to_caret(self) -> None:
+    """
+    Reset visual area to include the line of caret if it is currently not visible. This function ensures
+    that whenever we type, the line in which the caret resides is visible, even after scrolling.
+    """
+
+    if self.chosen_LineIndex < self.showStartLine:  # above visible area
+        self.showStartLine = self.chosen_LineIndex
+        self.rerenderLineNumbers = True
+        self.update_caret_coordinates()
+    elif self.chosen_LineIndex > (self.showStartLine + self.showable_line_numbers_in_editor - 1):  # below visible area
+        self.showStartLine = self.chosen_LineIndex - self.showable_line_numbers_in_editor + 1
+        self.rerenderLineNumbers = True
+        self.update_caret_coordinates()
+    # TODO: set cursor coordinates
+
+
+

@@ -1,5 +1,8 @@
+from ._line_getters import get_line_index, get_letter_index, get_number_of_letters_in_line_by_mouse, \
+    get_number_of_letters_in_line_by_index
 
-def set_cursor_x_position(self, mouse_x, mouse_y):
+
+def set_caret_x_position_by_mouse(self, mouse_x, mouse_y) -> None:
     # end of line
     if get_number_of_letters_in_line_by_mouse(self, mouse_y) < get_letter_index(self, mouse_x):
         self.drag_chosen_LetterIndex_start = len(self.line_String_array[self.drag_chosen_LineIndex_start])
@@ -11,17 +14,17 @@ def set_cursor_x_position(self, mouse_x, mouse_y):
             (mouse_x - self.editor_offset_X - self.xline_start_offset) / self.letter_size_X)
         self.drag_cursor_X_start = self.editor_offset_X + self.xline_start_offset + (
                 self.drag_chosen_LetterIndex_start * self.letter_size_X)
-    #print("self.drag_chosen_LetterIndex_start: " + str(self.drag_chosen_LetterIndex_start))
+    # print("self.drag_chosen_LetterIndex_start: " + str(self.drag_chosen_LetterIndex_start))
 
 
-def set_cursor_y_position(self, mouse_y):
+def set_caret_y_position_by_mouse(self, mouse_y) -> None:
     self.drag_chosen_LineIndex_start = get_line_index(self, mouse_y)
     self.drag_cursor_Y_start = self.editor_offset_Y + (self.drag_chosen_LineIndex_start * self.line_gap) - (
                 self.showStartLine * self.lineHeight)
-    #print("self.drag_chosen_LineIndex_start: " + str(self.drag_chosen_LineIndex_start))
+    # print("self.drag_chosen_LineIndex_start: " + str(self.drag_chosen_LineIndex_start))
 
 
-def set_cursor_after_last_line(self):
+def set_caret_after_last_line(self) -> None:
     self.drag_chosen_LineIndex_start = self.maxLines - 1  # go to the end of the last line
     self.drag_cursor_Y_start = self.editor_offset_Y + (self.drag_chosen_LineIndex_start * self.line_gap)
     # Last letter of the line
@@ -29,3 +32,13 @@ def set_cursor_after_last_line(self):
     self.drag_cursor_X_start = self.editor_offset_X + self.xline_start_offset + (
                 self.drag_chosen_LetterIndex_start * self.letter_size_X)
 
+
+def update_caret_coordinates(self) -> None:
+    """
+    # Updates cursor_X and cursor_Y positions based on current position by line and letter indices
+    """
+    self.cursor_X = self.editor_offset_X + self.xline_start_offset + \
+                               (self.chosen_LetterIndex * self.letter_size_X)
+
+    self.cursor_Y = self.editor_offset_Y + (self.chosen_LineIndex * self.line_gap) - \
+                               (self.showStartLine * self.lineHeight)

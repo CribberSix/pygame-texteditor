@@ -14,8 +14,13 @@ class TextEditor:
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
+    # caret
+    from ._caret import set_caret_x_position_by_mouse, set_caret_y_position_by_mouse, set_caret_after_last_line, \
+        update_caret_coordinates
+
     # rendering
-    from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor
+    from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor, \
+        reset_text_area_to_caret
 
     # files for customization of the editor:
     from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
@@ -36,7 +41,7 @@ class TextEditor:
         self.courier_font = pygame.font.Font(os.path.join(cdir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
         self.trennzeichen_image = pygame.image.load(os.path.join(cdir, "elements/graphics/Trennzeichen.png")).convert_alpha()
 
-        # LINES AND CURSOR
+        # LINES
         self.Trenn_counter = 0
         self.MaxLinecounter = 0
         self.line_String_array = []  # LOGIC: Array of actual Strings

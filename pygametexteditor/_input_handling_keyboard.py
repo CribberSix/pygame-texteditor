@@ -3,23 +3,26 @@ import pygame
 
 def handle_keyboard_input(self, pygame_events):
     self.deleteCounter += 1
-    self.deleteCounter = self.deleteCounter % 4
-    # TODO: find a good option here. If FPS = 60; then we can delete 15 characters each second
-    # FPS are set in __init__.py
+    self.deleteCounter = self.deleteCounter % 4  # If FPS = 60; then we can delete 15 characters each second
 
     # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
     pressed_keys = pygame.key.get_pressed()
     if pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
-        self.handle_keyboard_delete()
+        self.handle_keyboard_delete()  # handle input
+        self.reset_text_area_to_caret()  # reset caret if necessary
     if pressed_keys[pygame.K_BACKSPACE] and self.deleteCounter == 0:
-        self.handle_keyboard_backspace()
+        self.handle_keyboard_backspace()  # handle input
+        self.reset_text_area_to_caret()  # reset caret if necessary
 
     # ___ OTHER KEYS ___ #
     for event in pygame_events:
+
         if event.type == pygame.QUIT:
             pygame.quit()  # Fixes the bug that pygame takes up space in the RAM when game is just closed by sys.exit()
             exit()
-        if event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
+            self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessaryss
+
             key = pygame.key.name(event.key)  # Returns string id of pressed key.
 
             if len(key) == 1:  # This covers all letters and numbers not on numpad.
@@ -49,7 +52,9 @@ def handle_keyboard_input(self, pygame_events):
             else:
                 if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_DELETE,
                                      pygame.K_BACKSPACE]:  # we handled those separately
-                    raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
+                    # disabled for smooth development:
+                    # raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
+                    print("No key implementation: " + str(pygame.key.name(event.key)))
 
 
 def handle_keyboard_backspace(self):
