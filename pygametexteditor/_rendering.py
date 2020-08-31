@@ -62,16 +62,55 @@ def render_highlight(self, mouse_x, mouse_y) -> None:
 
         if self.dragged_finished:  # area confined by drag__end
             x2, y2 = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_end, self.drag_chosen_LetterIndex_end)
-            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.letter_size_Y))
+            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
+
+            # TODO: multi-line
 
         else:  # area follows mouse
-            x2, y2 = self.get_rect_coord_from_mouse(mouse_x, mouse_y)  # single-line select
-            if y1 == y2:
-                pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.letter_size_Y))
+            x2, y2 = self.get_rect_coord_from_mouse(mouse_x, mouse_y)
+            if y1 == y2:  # single-line select
+                pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
             else:
-                print("Multi-line select not yet implemented")
-                pass  # TODO: multi-line select
+                # set the step pos/neg, depending whether the user highlights down- or upward
+                step = self.lineHeight if y1 < y2 else self.lineHeight * (-1)
+                for i, y in enumerate(range(y1, y2 + step, step)):  # for each line
+                    # first line
+                    if i == 0:
+                        if y1 < y2:  # starting line < ending line
+                            # Right sides highlight - drag_start until end
+                            start_x, start_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start, self.drag_chosen_LetterIndex_start)
+                            end_x, end_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start, len(self.line_String_array[self.drag_chosen_LineIndex_start]))
+                            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(start_x, start_y, end_x - start_x, self.lineHeight))
+                        else:  # starting line > ending line
+                            # Left sided highlight - line-start until drag_start
+                            end_x, end_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start, self.drag_chosen_LetterIndex_start)
+                            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(self.xline_start, end_y, end_x - self.xline_start, self.lineHeight))
+                    # middle lines
+                    elif i < len(range(y1, y2 + step, step)) - 1:  # middle line
+                        # Full highlight of entire line - start until end
+                        lines = i if step > 0 else i * (-1)
+                        end_x, end_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start + lines, len(self.line_String_array[self.drag_chosen_LineIndex_start + lines]))
+                        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(self.xline_start, end_y, end_x - self.xline_start, self.lineHeight))
 
+                    # last line
+                    else:
+                        if y1 < y2:  # starting line < ending line
+                            # Left sided highlight - start to cursor (or start to end if cursor > end)
+                            cursor_x, cursor_y = self.get_rect_coord_from_mouse(mouse_x, mouse_y)
+                            end_x, end_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start + i, len(self.line_String_array[self.drag_chosen_LineIndex_start + i]))
+                            # if cursor is behind a line, we can at max highlight until the last character
+                            actual_x = end_x if cursor_x > end_x else cursor_x
+                            pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(self.xline_start, cursor_y, actual_x - self.xline_start, self.lineHeight))
+
+                        else:  # starting line > ending line
+                            # Right sided highlight - cursor to end  (or end to end if cursor > end)
+                            cursor_x, cursor_y = self.get_rect_coord_from_mouse(mouse_x, mouse_y)
+                            end_x, end_y = self.get_rect_coord_from_indizes(self.get_line_index(mouse_y), len(self.line_String_array[self.get_line_index(mouse_y)]))
+
+                            if cursor_x > end_x:  # end to end = NONE
+                                pass
+                            else:  # cursor to end -> if cursor is within a line
+                                pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(cursor_x, cursor_y, end_x - cursor_x, self.lineHeight))
 
 
 def get_rect_coord_from_mouse(self, mouse_x, mouse_y):

@@ -147,8 +147,6 @@ class TextEditor:
             self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight))
             self.firstiteration_boolean = False
 
-        # RENDERING 1 - Background objects
-        self.render_background_objects()
 
         # INPUT - Mouse + Keyboard
         pygame_events = pygame.event.get()
@@ -161,6 +159,9 @@ class TextEditor:
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.handle_keyboard_input(pygame_events)
         self.handle_mouse_input(pygame_events, mouse_x, mouse_y)
+
+        # RENDERING 1 - Background objects
+        self.render_background_objects()
 
         # RENDERING 3 - Lines
         self.render_highlight(mouse_x, mouse_y)
