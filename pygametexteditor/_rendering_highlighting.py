@@ -36,12 +36,12 @@ def highlight_entire_line(self, step, line_number) -> None:
 
 def highlight_from_start_to_cursor(self, mouse_x, mouse_y) -> None:
     """
-    # Left sided highlight - start to cursor
+    # Left sided highlight - start to cursor (of cursor line)
     If the cursor is behind the last letter of the line, the entire line is highlighted
     """
     cursor_x, cursor_y = self.get_rect_coord_from_mouse(mouse_x, mouse_y)
-    end_x, end_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start + i,
-                                                    len(self.line_String_array[self.drag_chosen_LineIndex_start + i]))
+    end_x, end_y = self.get_rect_coord_from_indizes(self.get_line_index(mouse_y),
+                                                    len(self.line_String_array[self.get_line_index(mouse_y)]))
     # if cursor is behind a line, we can at max highlight until the last character
     actual_x = end_x if cursor_x > end_x else cursor_x
     pygame.draw.rect(self.screen, (0, 0, 0),
@@ -50,7 +50,7 @@ def highlight_from_start_to_cursor(self, mouse_x, mouse_y) -> None:
 
 def highlight_from_cursor_to_end(self, mouse_x, mouse_y) -> None:
     """
-    Right sided highlight - cursor to end
+    Right sided highlight - cursor to end (of cursor line)
     If the cursor is behind the last letter of the line, nothing is highlighted
     """
     cursor_x, cursor_y = self.get_rect_coord_from_mouse(mouse_x, mouse_y)
