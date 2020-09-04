@@ -16,6 +16,18 @@ def get_showable_lines(self) -> int:
         return self.maxLines
 
 
+def get_rect_coord_from_mouse(self, mouse_x, mouse_y):
+    line = self.get_line_index(mouse_y)
+    letter = self.get_letter_index(mouse_x)
+    return self.get_rect_coord_from_indizes(line, letter)
+
+
+def get_rect_coord_from_indizes(self, line, letter) -> (int, int):
+    line_coord = self.editor_offset_Y + (self.line_gap * (line - self.showStartLine))
+    letter_coord = self.xline_start + (letter * self.letter_size_X)
+    return letter_coord, line_coord
+
+
 def render_background_objects(self) -> None:
     render_background_coloring(self)
     render_line_numbers(self)
@@ -53,58 +65,30 @@ def render_line_numbers(self) -> None:
 def render_highlight(self, mouse_x, mouse_y) -> None:
     """
     Renders highlighted area:
-    1. during drag-action (area follows mouse)
-    2. after drag-action (area stays confined to selected area by drag_start / drag_end)
+    1. During drag-action -> area starts at drag_start and follows mouse
+    2. After drag-action -> area stays confined to selected area by drag_start and drag_end
     """
 
     if self.dragged_active:  # some text is highlighted or being highlighted
+        line_start = self.drag_chosen_LineIndex_start
+        letter_start = self.drag_chosen_LetterIndex_start
 
-        if self.dragged_finished: # highlighting operation is done, user "clicked-up" with the left mouse button
-
-            if self.drag_chosen_LineIndex_start == self.drag_chosen_LineIndex_end:  # single-line highlight
-                # area always starts at drag__start and is confined by drag__end in the same line
-                x1, y1 = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start, self.drag_chosen_LetterIndex_start)
-                x2, y2 = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_end, self.drag_chosen_LetterIndex_end)
-                pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
-
-            else: # multi-line highlighting
-                pass # TODO
+        if self.dragged_finished:  # highlighting operation is done, user "clicked-up" with the left mouse button
+            line_end = self.drag_chosen_LineIndex_end
+            letter_end = self.drag_chosen_LetterIndex_end
+            self.highlight_lines(line_start, letter_start, line_end, letter_end)  # Actual highlighting
 
         else:  # active highlighting -> highlighted area follows mouse movements
-            x1, y1 = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start, self.drag_chosen_LetterIndex_start)
-            x2, y2 = self.get_rect_coord_from_mouse(mouse_x, mouse_y)
-            if y1 == y2:  # single-line select
-                pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
-            else:
-                # set the step pos/neg, depending on whether the user highlights down- or upward
-                step = self.lineHeight if y1 < y2 else self.lineHeight * (-1)
-                for line_number, y in enumerate(range(y1, y2 + step, step)):  # for each line
-                    if line_number == 0:  # first line
-                        if y1 < y2:  # starting line < ending line
-                            self.highlight_from_dragstart_to_end()
-                        else:  # starting line > ending line
-                            self.highlight_from_start_to_dragstart()
+            line_end = self.get_line_index(mouse_y)
+            letter_end = self.get_letter_index(mouse_x)
 
-                    elif line_number < len(range(y1, y2 + step, step)) - 1:  # middle line
-                        self.highlight_entire_line(step, line_number)
+            # stop highlight not directly at the mouse, but at first or last letter depending on cursor positioning
+            if letter_end < 0:
+                letter_end = 0
+            elif letter_end > len(self.line_String_array[line_end]):
+                letter_end = len(self.line_String_array[line_end])
 
-                    else: # last line
-                        if y1 < y2:  # starting line < ending line
-                            self.highlight_from_start_to_cursor(mouse_x, mouse_y)
-                        else:  # starting line > ending line
-                            self.highlight_from_cursor_to_end(mouse_x, mouse_y)
-
-
-def get_rect_coord_from_mouse(self, mouse_x, mouse_y):
-    line = self.get_line_index(mouse_y)
-    letter = self.get_letter_index(mouse_x)
-    return self.get_rect_coord_from_indizes(line, letter)
-
-
-def get_rect_coord_from_indizes(self, line, letter) -> (int, int):
-    line_coord = self.editor_offset_Y + (self.line_gap * (line - self.showStartLine))
-    letter_coord = self.xline_start + (letter * self.letter_size_X)
-    return letter_coord, line_coord
+            self.highlight_lines(line_start, letter_start, line_end, letter_end)  # Actual highlighting
 
 
 def render_line_contents(self) -> None:
@@ -129,6 +113,19 @@ def render_line_contents(self) -> None:
         self.yline += self.line_gap
 
 
+def caret_within_texteditor(self) -> bool:
+    """
+    Tests whether the caret's coordinates are within the visible text area.
+    If the caret can possibly be in a line which is not currently displayed after using the mouse wheel for scrolling.
+    Test for 'self.editor_offset_Y <= self.cursor_Y' as the caret can have the exact same Y-coordinate as the offset if
+    the caret is in the first line.
+    """
+    return self.editor_offset_X + self.lineNumberWidth < self.cursor_X < (
+                self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth) \
+           and self.editor_offset_Y <= self.cursor_Y < (
+                       self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight)
+
+
 def render_caret(self) -> None:
     """
     Called every frame. Displays a cursor for x frames, then none for x frames. Only displayed if line in which
@@ -139,18 +136,7 @@ def render_caret(self) -> None:
     self.Trenn_counter += 1
     if self.Trenn_counter > (self.FPS / 5) and self.caret_within_texteditor() and self.dragged_finished:
         self.screen.blit(self.trennzeichen_image, (self.cursor_X, self.cursor_Y))
-        self.Trenn_counter = self.Trenn_counter % ((self.FPS / 5)*2)
-
-
-def caret_within_texteditor(self) -> bool:
-    """
-    Tests whether the caret's coordinates are within the visible text area.
-    If the caret can possibly be in a line which is not currently displayed after using the mouse wheel for scrolling.
-    Test for 'self.editor_offset_Y <= self.cursor_Y' as the caret can have the exact same Y-coordinate as the offset if
-    the caret is in the first line.
-    """
-    return self.editor_offset_X + self.lineNumberWidth < self.cursor_X < (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth) \
-           and self.editor_offset_Y <= self.cursor_Y < (self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight)
+        self.Trenn_counter = self.Trenn_counter % ((self.FPS / 5) * 2)
 
 
 def reset_text_area_to_caret(self) -> None:
@@ -167,6 +153,3 @@ def reset_text_area_to_caret(self) -> None:
         self.rerenderLineNumbers = True
         self.update_caret_position()
     # TODO: set cursor coordinates
-
-
-

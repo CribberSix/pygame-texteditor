@@ -1,60 +1,63 @@
 import pygame
 
 
-def highlight_from_start_to_dragstart(self) -> None:
+def highlight_from_letter_to_end(self, line, letter) -> None:
     """
-    Highlights the line starting at the first letter until the the drag_start point of the highlighting operation.
-    (Differently put: From the drag_start point towards the left until the first letter.)
+    Highlight from a specific letter by index to the end of a line.
     """
-    end_x, end_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start, self.drag_chosen_LetterIndex_start)
-    pygame.draw.rect(self.screen, (0, 0, 0),
-                     pygame.Rect(self.xline_start, end_y, end_x - self.xline_start, self.lineHeight))
+    x1, y1 = self.get_rect_coord_from_indizes(line, letter)
+    x2, y2 = self.get_rect_coord_from_indizes(line, len(self.line_String_array[line]))
+    pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
 
 
-def highlight_from_dragstart_to_end(self) -> None:
+def highlight_from_start_to_letter(self, line, letter) -> None:
     """
-    Highlights the line starting at the drag_start point of the highlighting operation towards the right
-    until the end of the line.
+    Highlight from the beginning of a line to a specific letter by index.
     """
-    start_x, start_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start, self.drag_chosen_LetterIndex_start)
-    end_x, end_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start, len(self.line_String_array[self.drag_chosen_LineIndex_start]))
-    pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(start_x, start_y, end_x - start_x, self.lineHeight))
+    x1, y1 = self.get_rect_coord_from_indizes(line, 0)
+    x2, y2 = self.get_rect_coord_from_indizes(line, letter)
+    pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
 
 
-def highlight_entire_line(self, step, line_number) -> None:
+def highlight_entire_line(self, line) -> None:
     """
-    Full highlight of entire line - first until last letter.
-    Calculates in which line we are and in which direction we move (upward/downward highlighting) based on
-    step (pos/neg) and the iteration of the highlighting algorithm.
+    Full highlight of the entire line - first until last letter.
     """
-    lines = line_number if step > 0 else line_number * (-1)
-    end_x, end_y = self.get_rect_coord_from_indizes(self.drag_chosen_LineIndex_start + lines, len(
-        self.line_String_array[self.drag_chosen_LineIndex_start + lines]))
-    pygame.draw.rect(self.screen, (0, 0, 0),
-                     pygame.Rect(self.xline_start, end_y, end_x - self.xline_start, self.lineHeight))
+    x1, y1 = self.get_rect_coord_from_indizes(line, 0)
+    x2, y2 = self.get_rect_coord_from_indizes(line, len(self.line_String_array[line]))
+    pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
 
 
-def highlight_from_start_to_cursor(self, mouse_x, mouse_y) -> None:
+def highlight_from_letter_to_letter(self, line, letter_start, letter_end) -> None:
     """
-    # Left sided highlight - start to cursor (of cursor line)
-    If the cursor is behind the last letter of the line, the entire line is highlighted
+    Highlights within a single line from letter to letter by indizes.
     """
-    cursor_x, cursor_y = self.get_rect_coord_from_mouse(mouse_x, mouse_y)
-    end_x, end_y = self.get_rect_coord_from_indizes(self.get_line_index(mouse_y),
-                                                    len(self.line_String_array[self.get_line_index(mouse_y)]))
-    # if cursor is behind a line, we can at max highlight until the last character
-    actual_x = end_x if cursor_x > end_x else cursor_x
-    pygame.draw.rect(self.screen, (0, 0, 0),
-                     pygame.Rect(self.xline_start, cursor_y, actual_x - self.xline_start, self.lineHeight))
+    x1, y1 = self.get_rect_coord_from_indizes(line, letter_start)
+    x2, y2 = self.get_rect_coord_from_indizes(line, letter_end)
+    pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
 
 
-def highlight_from_cursor_to_end(self, mouse_x, mouse_y) -> None:
+def highlight_lines(self, line_start, letter_start, line_end, letter_end) -> None:
     """
-    Right sided highlight - cursor to end (of cursor line)
-    If the cursor is behind the last letter of the line, nothing is highlighted
+    Highlights multiple lines based on indizies of starting & ending lines and letters.
     """
-    cursor_x, cursor_y = self.get_rect_coord_from_mouse(mouse_x, mouse_y)
-    end_x, end_y = self.get_rect_coord_from_indizes(self.get_line_index(mouse_y),
-                                                    len(self.line_String_array[self.get_line_index(mouse_y)]))
-    if cursor_x < end_x:
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(cursor_x, cursor_y, end_x - cursor_x, self.lineHeight))
+    if line_start == line_end:  # single-line highlight
+        self.highlight_from_letter_to_letter(line_start, letter_start, letter_end)
+    else:  # fixed multi-line highlighting
+        step = 1 if line_start < line_end else -1
+        for i, line_number in enumerate(range(line_start, line_end + step, step)):  # for each line
+
+            if i == 0:  # first line
+                if line_start < line_end:
+                    self.highlight_from_letter_to_end(line_number, letter_start)  # right leaning highlight
+                else:
+                    self.highlight_from_start_to_letter(line_number, letter_start)  # left leaning highlight
+
+            elif i < len(range(line_start, line_end + step, step)) - 1:  # middle line
+                self.highlight_entire_line(line_number)
+
+            else:  # last line
+                if line_start < line_end:
+                    self.highlight_from_start_to_letter(line_number, letter_end)  # left leaning highlight
+                else:
+                    self.highlight_from_letter_to_end(line_number, letter_end)  # right leaning highlight
