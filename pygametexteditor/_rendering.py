@@ -1,15 +1,10 @@
 import pygame
 
 
-def get_line_number_string(num) -> str:
-    if num < 10:  # 1-digit numbers
-        return " " + str(num)
-    else:  # 2-digit numbers
-        return str(num)
-
-
 def get_showable_lines(self) -> int:
-    # if the text is longer than the possibly-to-display-lines, check which lines we show
+    """
+    Return the number of lines which are shown. Less than maximum if less lines are in the array.
+    """
     if self.showable_line_numbers_in_editor + self.showStartLine < self.maxLines:
         return self.showable_line_numbers_in_editor + self.showStartLine
     else:
@@ -17,23 +12,36 @@ def get_showable_lines(self) -> int:
 
 
 def get_rect_coord_from_mouse(self, mouse_x, mouse_y):
+    """
+    Return x and y pixel-coordinates for the position of the mouse.
+    """
     line = self.get_line_index(mouse_y)
     letter = self.get_letter_index(mouse_x)
     return self.get_rect_coord_from_indizes(line, letter)
 
 
 def get_rect_coord_from_indizes(self, line, letter) -> (int, int):
+    """
+    Return x and y pixel-coordinates for line and letter by index.
+    """
     line_coord = self.editor_offset_Y + (self.line_gap * (line - self.showStartLine))
     letter_coord = self.xline_start + (letter * self.letter_size_X)
     return letter_coord, line_coord
 
 
 def render_background_objects(self) -> None:
+    """
+    Renders background color of the text area.
+    Renders line numbers if self.displayLineNumbers = True
+    """
     render_background_coloring(self)
     render_line_numbers(self)
 
 
 def render_background_coloring(self) -> None:
+    """
+    Renders background color of the text area.
+    """
     bg_left = self.editor_offset_X + self.lineNumberWidth
     bg_top = self.editor_offset_Y
     bg_width = self.textAreaWidth - self.scrollBarWidth - self.lineNumberWidth
@@ -56,10 +64,32 @@ def render_line_numbers(self) -> None:
                              (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
             # line number
             if x < get_showable_lines(self):
-                text = self.courier_font.render(get_line_number_string(x), 1, self.lineNumberColor)
+                text = self.courier_font.render(str(x).zfill(2), 1, self.lineNumberColor)
                 self.screen.blit(text, (self.editor_offset_X + 5, line_numbers_Y + 3))  # center of bg block
 
             line_numbers_Y += self.line_gap
+
+
+def render_line_contents(self) -> None:
+    """
+    Called every frame. Renders all visible lines.
+    Renders highlighted area and actual letters
+    """
+    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(
+        self.line_String_array[self.chosen_LineIndex], 1, self.textColor)
+    self.yline = self.yline_start
+
+    first_line = self.showStartLine
+    if self.showable_line_numbers_in_editor < len(self.line_Text_array):
+        # we got more text than we are able to display
+        last_line = self.showStartLine + self.showable_line_numbers_in_editor
+    else:
+        last_line = self.maxLines
+
+    # render all visible lines once per Frame based on the visual array of surfaces
+    for line in self.line_Text_array[first_line: last_line]:
+        self.screen.blit(line, (self.xline, self.yline))
+        self.yline += self.line_gap
 
 
 def render_highlight(self, mouse_x, mouse_y) -> None:
@@ -89,28 +119,6 @@ def render_highlight(self, mouse_x, mouse_y) -> None:
                 letter_end = len(self.line_String_array[line_end])
 
             self.highlight_lines(line_start, letter_start, line_end, letter_end)  # Actual highlighting
-
-
-def render_line_contents(self) -> None:
-    """
-    Called every frame. Renders all visible lines.
-    Renders highlighted area and actual letters
-    """
-    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(
-        self.line_String_array[self.chosen_LineIndex], 1, self.textColor)
-    self.yline = self.yline_start
-
-    first_line = self.showStartLine
-    if self.showable_line_numbers_in_editor < len(self.line_Text_array):
-        # we got more text than we are able to display
-        last_line = self.showStartLine + self.showable_line_numbers_in_editor
-    else:
-        last_line = self.maxLines
-
-    # render all visible lines once per Frame based on the visual array of surfaces
-    for line in self.line_Text_array[first_line: last_line]:
-        self.screen.blit(line, (self.xline, self.yline))
-        self.yline += self.line_gap
 
 
 def caret_within_texteditor(self) -> bool:
