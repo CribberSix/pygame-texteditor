@@ -92,35 +92,6 @@ def render_line_contents(self) -> None:
         self.yline += self.line_gap
 
 
-def render_highlight(self, mouse_x, mouse_y) -> None:
-    """
-    Renders highlighted area:
-    1. During drag-action -> area starts at drag_start and follows mouse
-    2. After drag-action -> area stays confined to selected area by drag_start and drag_end
-    """
-
-    if self.dragged_active:  # some text is highlighted or being highlighted
-        line_start = self.drag_chosen_LineIndex_start
-        letter_start = self.drag_chosen_LetterIndex_start
-
-        if self.dragged_finished:  # highlighting operation is done, user "clicked-up" with the left mouse button
-            line_end = self.drag_chosen_LineIndex_end
-            letter_end = self.drag_chosen_LetterIndex_end
-            self.highlight_lines(line_start, letter_start, line_end, letter_end)  # Actual highlighting
-
-        else:  # active highlighting -> highlighted area follows mouse movements
-            line_end = self.get_line_index(mouse_y)
-            letter_end = self.get_letter_index(mouse_x)
-
-            # stop highlight not directly at the mouse, but at first or last letter depending on cursor positioning
-            if letter_end < 0:
-                letter_end = 0
-            elif letter_end > len(self.line_String_array[line_end]):
-                letter_end = len(self.line_String_array[line_end])
-
-            self.highlight_lines(line_start, letter_start, line_end, letter_end)  # Actual highlighting
-
-
 def caret_within_texteditor(self) -> bool:
     """
     Tests whether the caret's coordinates are within the visible text area.
