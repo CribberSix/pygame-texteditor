@@ -12,13 +12,17 @@ class TextEditor:
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
         handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, \
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down, \
-        handle_input_with_highlight
+        handle_input_with_highlight, reset_after_highlight
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # caret
     from ._caret import update_caret_position, update_caret_position_by_drag_end, update_caret_position_by_drag_start, \
         set_drag_start_after_last_line, set_drag_end_after_last_line, set_drag_start_by_mouse, \
         set_drag_end_by_mouse, set_drag_end_line_by_mouse, set_drag_end_letter_by_mouse
+
+    # delete operations
+    from ._delete_operations import delete_entire_line, delete_letter_to_end, delete_letter_to_letter, \
+        delete_start_to_letter
 
     # rendering
     from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor, \
@@ -154,7 +158,7 @@ class TextEditor:
         # INPUT - Mouse + Keyboard
         pygame_events = pygame.event.get()
 
-        for event in pygame_events:
+        for event in pygame_events:  # handle QUIT operation
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()

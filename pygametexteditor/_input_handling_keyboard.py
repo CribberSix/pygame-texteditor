@@ -1,35 +1,84 @@
 import pygame
 
 
-def handle_input_with_highlight(self, input_key):
-    if self.dragged_active:
-        self.dragged_active = False
-        print("Dragged_active + key: " + str(input_key))
-        if input_key in (pygame.K_DOWN, pygame.K_UP, pygame.K_RIGHT, pygame.K_LEFT):
+def reset_after_highlight(self):
+    self.dragged_active = False  # deactivate highlight
+    self.dragged_finished = True  # highlight is finished
 
-            # if left/right arrow ->  we jump in front of or at the backend of the area.
-            # TODO:    --------------------> arrow functions already implemented for this?
+    self.update_caret_position()  # update caret position to chosen_Index (Line+Letter)
+    self.last_clickdown_cycle = 0  # reset drag-cycle
+    self.last_clickup_cycle = -1
+
+
+def handle_input_with_highlight(self, input_key):
+    # for readability & maintainability we use shorter variable names
+    line_start = self.drag_chosen_LineIndex_start
+    line_end = self.drag_chosen_LineIndex_end
+    letter_start = self.drag_chosen_LetterIndex_start
+    letter_end = self.drag_chosen_LetterIndex_end
+
+    if self.dragged_finished and self.dragged_active:
+        if input_key in (pygame.K_DOWN, pygame.K_UP, pygame.K_RIGHT, pygame.K_LEFT):
             if input_key == pygame.K_DOWN:
                 pass  # we jump one line down from drag_end (if a line exists above, otherwise to the start of the line)
             elif input_key == pygame.K_UP:
                 pass  # we jump one line up from drag_end (if a line exists below, otherwise to the end of the line)
             elif input_key == pygame.K_RIGHT:
-                pass  # jump to drag_end if drag_start_line < drag_end_line; else drag_start
+                if line_start <= line_end:
+                    # downward highlight or the same line
+                    self.chosen_LineIndex = line_end
+                    self.chosen_LetterIndex = letter_end
+                else:  # upward highlight
+                    self.chosen_LineIndex = line_start
+                    self.chosen_LetterIndex = letter_start
             elif input_key == pygame.K_LEFT:
-                pass  # jump to drag_start if drag_start_line < drag_end_line; else drag_end
-            pass
+                if line_start <= line_end:
+                    # downward highlight or the same line
+                    self.chosen_LineIndex = line_start
+                    self.chosen_LetterIndex = letter_start
+                else:  # upward highlight
+                    self.chosen_LineIndex = line_end
+                    self.chosen_LetterIndex = letter_end
+
+            self.reset_after_highlight()
 
         elif input_key in (pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_CAPSLOCK):
             pass  # nothing happens (?)
+        # Are there other keys which we have to take into account?
 
-        # Are there oter keys which we have to take into account?
+        else:  # normal key -> delete highlighted area and insert key
+            if line_start == line_end:  # delete in single line (no line-rearranging)
+                self.delete_letter_to_letter(line_start, letter_start, letter_end)
+            else:  # multi-line delete
+                step = 1 if line_start < line_end else -1
+                for i, line_number in enumerate(range(line_start, line_end + step, step)):
+                    print("Current: " + str(line_number) + " of: " + str(line_start) + "->" + str(line_end))
+                    if i == 0:  # first line
+                        if step > 0:  # downward highlighted
+                            self.delete_letter_to_end(line_start, letter_start)  # delete right side from start
+                        else:
+                            self.delete_start_to_letter(line_start, letter_start)  # delete left side from start
+                    elif i < len(range(line_start, line_end, 1)):  # middle line
+                        # TODO: WATCH OUT FOR NEW INDIZES AFTER DELETION (!)
+                        self.delete_entire_line(line_start + 1)  # doesn't it always stay at line_start +1?
+                    else:  # last line
+                        if step > 0:
+                            self.delete_start_to_letter(line_start + 1, letter_end)  # delete left side
+                        else:
+                            self.delete_letter_to_end(line_start + 1, letter_end)  # delete right side
 
-        else:
-            # TODO: if we type a letter / return / backspace / del we delete the marked area.
-            # def delete_letter_to_end
-            # def delete_start_to_letter
-            # def delete_entire_line
-            pass
+                # join rest of start/end lines into new line
+                l1 = self.line_String_array[line_start]
+                l2 = self.line_String_array[line_start + 1]  # which was formerly line_end
+                self.line_String_array[line_start] = l1 + l2
+                self.delete_entire_line(line_start + 1)  # after copying contents, we need to delete
+
+                # set caret and rerender line_numbers
+                self.chosen_LineIndex = line_start if line_start < line_end else line_end
+                self.chosen_LetterIndex = letter_start if line_start < line_end else letter_end
+                self.rerenderLineNumbers = True
+                self.reset_after_highlight()
+                self.deleteCounter = 1  # TODO: BUG -> another character gets deleted by mistake
 
 
 def handle_keyboard_input(self, pygame_events):
@@ -38,73 +87,62 @@ def handle_keyboard_input(self, pygame_events):
 
     # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
     pressed_keys = pygame.key.get_pressed()
-    if pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
-        if self.dragged_finished:
-            self.handle_input_with_highlight(pygame.K_DELETE)
-        else:
-            self.handle_keyboard_delete()  # handle input
-            self.reset_text_area_to_caret()  # reset caret if necessary
-    if pressed_keys[pygame.K_BACKSPACE] and self.deleteCounter == 0:
-        if self.dragged_finished:
-            self.handle_input_with_highlight(pygame.K_BACKSPACE)
-        else:
-            self.handle_keyboard_backspace()  # handle input
-            self.reset_text_area_to_caret()  # reset caret if necessary
+    if self.dragged_finished and self.dragged_active and \
+            (pressed_keys[pygame.K_DELETE] or pressed_keys[pygame.K_BACKSPACE]):
+        self.handle_input_with_highlight(pygame.K_DELETE)  # delete and backspacke have the same functionality
+
+    elif pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
+        self.handle_keyboard_delete()  # handle input
+        self.reset_text_area_to_caret()  # reset caret if necessary
+    elif pressed_keys[pygame.K_BACKSPACE] and self.deleteCounter == 0:
+        self.handle_keyboard_backspace()  # handle input
+        self.reset_text_area_to_caret()  # reset caret if necessary
 
     # ___ OTHER KEYS ___ #
     for event in pygame_events:
-
-        if event.type == pygame.QUIT:
-            pygame.quit()  # Fixes the bug that pygame takes up space in the RAM when game is just closed by sys.exit()
-            exit()
-        elif event.type == pygame.KEYDOWN:
-            self.handle_input_with_highlight(event.key)
-            self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessaryss
-
-            key = pygame.key.name(event.key)  # Returns string id of pressed key.
-
-            if len(key) == 1:  # This covers all letters and numbers not on numpad.
-                self.chosen_LetterIndex = int(self.chosen_LetterIndex)
-                self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex][
-                                                                :self.chosen_LetterIndex] + event.unicode + \
-                                                                self.line_String_array[self.chosen_LineIndex][
-                                                                self.chosen_LetterIndex:]
-                self.cursor_X += self.letter_size_X
-                self.chosen_LetterIndex += 1
-
-            # ___ SPECIAL KEYS ___
-            elif event.key == pygame.K_TAB:  # ___TABULATOR
-                self.handle_keyboard_tab()
-            elif event.key == pygame.K_SPACE:  # ___SPACEBAR
-                self.handle_keyboard_space()
-            elif event.key == pygame.K_RETURN:  # ___RETURN
-                self.handle_keyboard_return()
-            elif event.key == pygame.K_UP:  # ___ARROW_UP
-                self.handle_keyboard_arrow_up()
-            elif event.key == pygame.K_DOWN:  # ___ARROW_DOWN
-                self.handle_keyboard_arrow_down()
-            elif event.key == pygame.K_RIGHT:  # ___ARROW_RIGHT
-                self.handle_keyboard_arrow_right()
-            elif event.key == pygame.K_LEFT:  # ___ARROW_LEFT
-                self.handle_keyboard_arrow_left()
+        if event.type == pygame.KEYDOWN:
+            if self.dragged_finished and self.dragged_active:
+                self.handle_input_with_highlight(event.key)
             else:
-                if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_DELETE,
-                                     pygame.K_BACKSPACE, pygame.K_CAPSLOCK]:
-                    # we handled the separately, Capslock is apparently implicitly handled when using it
+                self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessaryss
 
-                    # disabled for smooth development:
-                    # raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
-                    print("No key implementation: " + str(pygame.key.name(event.key)))
+                key = pygame.key.name(event.key)  # Returns string id of pressed key.
+
+                if len(key) == 1:  # This covers all letters and numbers not on numpad.
+                    self.chosen_LetterIndex = int(self.chosen_LetterIndex)
+                    self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex][
+                                                                    :self.chosen_LetterIndex] + event.unicode + \
+                                                                    self.line_String_array[self.chosen_LineIndex][
+                                                                    self.chosen_LetterIndex:]
+                    self.cursor_X += self.letter_size_X
+                    self.chosen_LetterIndex += 1
+
+                # ___ SPECIAL KEYS ___
+                elif event.key == pygame.K_TAB:  # ___TABULATOR
+                    self.handle_keyboard_tab()
+                elif event.key == pygame.K_SPACE:  # ___SPACEBAR
+                    self.handle_keyboard_space()
+                elif event.key == pygame.K_RETURN:  # ___RETURN
+                    self.handle_keyboard_return()
+                elif event.key == pygame.K_UP:  # ___ARROW_UP
+                    self.handle_keyboard_arrow_up()
+                elif event.key == pygame.K_DOWN:  # ___ARROW_DOWN
+                    self.handle_keyboard_arrow_down()
+                elif event.key == pygame.K_RIGHT:  # ___ARROW_RIGHT
+                    self.handle_keyboard_arrow_right()
+                elif event.key == pygame.K_LEFT:  # ___ARROW_LEFT
+                    self.handle_keyboard_arrow_left()
+                else:
+                    if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_DELETE,
+                                         pygame.K_BACKSPACE, pygame.K_CAPSLOCK]:
+                        # we handled the separately, Capslock is apparently implicitly handled when using it
+
+                        # disabled for smooth development:
+                        # raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
+                        print("No key implementation: " + str(pygame.key.name(event.key)))
 
 
 def handle_keyboard_backspace(self):
-
-    self.chosen_LetterIndex = int(self.chosen_LetterIndex)  # TODO: Why would it not be of type integer?
-    # TODO: Deletion-speed is a bit off
-    # TODO: Differentiate between a one-time-press and a longer pressing
-    # --> wait x amount of time before deleting the second character if the is being pressed.
-    # --> I already do that (self.deleteCounter), but how can I improve it?
-
     if self.chosen_LetterIndex == 0 and self.chosen_LineIndex == 0:
         # First position and in the first Line -> nothing happens
         pass
