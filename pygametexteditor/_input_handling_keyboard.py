@@ -1,13 +1,35 @@
 import pygame
 
 
-def handle_input_with_highlight(self):
+def handle_input_with_highlight(self, input_key):
     if self.dragged_active:
         self.dragged_active = False
-        # TODO: if we type a letter / return / backspace / del we delete the marked area.
-        # TODO: if we type an arrow we jump in front of or at the backend of the area.
-        # print("Something with mouse dragging should be happening here.")
-        pass
+        print("Dragged_active + key: " + str(input_key))
+        if input_key in (pygame.K_DOWN, pygame.K_UP, pygame.K_RIGHT, pygame.K_LEFT):
+
+            # if left/right arrow ->  we jump in front of or at the backend of the area.
+            # TODO:    --------------------> arrow functions already implemented for this?
+            if input_key == pygame.K_DOWN:
+                pass  # we jump one line down from drag_end (if a line exists above, otherwise to the start of the line)
+            elif input_key == pygame.K_UP:
+                pass  # we jump one line up from drag_end (if a line exists below, otherwise to the end of the line)
+            elif input_key == pygame.K_RIGHT:
+                pass  # jump to drag_end if drag_start_line < drag_end_line; else drag_start
+            elif input_key == pygame.K_LEFT:
+                pass  # jump to drag_start if drag_start_line < drag_end_line; else drag_end
+            pass
+
+        elif input_key in (pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_CAPSLOCK):
+            pass  # nothing happens (?)
+
+        # Are there oter keys which we have to take into account?
+
+        else:
+            # TODO: if we type a letter / return / backspace / del we delete the marked area.
+            # def delete_letter_to_end
+            # def delete_start_to_letter
+            # def delete_entire_line
+            pass
 
 
 def handle_keyboard_input(self, pygame_events):
@@ -17,13 +39,17 @@ def handle_keyboard_input(self, pygame_events):
     # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
     pressed_keys = pygame.key.get_pressed()
     if pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
-        self.handle_input_with_highlight()
-        self.handle_keyboard_delete()  # handle input
-        self.reset_text_area_to_caret()  # reset caret if necessary
+        if self.dragged_finished:
+            self.handle_input_with_highlight(pygame.K_DELETE)
+        else:
+            self.handle_keyboard_delete()  # handle input
+            self.reset_text_area_to_caret()  # reset caret if necessary
     if pressed_keys[pygame.K_BACKSPACE] and self.deleteCounter == 0:
-        self.handle_input_with_highlight()
-        self.handle_keyboard_backspace()  # handle input
-        self.reset_text_area_to_caret()  # reset caret if necessary
+        if self.dragged_finished:
+            self.handle_input_with_highlight(pygame.K_BACKSPACE)
+        else:
+            self.handle_keyboard_backspace()  # handle input
+            self.reset_text_area_to_caret()  # reset caret if necessary
 
     # ___ OTHER KEYS ___ #
     for event in pygame_events:
@@ -32,7 +58,7 @@ def handle_keyboard_input(self, pygame_events):
             pygame.quit()  # Fixes the bug that pygame takes up space in the RAM when game is just closed by sys.exit()
             exit()
         elif event.type == pygame.KEYDOWN:
-            self.handle_input_with_highlight()
+            self.handle_input_with_highlight(event.key)
             self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessaryss
 
             key = pygame.key.name(event.key)  # Returns string id of pressed key.
