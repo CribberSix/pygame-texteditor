@@ -1,13 +1,11 @@
-from ._line_getters import get_line_index, get_letter_index, get_number_of_letters_in_line_by_mouse, \
-    get_number_of_letters_in_line_by_index
 
 
 def set_drag_start_by_mouse(self, mouse_x, mouse_y) -> None:
     # get line
-    self.drag_chosen_LineIndex_start = get_line_index(self, mouse_y)
+    self.drag_chosen_LineIndex_start = self.get_line_index(mouse_y)
 
     # end of line
-    if get_number_of_letters_in_line_by_mouse(self, mouse_y) < get_letter_index(self, mouse_x):
+    if self.get_number_of_letters_in_line_by_mouse(mouse_y) < self.get_letter_index(mouse_x):
         self.drag_chosen_LetterIndex_start = len(self.line_String_array[self.drag_chosen_LineIndex_start])
 
     else:  # within existing line
@@ -16,11 +14,29 @@ def set_drag_start_by_mouse(self, mouse_x, mouse_y) -> None:
 
 
 def set_drag_end_by_mouse(self, mouse_x, mouse_y) -> None:
-    # get line
-    self.drag_chosen_LineIndex_end = get_line_index(self, mouse_y)
+    """
+    Compact method to set both line and letter of drag_end based on mouse coordinates.
+    """
+    # set line
+    self.set_drag_end_line_by_mouse(mouse_y)
+    # set letter
+    self.set_drag_end_letter_by_mouse(mouse_x)
 
+
+def set_drag_end_line_by_mouse(self, mouse_y):
+    """
+    Sets self.drag_chosen_LineIndex_end by mouse_y.
+    """
+    self.drag_chosen_LineIndex_end = self.get_line_index(mouse_y)
+
+
+def set_drag_end_letter_by_mouse(self, mouse_x):
+    """
+    Sets self.drag_chosen_LetterIndex_end by mouse_x.
+    Dependent on self.drag_chosen_LineIndex_end.
+    """
     # end of line
-    if get_number_of_letters_in_line_by_mouse(self, mouse_y) < get_letter_index(self, mouse_x):
+    if self.get_number_of_letters_in_line_by_index(self.drag_chosen_LineIndex_end) < self.get_letter_index(mouse_x):
         self.drag_chosen_LetterIndex_end = len(self.line_String_array[self.drag_chosen_LineIndex_end])
 
     else:  # within existing line

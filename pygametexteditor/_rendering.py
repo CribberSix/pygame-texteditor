@@ -1,15 +1,6 @@
 import pygame
 
 
-def get_showable_lines(self) -> int:
-    """
-    Return the number of lines which are shown. Less than maximum if less lines are in the array.
-    """
-    if self.showable_line_numbers_in_editor + self.showStartLine < self.maxLines:
-        return self.showable_line_numbers_in_editor + self.showStartLine
-    else:
-        return self.maxLines
-
 
 def get_rect_coord_from_mouse(self, mouse_x, mouse_y):
     """
@@ -63,7 +54,7 @@ def render_line_numbers(self) -> None:
             pygame.draw.rect(self.screen, self.lineNumberBackgroundColor,
                              (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
             # line number
-            if x < get_showable_lines(self):
+            if x < self.get_showable_lines():
                 text = self.courier_font.render(str(x).zfill(2), 1, self.lineNumberColor)
                 self.screen.blit(text, (self.editor_offset_X + 5, line_numbers_Y + 3))  # center of bg block
 

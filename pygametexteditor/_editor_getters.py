@@ -25,3 +25,20 @@ def get_number_of_letters_in_line_by_mouse(self, mouse_y):
 def get_number_of_letters_in_line_by_index(self, index):
     return len(self.line_String_array[index])
 
+
+def get_showable_lines(self) -> int:
+    """
+    Return the number of lines which are shown. Less than maximum if less lines are in the array.
+    """
+    if self.showable_line_numbers_in_editor + self.showStartLine < self.maxLines:
+        return self.showable_line_numbers_in_editor + self.showStartLine
+    else:
+        return self.maxLines
+
+
+def line_is_visible(self, line):
+    """
+    Calculate whether the line is being shown in the editor
+    """
+    return self.showStartLine <= line < self.showStartLine + self.showable_line_numbers_in_editor
+

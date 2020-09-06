@@ -17,8 +17,8 @@ class TextEditor:
 
     # caret
     from ._caret import update_caret_position, update_caret_position_by_drag_end, update_caret_position_by_drag_start, \
-        set_drag_start_after_last_line, set_drag_end_after_last_line, \
-        set_drag_start_by_mouse, set_drag_end_by_mouse
+        set_drag_start_after_last_line, set_drag_end_after_last_line, set_drag_start_by_mouse, \
+        set_drag_end_by_mouse, set_drag_end_line_by_mouse, set_drag_end_letter_by_mouse
 
     # rendering
     from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor, \
@@ -32,7 +32,8 @@ class TextEditor:
 
     from ._usage import get_text_as_array, get_text_as_string
 
-    from ._line_getters import get_line_index, get_letter_index
+    from ._editor_getters import get_line_index, get_letter_index, line_is_visible, get_showable_lines, \
+        get_number_of_letters_in_line_by_mouse, get_number_of_letters_in_line_by_index
 
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, line_numbers=True):
 
