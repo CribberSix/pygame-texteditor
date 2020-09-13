@@ -263,16 +263,15 @@ def handle_keyboard_arrow_down(self):
         self.cursor_Y += self.line_gap
 
         if len(self.line_String_array[self.chosen_LineIndex]) < self.chosen_LetterIndex:
-            # reset letter-index
+            # reset letter-index to the end
             self.chosen_LetterIndex = len(self.line_String_array[self.chosen_LineIndex])
             self.cursor_X = (len(self.line_String_array[self.chosen_LineIndex]) * self.letter_size_X) + self.xline_start
 
         if self.chosen_LineIndex > (self.showStartLine + self.showable_line_numbers_in_editor - 1):
             # handle scrolling functionality if necessary (moved below shown lines)
-            self.showStartLine += 1
-            self.cursor_Y -= self.line_gap
-            self.rerenderLineNumbers = True
-    if self.chosen_LineIndex == (self.maxLines - 1):  # im in the last line and want to jump to its end.
+            self.scrollDown()
+
+    elif self.chosen_LineIndex == (self.maxLines - 1):  # im in the last line and want to jump to its end.
         self.chosen_LetterIndex = len(self.line_String_array[self.chosen_LineIndex])  # end of the line
         self.cursor_X = self.xline_start + (
                 len(self.line_String_array[self.chosen_LineIndex]) * self.letter_size_X)
@@ -280,21 +279,22 @@ def handle_keyboard_arrow_down(self):
 
 def handle_keyboard_arrow_up(self):
     if self.chosen_LineIndex == 0:
-        # first line, cannot go upwards
-        pass
+        # first line, cannot go upwards, so we go to the first position
+        self.chosen_LetterIndex = 0
+        self.cursor_X = self.xline_start
+
     elif self.chosen_LineIndex > 0:
         # subsequent lines, upwards movement possible
         self.chosen_LineIndex -= 1
         self.cursor_Y -= self.line_gap
-        if len(self.line_String_array[
-                   self.chosen_LineIndex]) < self.chosen_LetterIndex:  # have to reset (toward the left)
+
+        if len(self.line_String_array[self.chosen_LineIndex]) < self.chosen_LetterIndex:
+            # less letters in this line, reset toward the end of the line (to the left)
             self.chosen_LetterIndex = len(self.line_String_array[self.chosen_LineIndex])
-            self.cursor_X = (len(
-                self.line_String_array[self.chosen_LineIndex])) * self.letter_size_X + self.xline_start
-        if self.chosen_LineIndex < self.showStartLine:
-            self.showStartLine -= 1
-            self.cursor_Y += self.line_gap
-            self.rerenderLineNumbers = True
+            self.cursor_X = (len(self.line_String_array[self.chosen_LineIndex])) * self.letter_size_X + self.xline_start
+
+        if self.chosen_LineIndex < self.showStartLine:  # scroll up one line
+            self.scrollUp()
 
 
 def handle_keyboard_tab(self):
