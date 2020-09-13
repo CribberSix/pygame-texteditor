@@ -26,7 +26,8 @@ class TextEditor:
 
     # rendering
     from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor, \
-        reset_text_area_to_caret, get_rect_coord_from_indizes, get_rect_coord_from_mouse
+        reset_text_area_to_caret, get_rect_coord_from_indizes, get_rect_coord_from_mouse, \
+        render_line_contents_syntax_coloring
     from ._rendering_highlighting import render_highlight, highlight_lines, highlight_entire_line, \
         highlight_from_letter_to_letter, highlight_from_start_to_letter, highlight_from_letter_to_end
 
@@ -53,6 +54,7 @@ class TextEditor:
         current_dir = os.path.dirname(__file__)
         self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
         self.trennzeichen_image = pygame.image.load(os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
+        #self.syntax_coloring = False  # TODO
 
         # LINES
         self.Trenn_counter = 0
@@ -124,6 +126,7 @@ class TextEditor:
         self.codingBackgroundColor = (40, 44, 52)  # (40, 44, 52)
         self.codingScrollBarBackgroundColor = (40, 44, 52)  # (40, 44, 52)
         self.textColor = (171, 178, 191)  # (171, 178, 191)
+        self.textColor_comments = (0, 0, 255)
         self.lineNumberColor = (73, 81, 97)  # (73, 81, 97)
         self.lineNumberBackgroundColor = (40, 44, 52)  # (0, 0, 0) # (0, 51, 102)
 
@@ -172,7 +175,8 @@ class TextEditor:
 
         # RENDERING 3 - Lines
         self.render_highlight(mouse_x, mouse_y)
-        self.render_line_contents()
+        #self.render_line_contents()
+        self.render_line_contents_syntax_coloring()
         self.render_caret()
 
         self.render_scrollbar_vertical()
