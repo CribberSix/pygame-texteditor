@@ -26,10 +26,10 @@ class TextEditor:
 
     # rendering
     from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor, \
-        reset_text_area_to_caret, get_rect_coord_from_indizes, get_rect_coord_from_mouse, \
-        render_line_contents_syntax_coloring
+        reset_text_area_to_caret, get_rect_coord_from_indizes, get_rect_coord_from_mouse
     from ._rendering_highlighting import render_highlight, highlight_lines, highlight_entire_line, \
         highlight_from_letter_to_letter, highlight_from_start_to_letter, highlight_from_letter_to_end
+    from ._render_syntax_coloring import render_line_contents_syntax_coloring
 
     from ._editor_getters import get_line_index, get_letter_index, line_is_visible, get_showable_lines, \
         get_number_of_letters_in_line_by_mouse, get_number_of_letters_in_line_by_index
