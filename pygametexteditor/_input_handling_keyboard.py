@@ -1,14 +1,6 @@
 import pygame
 
 
-def reset_after_highlight(self):
-    self.dragged_active = False  # deactivate highlight
-    self.dragged_finished = True  # highlight is finished
-    self.update_caret_position()  # update caret position to chosen_Index (Line+Letter)
-    self.last_clickdown_cycle = 0  # reset drag-cycle
-    self.last_clickup_cycle = -1
-
-
 def handle_input_with_highlight(self, input_event):
     # for readability & maintainability we use shorter variable names
     line_start = self.drag_chosen_LineIndex_start

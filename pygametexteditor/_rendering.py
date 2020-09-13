@@ -1,7 +1,6 @@
 import pygame
 
 
-
 def get_rect_coord_from_mouse(self, mouse_x, mouse_y):
     """
     Return x and y pixel-coordinates for the position of the mouse.
@@ -63,21 +62,26 @@ def render_line_numbers(self) -> None:
 
 def render_line_contents(self) -> None:
     """
-    Called every frame. Renders all visible lines.
+    Called every frame. Updates the content of the surface of the line in which the cursor is.
+    Renders all lines.
     Renders highlighted area and actual letters
     """
-    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(
-        self.line_String_array[self.chosen_LineIndex], 1, self.textColor)
-    self.yline = self.yline_start
+    # we only re-render the surface in which's line the cursor is currently -> better performance.
+    # Limit render string, so we don't blit outside of the textarea to the right
+    render_length = int((self.textAreaWidth - self.lineNumberWidth - self.scrollBarWidth)/self.letter_size_X)
+    render_string = self.line_String_array[self.chosen_LineIndex][:render_length]
+    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(render_string, 1, self.textColor)
 
+    # render all visible lines once per Frame based on the visual array of surfaces.
+    # Preparation of the rendering:
+    self.yline = self.yline_start
     first_line = self.showStartLine
     if self.showable_line_numbers_in_editor < len(self.line_Text_array):
         # we got more text than we are able to display
         last_line = self.showStartLine + self.showable_line_numbers_in_editor
     else:
         last_line = self.maxLines
-
-    # render all visible lines once per Frame based on the visual array of surfaces
+    # Actual line rendering
     for line in self.line_Text_array[first_line: last_line]:
         self.screen.blit(line, (self.xline, self.yline))
         self.yline += self.line_gap

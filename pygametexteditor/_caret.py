@@ -87,10 +87,3 @@ def update_caret_position(self) -> None:
 
     self.cursor_Y = self.editor_offset_Y + (self.chosen_LineIndex * self.line_gap) - \
                     (self.showStartLine * self.lineHeight)
-
-
-#def update_caret_position_by_mouse_coordinates(self, mouse_x, mouse_y) -> None:
-#    """
-#    # Updates cursor_X and cursor_Y positions based on current position of the mouse
-#    """
-#    pass  # TODO: caret positioning during mouse drag

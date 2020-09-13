@@ -12,7 +12,7 @@ class TextEditor:
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
         handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, insert_unicode, \
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down, \
-        handle_input_with_highlight, reset_after_highlight
+        handle_input_with_highlight
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # caret
@@ -33,7 +33,7 @@ class TextEditor:
     from ._editor_getters import get_line_index, get_letter_index, line_is_visible, get_showable_lines, \
         get_number_of_letters_in_line_by_mouse, get_number_of_letters_in_line_by_index
 
-    from ._other import jump_to_start, jump_to_end
+    from ._other import jump_to_start, jump_to_end, reset_after_highlight
 
     # files for customization of the editor:
     from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
@@ -49,6 +49,7 @@ class TextEditor:
         self.textAreaWidth = text_area_width
         self.textAreaHeight = text_area_height
         self.letter_size_Y = 15
+        self.letter_size_X = 9
         current_dir = os.path.dirname(__file__)
         self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
         self.trennzeichen_image = pygame.image.load(os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
@@ -88,12 +89,11 @@ class TextEditor:
             self.lineNumberWidth = 27  # line number background width and also offset for text!
         else:
             self.lineNumberWidth = 0
-        self.letter_size_X = 9
-        self.chosen_LineIndex = 0
-        self.chosen_LetterIndex = 0
         self.line_numbers_Y = self.editor_offset_Y
 
         # TEXT COORDINATES
+        self.chosen_LineIndex = 0
+        self.chosen_LetterIndex = 0
         self.yline_start = self.editor_offset_Y + 3
         self.yline = self.editor_offset_Y
         self.xline_start_offset = 28
