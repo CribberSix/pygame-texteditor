@@ -4,13 +4,12 @@ import pygame
 def reset_after_highlight(self):
     self.dragged_active = False  # deactivate highlight
     self.dragged_finished = True  # highlight is finished
-
     self.update_caret_position()  # update caret position to chosen_Index (Line+Letter)
     self.last_clickdown_cycle = 0  # reset drag-cycle
     self.last_clickup_cycle = -1
 
 
-def handle_input_with_highlight(self, input_key):
+def handle_input_with_highlight(self, input_event):
     # for readability & maintainability we use shorter variable names
     line_start = self.drag_chosen_LineIndex_start
     line_end = self.drag_chosen_LineIndex_end
@@ -18,48 +17,38 @@ def handle_input_with_highlight(self, input_key):
     letter_end = self.drag_chosen_LetterIndex_end
 
     if self.dragged_finished and self.dragged_active:
-        if input_key in (pygame.K_DOWN, pygame.K_UP, pygame.K_RIGHT, pygame.K_LEFT):
-            if input_key == pygame.K_DOWN:
-                pass  # we jump one line down from drag_end (if a line exists above, otherwise to the start of the line)
-            elif input_key == pygame.K_UP:
-                pass  # we jump one line up from drag_end (if a line exists below, otherwise to the end of the line)
-            elif input_key == pygame.K_RIGHT:
-                if line_start <= line_end:
-                    # downward highlight or the same line
-                    self.chosen_LineIndex = line_end
-                    self.chosen_LetterIndex = letter_end
-                else:  # upward highlight
-                    self.chosen_LineIndex = line_start
-                    self.chosen_LetterIndex = letter_start
-            elif input_key == pygame.K_LEFT:
-                if line_start <= line_end:
-                    # downward highlight or the same line
-                    self.chosen_LineIndex = line_start
-                    self.chosen_LetterIndex = letter_start
-                else:  # upward highlight
-                    self.chosen_LineIndex = line_end
-                    self.chosen_LetterIndex = letter_end
-
+        if input_event.key in (pygame.K_DOWN, pygame.K_UP, pygame.K_RIGHT, pygame.K_LEFT):
+            # deselect highlight
+            if input_event.key == pygame.K_DOWN:
+                self.jump_to_end(line_start, line_end, letter_start, letter_end)
+            elif input_event.key == pygame.K_UP:
+                self.jump_to_start(line_start, line_end, letter_start, letter_end)
+            elif input_event.key == pygame.K_RIGHT:
+                self.jump_to_end(line_start, line_end, letter_start, letter_end)
+            elif input_event.key == pygame.K_LEFT:
+                self.jump_to_start(line_start, line_end, letter_start, letter_end)
             self.reset_after_highlight()
 
-        elif input_key in (pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_CAPSLOCK):
+        elif input_event.key in (pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_CAPSLOCK):
             pass  # nothing happens (?)
         # Are there other keys which we have to take into account?
 
-        else:  # normal key -> delete highlighted area and insert key
+        else:  # other key -> delete highlighted area and insert key (if not esc/delete)
             if line_start == line_end:  # delete in single line (no line-rearranging)
-                self.delete_letter_to_letter(line_start, letter_start, letter_end)
+                if letter_start < letter_end:  # highlight from the left
+                    self.delete_letter_to_letter(line_start, letter_start, letter_end)
+                else:  # highlight from the right
+                    self.delete_letter_to_letter(line_start, letter_end, letter_start)
+
             else:  # multi-line delete
                 step = 1 if line_start < line_end else -1
                 for i, line_number in enumerate(range(line_start, line_end + step, step)):
-                    print("Current: " + str(line_number) + " of: " + str(line_start) + "->" + str(line_end))
                     if i == 0:  # first line
                         if step > 0:  # downward highlighted
                             self.delete_letter_to_end(line_start, letter_start)  # delete right side from start
                         else:
                             self.delete_start_to_letter(line_start, letter_start)  # delete left side from start
                     elif i < len(range(line_start, line_end, 1)):  # middle line
-                        # TODO: WATCH OUT FOR NEW INDIZES AFTER DELETION (!)
                         self.delete_entire_line(line_start + 1)  # doesn't it always stay at line_start +1?
                     else:  # last line
                         if step > 0:
@@ -67,29 +56,32 @@ def handle_input_with_highlight(self, input_key):
                         else:
                             self.delete_letter_to_end(line_start + 1, letter_end)  # delete right side
 
-                # join rest of start/end lines into new line
+                # join rest of start/end lines into new line in multiline delete
                 l1 = self.line_String_array[line_start]
                 l2 = self.line_String_array[line_start + 1]  # which was formerly line_end
                 self.line_String_array[line_start] = l1 + l2
                 self.delete_entire_line(line_start + 1)  # after copying contents, we need to delete
 
-                # set caret and rerender line_numbers
-                self.chosen_LineIndex = line_start if line_start < line_end else line_end
-                self.chosen_LetterIndex = letter_start if line_start < line_end else letter_end
-                self.rerenderLineNumbers = True
-                self.reset_after_highlight()
-                self.deleteCounter = 1  # TODO: BUG -> another character gets deleted by mistake
+            # set caret and rerender line_numbers
+            self.chosen_LineIndex = line_start if line_start <= line_end else line_end  # start for single_line
+            self.chosen_LetterIndex = letter_start if line_start <= line_end else letter_end
+            self.rerenderLineNumbers = True
+            self.reset_after_highlight()
+            self.deleteCounter = 1
+            if input_event.key not in (pygame.K_DELETE, pygame.K_BACKSPACE):   # insert key unless delete/backaspace
+                self.insert_unicode(input_event.unicode)
 
 
 def handle_keyboard_input(self, pygame_events):
     self.deleteCounter += 1
-    self.deleteCounter = self.deleteCounter % 4  # If FPS = 60; then we can delete 15 characters each second
+    self.deleteCounter = self.deleteCounter % 6  # If FPS = 60; then we can delete 10 characters each second
 
     # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
     pressed_keys = pygame.key.get_pressed()
     if self.dragged_finished and self.dragged_active and \
             (pressed_keys[pygame.K_DELETE] or pressed_keys[pygame.K_BACKSPACE]):
-        self.handle_input_with_highlight(pygame.K_DELETE)  # delete and backspacke have the same functionality
+        delete_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DELETE)  # create the event
+        self.handle_input_with_highlight(delete_event)  # delete and backspace have the same functionality
 
     elif pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
         self.handle_keyboard_delete()  # handle input
@@ -102,21 +94,12 @@ def handle_keyboard_input(self, pygame_events):
     for event in pygame_events:
         if event.type == pygame.KEYDOWN:
             if self.dragged_finished and self.dragged_active:
-                self.handle_input_with_highlight(event.key)
+                self.handle_input_with_highlight(event)
             else:
                 self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessaryss
-
-                key = pygame.key.name(event.key)  # Returns string id of pressed key.
-
-                if len(key) == 1:  # This covers all letters and numbers not on numpad.
+                if len(pygame.key.name(event.key)) == 1:  # This covers all letters and numbers (not on numpad).
                     self.chosen_LetterIndex = int(self.chosen_LetterIndex)
-                    self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex][
-                                                                    :self.chosen_LetterIndex] + event.unicode + \
-                                                                    self.line_String_array[self.chosen_LineIndex][
-                                                                    self.chosen_LetterIndex:]
-                    self.cursor_X += self.letter_size_X
-                    self.chosen_LetterIndex += 1
-
+                    self.insert_unicode(event.unicode)
                 # ___ SPECIAL KEYS ___
                 elif event.key == pygame.K_TAB:  # ___TABULATOR
                     self.handle_keyboard_tab()
@@ -135,11 +118,22 @@ def handle_keyboard_input(self, pygame_events):
                 else:
                     if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_DELETE,
                                          pygame.K_BACKSPACE, pygame.K_CAPSLOCK]:
-                        # we handled the separately, Capslock is apparently implicitly handled when using it
+                        # We handled the keys separately
+                        # Capslock is apparently implicitly handled when using it in combination
 
                         # disabled for smooth development:
                         # raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
                         print("No key implementation: " + str(pygame.key.name(event.key)))
+
+
+def insert_unicode(self, unicode):
+    #self.chosen_LetterIndex = int(self.chosen_LetterIndex)
+    self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex][
+                                                    :self.chosen_LetterIndex] + unicode + \
+                                                    self.line_String_array[self.chosen_LineIndex][
+                                                    self.chosen_LetterIndex:]
+    self.cursor_X += self.letter_size_X
+    self.chosen_LetterIndex += 1
 
 
 def handle_keyboard_backspace(self):
@@ -261,6 +255,7 @@ def handle_keyboard_arrow_right(self):
             self.cursor_Y -= self.line_gap
             self.rerenderLineNumbers = True
 
+
 def handle_keyboard_arrow_down(self):
     if self.chosen_LineIndex < (self.maxLines - 1):
         # Not in the last line, downward movement possible
@@ -348,3 +343,4 @@ def handle_keyboard_return(self):
         self.showStartLine += 1
     else:  # not in last row, put courser one line down without changing the shown line numbers
         self.cursor_Y += self.line_gap
+

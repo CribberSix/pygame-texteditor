@@ -59,7 +59,6 @@ def highlight_lines(self, line_start, letter_start, line_end, letter_end) -> Non
                     self.highlight_from_letter_to_end(line_number, letter_end)  # right leaning highlight
 
 
-
 def highlight_from_letter_to_end(self, line, letter) -> None:
     """
     Highlight from a specific letter by index to the end of a line.

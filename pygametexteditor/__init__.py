@@ -10,7 +10,7 @@ class TextEditor:
 
     # input handling KEYBOARD + MOUSE
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
-        handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, \
+        handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, insert_unicode, \
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down, \
         handle_input_with_highlight, reset_after_highlight
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
@@ -30,17 +30,17 @@ class TextEditor:
     from ._rendering_highlighting import render_highlight, highlight_lines, highlight_entire_line, \
         highlight_from_letter_to_letter, highlight_from_start_to_letter, highlight_from_letter_to_end
 
-    # files for customization of the editor:
-    from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
-        set_color_lineNumber, set_color_lineNumberBackground
-
-    from ._usage import get_text_as_array, get_text_as_string
-
     from ._editor_getters import get_line_index, get_letter_index, line_is_visible, get_showable_lines, \
         get_number_of_letters_in_line_by_mouse, get_number_of_letters_in_line_by_index
 
-    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, line_numbers=True):
+    from ._other import jump_to_start, jump_to_end
 
+    # files for customization of the editor:
+    from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
+        set_color_lineNumber, set_color_lineNumberBackground
+    from ._usage import get_text_as_array, get_text_as_string
+
+    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, line_numbers=True):
         self.screen = screen
 
         # VISUALS
