@@ -1,6 +1,7 @@
 import pygame
 
-def render_scrollbar_vertical(self):
+
+def render_scrollbar_vertical(self) -> None:
     # _________RENDER_THE_SCROLLBAR_________#
     # Scrollbar Background
     pygame.draw.rect(self.screen, self.codingScrollBarBackgroundColor, (
@@ -42,7 +43,7 @@ def render_scrollbar_vertical(self):
                                                          (self.showStartLine * 1.0) / (self.maxLines)))))
 
 
-def scrollButton(self, x, y, action):
+def scrollButton(self, x, y, action) -> None:
     # Description: Creates a button for rendering/blitting and offers action
 
     mouse = pygame.mouse.get_pos()
@@ -57,16 +58,17 @@ def scrollButton(self, x, y, action):
         elif action == "ScrollDown" and self.showStartLine + self.showable_line_numbers_in_editor < self.maxLines:
             scrollDown(self)
         self.rerenderLineNumbers = True
-    return None  # Button is not clicked.
+    else:
+        pass    # Button is not clicked.
 
 
-def scrollUp(self):
+def scrollUp(self) -> None:
     self.showStartLine -= 1
     self.cursor_Y += self.line_gap
     self.rerenderLineNumbers = True  # TODO: enhance performance - only rerender if necessary
 
 
-def scrollDown(self):
+def scrollDown(self) -> None:
     self.showStartLine += 1
     self.cursor_Y -= self.line_gap
     self.rerenderLineNumbers = True  # TODO: enhance performance - only rerender if necessary

@@ -1,13 +1,18 @@
+from typing import List, Dict, Tuple
 
-def get_syntax_coloring_dicts(self) -> []:
+
+def get_syntax_coloring_dicts(self) -> List[List[Dict]]:
     """
-    Rendering line contests with syntax coloring.
+    Converts the text in the editor based on the line_String_array into a list of lists of dicts.
+    Every line is one sublist which contains different dicts based on it's contents.
+
     We create a dict for every part of the line and include which letters are contained, the type and the color.
     So far implemented:
     - comments
-    - quoted Strings
-    TODO:
+    - single-quoted Strings
     - hashtags in quotes
+    TODO:
+    - double-quoted Strings
     - keywords
     - standalone - numbers
     """
@@ -17,10 +22,10 @@ def get_syntax_coloring_dicts(self) -> []:
     rendering_list = []
     for line in self.line_String_array:
 
-        # SPLIT AT FIRST COMMENT OUTSIDE OF QUOTES
+        # Split at first comment outside of a string
         text, comments = self.search_for_comment(line)
 
-        # SPLIT ON QUOTES
+        # Split on quotes into quoted and unquoted strings
         list_of_dicts = self.search_for_quotes(text)
 
         # TODO: SPLIT ON ALL OTHER THINGS, THEN CHECK FOR KEYWORDS AND STANDALONE NUMBERS!
@@ -32,7 +37,12 @@ def get_syntax_coloring_dicts(self) -> []:
     return rendering_list
 
 
-def get_single_color_dicts(self) -> []:
+def get_single_color_dicts(self) -> List[List[Dict]]:
+    """
+    Converts the text in the editor based on the line_String_array into a list of lists of dicts.
+    Every line is one sublist.
+    Since only one color is being applied, we create a list with one dict per line.
+    """
     rendering_list = []
     for line in self.line_String_array:
         # appends a single-item list
@@ -41,10 +51,10 @@ def get_single_color_dicts(self) -> []:
     return rendering_list
 
 
-def find_nth(haystack, needle, n):
+def find_nth(haystack, needle, n) -> int:
     """
     Finds the nth occurance of a string (=needle) in a string (=haystack) and returns its index.
-    Returns -1 if none could be found
+    Returns -1 if none could be found.
     """
     start = haystack.find(needle)
     while start >= 0 and n > 1:
@@ -53,7 +63,7 @@ def find_nth(haystack, needle, n):
     return start
 
 
-def search_for_quotes(self, sstring) -> [{}]:  # TODO: ADAPT FOR DOUBLE QUOTES
+def search_for_quotes(self, sstring) -> List[Dict]:  # TODO: ADAPT FOR DOUBLE QUOTES
     """
     Searches for tuples of quotes in the supplied searchable string.
     Returns a list of dicts describing the contents by the attributes:
@@ -83,13 +93,12 @@ def search_for_quotes(self, sstring) -> [{}]:  # TODO: ADAPT FOR DOUBLE QUOTES
     return dicts
 
 
-def search_for_comment(self, text) -> ('',''):
+def search_for_comment(self, text) -> Tuple[str, str]:
     """
     Searches for the first comment outside of quotes.
     Returns the text and the quotes as a tuple
     :returns (text, comments)
     """
-
     quotes = self.get_quote_tuples(text)
     hashtags = self.get_hashtags(text)
     sep_at = -1
@@ -109,7 +118,14 @@ def search_for_comment(self, text) -> ('',''):
         return text, ""
 
 
-def get_quote_tuples(self, text) -> []:
+def get_quote_tuples(self, text) -> List[Tuple[int, int]]:
+    """
+    Searches for the quoted text within a text.
+    Returns a list of tuples symbolizing the start and end indizies of the quoted area.
+    If there is no closing quote for a starting quote, the index for the end is set to the last character of the text.
+    Returns an empty list of no quotes are found.
+    :returns [(start, end)]
+    """
     quotes = []
     for j in range(1, 1001, 2):
         start = find_nth(text, "'", j)
@@ -126,7 +142,11 @@ def get_quote_tuples(self, text) -> []:
     return quotes
 
 
-def get_hashtags(self, text) -> []:
+def get_hashtags(self, text) -> List[int]:
+    """
+    Searches a text for hashtags and returns a list of the found hashtag's indizes.
+    Returns an empty list if none are found.
+    """
     comments = []
     for j in range(1, 1000, 1):
         index = find_nth(text, "#", j)

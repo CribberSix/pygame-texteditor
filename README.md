@@ -59,6 +59,9 @@ while True:
 
 The editor offers the function ```get_text()``` to retrieve the entire text including empty lines as a String from the editor. Lines are separated by the new line character ```\n```.
 
+
+## Customization
+
 ##### Color-scheme customization
 
 The editor offers various methods to customize the color-scheme. All methods take three parameters for the traditional rgb code (red, green, blue). Below are the methods and the default color values.
@@ -69,6 +72,15 @@ The editor offers various methods to customize the color-scheme. All methods tak
 - ```set_color_lineNumber``` (73, 81, 97)
 - ```set_color_lineNumberBackground``` (40, 44, 52) 
 
-##### Other customization
+##### Line Numbers 
 - Enable line numbers: ```set_line_numbers(True)```
-- Enbable Python syntax highlighting: ```set_syntax_coloring(True)``` 
+
+##### Syntax Highlighting
+
+The editor comes with syntax highlighting for Python code. 
+Different colors are set for quoted characters (single and double-quotes), comments, numbers and operators. 
+
+Different color-schemes (dark/bright) and more customization options will be implemented in the future. 
+
+- Enbable syntax highlighting: ```set_syntax_coloring(True)``` 
+

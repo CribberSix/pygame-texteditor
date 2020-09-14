@@ -1,7 +1,7 @@
 import pygame
 
 
-def handle_input_with_highlight(self, input_event):
+def handle_input_with_highlight(self, input_event) -> None:
     # for readability & maintainability we use shorter variable names
     line_start = self.drag_chosen_LineIndex_start
     line_end = self.drag_chosen_LineIndex_end
@@ -64,7 +64,7 @@ def handle_input_with_highlight(self, input_event):
                 self.insert_unicode(input_event.unicode)
 
 
-def handle_keyboard_input(self, pygame_events):
+def handle_keyboard_input(self, pygame_events) -> None:
     self.deleteCounter += 1
     self.deleteCounter = self.deleteCounter % 6  # If FPS = 60; then we can delete 10 characters each second
 
@@ -118,7 +118,7 @@ def handle_keyboard_input(self, pygame_events):
                         print("No key implementation: " + str(pygame.key.name(event.key)))
 
 
-def insert_unicode(self, unicode):
+def insert_unicode(self, unicode) -> None:
     #self.chosen_LetterIndex = int(self.chosen_LetterIndex)
     self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex][
                                                     :self.chosen_LetterIndex] + unicode + \
@@ -128,7 +128,7 @@ def insert_unicode(self, unicode):
     self.chosen_LetterIndex += 1
 
 
-def handle_keyboard_backspace(self):
+def handle_keyboard_backspace(self) -> None:
     if self.chosen_LetterIndex == 0 and self.chosen_LineIndex == 0:
         # First position and in the first Line -> nothing happens
         pass
@@ -179,7 +179,7 @@ def handle_keyboard_backspace(self):
                          \nLine:" + str(self.chosen_LineIndex) + "\nLetter: " + str(self.chosen_LetterIndex))
 
 
-def handle_keyboard_delete(self):
+def handle_keyboard_delete(self) -> None:
 
     if self.chosen_LetterIndex < (len(self.line_String_array[self.chosen_LineIndex])):
         # start of the line or mid-line (Cursor stays on point), cut one letter out
@@ -209,7 +209,7 @@ def handle_keyboard_delete(self):
                          \nLine:" + str(self.chosen_LineIndex) + "\nLetter: " + str(self.chosen_LetterIndex))
 
 
-def handle_keyboard_arrow_left(self):
+def handle_keyboard_arrow_left(self) -> None:
     if self.chosen_LetterIndex > 0:  # mid-line or end of line
         self.chosen_LetterIndex -= 1
         self.cursor_X -= self.letter_size_X
@@ -228,7 +228,7 @@ def handle_keyboard_arrow_left(self):
             self.rerenderLineNumbers = True
 
 
-def handle_keyboard_arrow_right(self):
+def handle_keyboard_arrow_right(self) -> None:
     if self.chosen_LetterIndex < (len(self.line_String_array[self.chosen_LineIndex])):
         # mid-line or start of the line
         self.chosen_LetterIndex += 1
@@ -248,7 +248,7 @@ def handle_keyboard_arrow_right(self):
             self.rerenderLineNumbers = True
 
 
-def handle_keyboard_arrow_down(self):
+def handle_keyboard_arrow_down(self) -> None:
     if self.chosen_LineIndex < (self.maxLines - 1):
         # Not in the last line, downward movement possible
         self.chosen_LineIndex += 1
@@ -269,7 +269,7 @@ def handle_keyboard_arrow_down(self):
                 len(self.line_String_array[self.chosen_LineIndex]) * self.letter_size_X)
 
 
-def handle_keyboard_arrow_up(self):
+def handle_keyboard_arrow_up(self) -> None:
     if self.chosen_LineIndex == 0:
         # first line, cannot go upwards, so we go to the first position
         self.chosen_LetterIndex = 0
@@ -289,12 +289,12 @@ def handle_keyboard_arrow_up(self):
             self.scrollUp()
 
 
-def handle_keyboard_tab(self):
+def handle_keyboard_tab(self) -> None:
     for x in range(0, 4):  # insert 4 spaces
         self.handle_keyboard_space()
 
 
-def handle_keyboard_space(self):
+def handle_keyboard_space(self) -> None:
     # insert 1 space
     self.line_String_array[self.chosen_LineIndex] = \
         self.line_String_array[self.chosen_LineIndex][:self.chosen_LetterIndex] + " " + \
@@ -304,7 +304,7 @@ def handle_keyboard_space(self):
     self.chosen_LetterIndex += 1
 
 
-def handle_keyboard_return(self):
+def handle_keyboard_return(self) -> None:
     # Get "transfer letters" behind cursor up to the end of the line to next line
     # If the cursor is at the end of the line, transferString is an empty String ("")
     transferString = self.line_String_array[self.chosen_LineIndex][self.chosen_LetterIndex:]

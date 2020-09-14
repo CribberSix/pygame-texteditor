@@ -1,5 +1,5 @@
 
-def jump_to_start(self, line_start, line_end, letter_start, letter_end):
+def jump_to_start(self, line_start, line_end, letter_start, letter_end) -> None:
     """
     Chosen LineIndex set to start of highlighted area
     """
@@ -12,7 +12,7 @@ def jump_to_start(self, line_start, line_end, letter_start, letter_end):
         self.chosen_LetterIndex = letter_end
 
 
-def jump_to_end(self, line_start, line_end, letter_start, letter_end):
+def jump_to_end(self, line_start, line_end, letter_start, letter_end) -> None:
     """
     Chosen LineIndex set to end of highlighted area
     """
@@ -25,7 +25,7 @@ def jump_to_end(self, line_start, line_end, letter_start, letter_end):
         self.chosen_LetterIndex = letter_start
 
 
-def reset_after_highlight(self):
+def reset_after_highlight(self)  -> None:
     """
     Reset caret, clickdown_cycles and dragged booleans.
     """

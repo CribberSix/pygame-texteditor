@@ -1,7 +1,7 @@
 import pygame
 
 
-def get_rect_coord_from_mouse(self, mouse_x, mouse_y):
+def get_rect_coord_from_mouse(self, mouse_x, mouse_y) -> (int, int):
     """
     Return x and y pixel-coordinates for the position of the mouse.
     """

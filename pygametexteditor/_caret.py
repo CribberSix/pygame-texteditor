@@ -23,14 +23,14 @@ def set_drag_end_by_mouse(self, mouse_x, mouse_y) -> None:
     self.set_drag_end_letter_by_mouse(mouse_x)
 
 
-def set_drag_end_line_by_mouse(self, mouse_y):
+def set_drag_end_line_by_mouse(self, mouse_y) -> None:
     """
     Sets self.drag_chosen_LineIndex_end by mouse_y.
     """
     self.drag_chosen_LineIndex_end = self.get_line_index(mouse_y)
 
 
-def set_drag_end_letter_by_mouse(self, mouse_x):
+def set_drag_end_letter_by_mouse(self, mouse_x) -> None:
     """
     Sets self.drag_chosen_LetterIndex_end by mouse_x.
     Dependent on self.drag_chosen_LineIndex_end.

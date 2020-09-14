@@ -2,7 +2,19 @@ import pygame
 from ._scrollbar_vertical import scrollDown, scrollUp
 
 
-def handle_mouse_input(self, pygame_events, mouse_x, mouse_y):
+def handle_mouse_input(self, pygame_events, mouse_x, mouse_y) -> None:
+    """
+    Handles mouse input based on mouse events (Buttons down/up + coordinates).
+    Handles drag-and-drop-select as well as single-click.
+    The code only differentiates the single-click only as so far, that
+        the DOWN-event is on the same position as the UP-event.
+
+    Implemented so far:
+    - left-click (selecting as drag-and-drop or single-click)
+    - mouse-wheel (scrolling)
+    TODO:
+    - right-cliuck
+    """
 
     # ___ MOUSE ___ #
     for event in pygame_events:
@@ -81,11 +93,18 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y):
             self.last_clickup_cycle = -1
 
 
-def mouse_within_texteditor(self, mouse_x, mouse_y):
+def mouse_within_texteditor(self, mouse_x, mouse_y) -> bool:
+    """
+    Returns True if the given coordinates are within the text-editor area of the pygame window, otherwise False.
+    """
     return self.editor_offset_X + self.lineNumberWidth < mouse_x < (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth) \
            and self.editor_offset_Y < mouse_y < (self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight)
 
 
 def mouse_within_existing_lines(self, mouse_y):
+    """
+    Returns True if the given Y-coordinate is within the height of the text-editor's existing lines.
+    Returns False if the coordinate is below existing lines or outside of the editor.
+    """
     return self.editor_offset_Y < mouse_y < self.editor_offset_Y + (self.lineHeight * self.maxLines)
 

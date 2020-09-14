@@ -17,12 +17,12 @@ def get_letter_index(self, mouse_x) -> int:
     return int((mouse_x - self.xline_start) / self.letter_size_X)
 
 
-def get_number_of_letters_in_line_by_mouse(self, mouse_y):
+def get_number_of_letters_in_line_by_mouse(self, mouse_y) -> int:
     line_index = get_line_index(self, mouse_y)
     return get_number_of_letters_in_line_by_index(self, line_index)
 
 
-def get_number_of_letters_in_line_by_index(self, index):
+def get_number_of_letters_in_line_by_index(self, index) -> int:
     return len(self.line_String_array[index])
 
 
@@ -36,7 +36,7 @@ def get_showable_lines(self) -> int:
         return self.maxLines
 
 
-def line_is_visible(self, line):
+def line_is_visible(self, line) -> bool:
     """
     Calculate whether the line is being shown in the editor
     """
