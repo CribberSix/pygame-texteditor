@@ -53,7 +53,7 @@ def find_nth(haystack, needle, n):
     return start
 
 
-def search_for_quotes(self, sstring) -> [{}]:
+def search_for_quotes(self, sstring) -> [{}]:  # TODO: ADAPT FOR DOUBLE QUOTES
     """
     Searches for tuples of quotes in the supplied searchable string.
     Returns a list of dicts describing the contents by the attributes:
@@ -61,20 +61,13 @@ def search_for_quotes(self, sstring) -> [{}]:
     - type (normal / quoted)
     - color (text-coloring)
     """
-
-    quotes = []
-    for j in range(1, 101, 2):
-        start = find_nth(sstring, "'", j)
-        end = find_nth(sstring, "'", j + 1)
-        if start == -1:  # no more to be found, stop searching
-            break
-        quotes.append((start, end))
+    quotes = self.get_quote_tuples(sstring)
 
     dicts = []
     offset = 0
     for tp in quotes:
         tp0 = tp[0] - offset  # adjusted start
-        tp1 = len(sstring) if tp[1] == -1 else tp[1] - offset + 1  # adjusted end
+        tp1 = tp[1] - offset + 1  # adjusted end
 
         # append unqoted-area
         dicts.append({'chars': sstring[0:tp0], 'type': 'normal', 'color': self.textColor})
@@ -84,7 +77,7 @@ def search_for_quotes(self, sstring) -> [{}]:
         sstring = sstring[tp1:]  # reduce searchable_string to the rest
         offset += tp1  # add to existing offset
 
-    if len(sstring) > 0:  # append rest as normal if there is some left over
+    if len(sstring) > 0:  # append rest as un-quoted area -> if there is some left over
         dicts.append({'chars': sstring, 'type': 'normal', 'color': self.textColor})
 
     return dicts

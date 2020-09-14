@@ -15,10 +15,11 @@ offset_X = 50  # offset from the left border of the pygame window
 offset_Y = 50  # offset from the top border of the pygame window
 textAreaHeight = 500
 textAreaWidth = 800
-lineNumbers = True
 
 # instantiation
-TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, lineNumbers)
+TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
+TX.set_line_numbers(True)
+TX.set_syntax_coloring(True)
 
 # TextEditor in the pygame-loop
 while True:

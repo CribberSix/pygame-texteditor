@@ -40,10 +40,10 @@ class TextEditor:
 
     # files for customization of the editor:
     from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
-        set_color_lineNumber, set_color_lineNumberBackground
+        set_color_lineNumber, set_color_lineNumberBackground, set_syntax_coloring, set_line_numbers
     from ._usage import get_text_as_array, get_text_as_string
 
-    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, line_numbers=True):
+    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen):
         self.screen = screen
 
         # VISUALS
@@ -56,7 +56,7 @@ class TextEditor:
         current_dir = os.path.dirname(__file__)
         self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
         self.trennzeichen_image = pygame.image.load(os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
-        self.syntax_coloring = True
+        self.syntax_coloring = False
 
         # LINES
         self.Trenn_counter = 0
@@ -88,7 +88,7 @@ class TextEditor:
         self.scrollBarHeight = (self.textAreaHeight-self.scrollBarButtonHeight*2 -2) * self.showable_line_numbers_in_editor / len(self.line_String_array)
 
         # LINE NUMBERS
-        self.displayLineNumbers = line_numbers
+        self.displayLineNumbers = False
         if self.displayLineNumbers:
             self.lineNumberWidth = 27  # line number background width and also offset for text!
         else:

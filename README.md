@@ -19,9 +19,6 @@ The texteditor takes 5 obligatory parameters and 1 optional parameter.
 - ```textAreaHeight``` : integer (height of texteditor area)
 - ```screen``` : pygame display surface (on which the texteditor is to be displayed)
 
-##### Optional parameters
-- ```lineNumbers``` : boolean (display line numbers if true, default = true)
-
 
 ###### Minimal pygame setup
 
@@ -45,10 +42,9 @@ offset_X = 50  # offset from the left border of the pygame window
 offset_Y = 50  # offset from the top border of the pygame window
 textAreaHeight = 500
 textAreaWidth = 800
-lineNumbers = True
 
 # instantiation
-TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, lineNumbers)
+TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
 
 # TextEditor in the pygame-loop
 while True:
@@ -72,3 +68,7 @@ The editor offers various methods to customize the color-scheme. All methods tak
 - ```set_color_text``` (171, 178, 191)
 - ```set_color_lineNumber``` (73, 81, 97)
 - ```set_color_lineNumberBackground``` (40, 44, 52) 
+
+##### Other customization
+- Enable line numbers: ```set_line_numbers(True)```
+- Enbable syntax highlighting: ```set_syntax_coloring(True)``` (Python)
