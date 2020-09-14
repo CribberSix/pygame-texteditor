@@ -19,15 +19,6 @@ def get_rect_coord_from_indizes(self, line, letter) -> (int, int):
     return letter_coord, line_coord
 
 
-def render_background_objects(self) -> None:
-    """
-    Renders background color of the text area.
-    Renders line numbers if self.displayLineNumbers = True
-    """
-    render_background_coloring(self)
-    render_line_numbers(self)
-
-
 def render_background_coloring(self) -> None:
     """
     Renders background color of the text area.
@@ -60,8 +51,30 @@ def render_line_numbers(self) -> None:
             line_numbers_Y += self.line_gap
 
 
+def render_line_contents_by_dicts(self, dicts) -> None:
+    # Preparation of the rendering:
+    self.yline = self.yline_start
+    first_line = self.showStartLine
+    if self.showable_line_numbers_in_editor < len(self.line_Text_array):
+        # we got more text than we are able to display
+        last_line = self.showStartLine + self.showable_line_numbers_in_editor
+    else:
+        last_line = self.maxLines
+
+    # Actual line rendering based on dict-keys
+    for line_list in dicts[first_line: last_line]:
+        xcoord = self.xline_start
+        for dict in line_list:
+            surface = self.courier_font.render(dict['chars'], 1, dict['color'])  # create surface
+            self.screen.blit(surface, (xcoord, self.yline))  # blit surface
+            xcoord = xcoord + (len(dict['chars']) * self.letter_size_X)  # next line-part prep
+
+        self.yline += self.line_gap  # next line prep
+
+
 def render_line_contents(self) -> None:
     """
+    --------------DEPRECATED--------------
     Called every frame. Updates the content of the surface of the line in which the cursor is.
     TODO: This can lead to an error if the line is changed before we can update the surface. Sometimes letters only
     appear after we click back into it!
@@ -73,9 +86,18 @@ def render_line_contents(self) -> None:
     # we only re-render the surface in which's line the cursor is currently -> better performance.
     # Limit render string of the current line, (TODO: shouldn't this be done to  all lines or is current one enough?)
     # so we don't blit outside of the textarea to the right
-    render_length = int((self.textAreaWidth - self.lineNumberWidth - self.scrollBarWidth)/self.letter_size_X)
-    render_string = self.line_String_array[self.chosen_LineIndex][:render_length]
-    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(render_string, 1, self.textColor)
+
+    # Update only line of cursor
+    # render_length = int((self.textAreaWidth - self.lineNumberWidth - self.scrollBarWidth)/self.letter_size_X)
+    # render_string = self.line_String_array[self.chosen_LineIndex][:render_length]
+    # self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(render_string, 1, self.textColor)
+
+    # Update all lines
+    render_length = int((self.textAreaWidth - self.lineNumberWidth - self.scrollBarWidth) / self.letter_size_X)
+    self.line_Text_array = []
+    for line in self.line_Text_array:
+        render_string = line[:render_length]
+        self.line_Text_array.append(self.courier_font.render(render_string, 1, self.textColor))
 
     # render all visible lines once per Frame based on the visual array of surfaces.
     # Preparation of the rendering:

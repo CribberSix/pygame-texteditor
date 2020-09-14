@@ -24,12 +24,14 @@ class TextEditor:
     from ._delete_operations import delete_entire_line, delete_letter_to_end, delete_letter_to_letter, \
         delete_start_to_letter
 
-    # rendering
-    from ._rendering import render_background_objects, render_line_contents, render_caret, caret_within_texteditor, \
+    # rendering (basic, highlighting, syntax coloring)
+    from ._rendering import render_line_contents, render_line_contents_by_dicts, \
+        render_caret, caret_within_texteditor, render_background_coloring, render_line_numbers, \
         reset_text_area_to_caret, get_rect_coord_from_indizes, get_rect_coord_from_mouse
     from ._rendering_highlighting import render_highlight, highlight_lines, highlight_entire_line, \
         highlight_from_letter_to_letter, highlight_from_start_to_letter, highlight_from_letter_to_end
-    from ._render_syntax_coloring import render_line_contents_syntax_coloring
+    from ._render_syntax_coloring import get_syntax_coloring_dicts, get_single_color_dicts, \
+        search_for_comment, search_for_quotes, get_quote_tuples, get_hashtags
 
     from ._editor_getters import get_line_index, get_letter_index, line_is_visible, get_showable_lines, \
         get_number_of_letters_in_line_by_mouse, get_number_of_letters_in_line_by_index
@@ -54,7 +56,7 @@ class TextEditor:
         current_dir = os.path.dirname(__file__)
         self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
         self.trennzeichen_image = pygame.image.load(os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
-        #self.syntax_coloring = False  # TODO
+        self.syntax_coloring = True
 
         # LINES
         self.Trenn_counter = 0
@@ -126,7 +128,8 @@ class TextEditor:
         self.codingBackgroundColor = (40, 44, 52)  # (40, 44, 52)
         self.codingScrollBarBackgroundColor = (40, 44, 52)  # (40, 44, 52)
         self.textColor = (171, 178, 191)  # (171, 178, 191)
-        self.textColor_comments = (0, 0, 255)
+        self.textColor_comments = (255, 0, 0)
+        self.textColor_quotes = (0, 255, 0)
         self.lineNumberColor = (73, 81, 97)  # (73, 81, 97)
         self.lineNumberBackgroundColor = (40, 44, 52)  # (0, 0, 0) # (0, 51, 102)
 
@@ -171,12 +174,18 @@ class TextEditor:
         self.handle_mouse_input(pygame_events, mouse_x, mouse_y)
 
         # RENDERING 1 - Background objects
-        self.render_background_objects()
+        self.render_background_coloring()
+        self.render_line_numbers()
 
-        # RENDERING 3 - Lines
+        # RENDERING 2 - Lines
         self.render_highlight(mouse_x, mouse_y)
-        #self.render_line_contents()
-        self.render_line_contents_syntax_coloring()
+
+        if self.syntax_coloring:  # syntax highlighting for code
+            list_of_dicts = self.get_syntax_coloring_dicts()
+        else:  # single-color text
+            list_of_dicts = self.get_single_color_dicts()
+        self.render_line_contents_by_dicts(list_of_dicts)
+
         self.render_caret()
 
         self.render_scrollbar_vertical()
