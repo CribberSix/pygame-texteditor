@@ -71,4 +71,4 @@ The editor offers various methods to customize the color-scheme. All methods tak
 
 ##### Other customization
 - Enable line numbers: ```set_line_numbers(True)```
-- Enbable syntax highlighting: ```set_syntax_coloring(True)``` (Python)
+- Enbable Python syntax highlighting: ```set_syntax_coloring(True)``` 
