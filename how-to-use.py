@@ -26,4 +26,4 @@ while True:
     # the method display_editor() has to be called once per loop to capture input accurately
     TX.display_editor()
 
-    pygame.display.flip() # updates pygame window
+    pygame.display.flip()  # updates pygame window

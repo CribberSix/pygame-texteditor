@@ -71,6 +71,7 @@ def search_for_quotes(self, sstring) -> List[Dict]:  # TODO: ADAPT FOR DOUBLE QU
     - type (normal / quoted)
     - color (text-coloring)
     """
+
     quotes = self.get_quote_tuples(sstring)
 
     dicts = []
@@ -120,25 +121,26 @@ def search_for_comment(self, text) -> Tuple[str, str]:
 
 def get_quote_tuples(self, text) -> List[Tuple[int, int]]:
     """
-    Searches for the quoted text within a text.
+    Searches for the quoted text within a text, single and double quotes.
     Returns a list of tuples symbolizing the start and end indizies of the quoted area.
     If there is no closing quote for a starting quote, the index for the end is set to the last character of the text.
     Returns an empty list of no quotes are found.
-    :returns [(start, end)]
+    :returns [(start_index, end_index)]
     """
     quotes = []
-    for j in range(1, 1001, 2):
-        start = find_nth(text, "'", j)
-        if start == -1:  # no more to be found, stop searching
-            break
-
-        end = find_nth(text, "'", j + 1)
-        if end == -1:  # open quotes towards the end
-            quotes.append((start, len(text)))
-            break  # no more quotes in line
-        else:  # closing quotes were found
-            quotes.append((start, end))
-
+    cont = 0
+    for i, char in enumerate(text):
+        if i > cont:  # only take a look at those necessary
+            # SINGLE and DOUBLE Quote
+            if char in ("'", '"'):
+                start = i
+                end = text.find(char, i+1)  # find closing quote after starting quote
+                if end == -1:  # no closing quote found
+                    quotes.append((start, len(text)))
+                    break
+                else:
+                    quotes.append((start, end))
+                    cont = end  # continue after end
     return quotes
 
 
