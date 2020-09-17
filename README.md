@@ -1,4 +1,4 @@
-# A WYSIWYG-texteditor based on pygame
+# A WYSIWYG-texteditor based on pygame for pygame
 
 ## Project status
 
@@ -59,13 +59,15 @@ while True:
 
 The editor offers the function ```get_text()``` to retrieve the entire text including empty lines as a String from the editor. Lines are separated by the new line character ```\n```.
 
-
 ## Customization
+
+##### Line Numbers 
+- Enable line numbers: ```set_line_numbers(True)```
 
 ##### Color-scheme customization
 
 The editor uses customizable yaml files to customize the color-scheme. The yaml files are in the folder ```pygametexteditor/elements/colorstyles/```. 
-All keys must have a value in the yaml file. Values are rgb Strings in the following format: ```(255, 255, 255)```.
+All keys must be present in the file and must have a value. Acceptable values are rgb strings in the following format: ```(255, 255, 255)``` or ```255, 255, 255```.
 
 Editor colors by keys:
 - ```codingBackgroundColor```
@@ -74,15 +76,11 @@ Editor colors by keys:
 - ```lineNumberBackgroundColor```
 - ```textColor```
 
-The following colors are used when syntax highlighting is turned on. 
+The following keys are used when syntax highlighting is turned on:
 - ```textColor_comments```
 - ```textColor_quotes```
 - ```textColor_operators```
 - ```textColor_keywords```
-
-
-##### Line Numbers 
-- Enable line numbers: ```set_line_numbers(True)```
 
 ##### Syntax Highlighting
 
