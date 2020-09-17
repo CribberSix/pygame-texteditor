@@ -1,41 +1,5 @@
 from typing import List, Dict, Tuple
-
-
-def get_syntax_coloring_dicts(self) -> List[List[Dict]]:
-    """
-    Converts the text in the editor based on the line_String_array into a list of lists of dicts.
-    Every line is one sublist which contains different dicts based on it's contents.
-
-    We create a dict for every part of the line and include which letters are contained, the type and the color.
-    So far implemented:
-    - comments
-    - single-quoted Strings
-    - hashtags in quotes
-    TODO:
-    - double-quoted Strings
-    - keywords
-    - standalone - numbers
-    """
-
-    # Identify render-blocks
-    # For now, we recreate all of it every frame
-    rendering_list = []
-    for line in self.line_String_array:
-
-        # Split at first comment outside of a string
-        text, comments = self.search_for_comment(line)
-
-        # Split on quotes into quoted and unquoted strings
-        list_of_dicts = self.search_for_quotes(text)
-
-        # TODO: SPLIT ON ALL OTHER THINGS, THEN CHECK FOR KEYWORDS AND STANDALONE NUMBERS!
-
-        if comments != "":  # comment-string not empty, insert as last block.
-            list_of_dicts.append({'chars': comments, 'type': 'comment', 'color': self.textColor_comments})
-
-        rendering_list.append(list_of_dicts)
-    return rendering_list
-
+import re as re
 
 def get_single_color_dicts(self) -> List[List[Dict]]:
     """
@@ -49,6 +13,82 @@ def get_single_color_dicts(self) -> List[List[Dict]]:
         rendering_list.append([{'chars': line, 'type': 'normal', 'color': self.textColor}])
 
     return rendering_list
+
+
+def get_syntax_coloring_dicts(self) -> List[List[Dict]]:
+    """
+    Converts the text in the editor based on the line_String_array into a list of lists of dicts.
+    Every line is one sublist which contains different dicts based on it's contents.
+
+    We create a dict for every part of the line and include which letters are contained, the type and the color.
+    So far implemented:
+    - comments
+    - single- and double-quoted Strings
+    - hashtags in quotes
+    - keywords
+    - boolean operators
+
+    """
+
+    # Identify render-blocks
+    # For now, we recreate all of it every frame
+    rendering_list = []
+    for line in self.line_String_array:
+
+        # Split at first comment outside of a string
+        normaltext, comments = self.search_for_comment(line)
+
+        # Split on quotes into quoted and unquoted strings
+        list_of_dicts = self.search_for_quotes(normaltext)
+
+        # TODO: SPLIT ON ALL OTHER THINGS, THEN CHECK FOR KEYWORDS AND STANDALONE NUMBERS!
+        result_list_of_dicts = []
+        for dict in list_of_dicts:
+            if dict['type'] == 'todo':  # unquoted areas, might need to be formatted
+                res = self.tokenization(dict['chars'])
+                # create dicts from res
+                # insert into list_of_dicts
+                result_list_of_dicts = result_list_of_dicts + res
+            else:  # append quoted areas -> no further formatting required.
+                result_list_of_dicts.append(dict)
+
+        if comments != "":  # comment-string not empty, insert as last block.
+            result_list_of_dicts.append({'chars': comments, 'type': 'comment', 'color': self.textColor_comments})
+
+        rendering_list.append(result_list_of_dicts)
+    return rendering_list
+
+
+def tokenization(self, text) -> [str]:
+    keywords = ['for', 'in', 'if', 'else', 'elif', 'from', 'import', 'return', 'def']
+    operators = ['and', 'or', '<=', '>=', '<', '>', '==']  # boolean operators
+
+    words = []
+    res_regex = []
+    tokens = [">=", "<=", "<", ">", "==", r"\s", r"\b"]
+    token_indizies = [m.start() for m in re.finditer(r"|".join(tokens), text)]
+
+    if len(token_indizies) == 0:  # list empty, no words
+        res_regex.append({'chars': text, 'type': 'normal', 'color': self.textColor})
+    else:
+        if len(text[:token_indizies[0]]) > 0:  # append spaces before the first word if there are any
+            res_regex.append({'chars': text[:token_indizies[0]], 'type': 'normal', 'color': self.textColor})
+
+        for i, start in enumerate(token_indizies):
+            try:  # end of a word is either the start of the next word
+                end = token_indizies[i+1]
+            except IndexError:  # or the EOL
+                end = len(text)
+
+            chars = text[start:end]
+            if chars in keywords:
+                res_regex.append({'chars': chars, 'type': 'keyword', 'color': self.textColor_keywords})
+            elif chars in operators:
+                res_regex.append({'chars': chars, 'type': 'operator', 'color': self.textColor_operators})
+            else:
+                res_regex.append({'chars': chars, 'type': 'text', 'color': self.textColor})
+
+    return res_regex
 
 
 def find_nth(haystack, needle, n) -> int:
@@ -68,7 +108,7 @@ def search_for_quotes(self, sstring) -> List[Dict]:  # TODO: ADAPT FOR DOUBLE QU
     Searches for tuples of quotes in the supplied searchable string.
     Returns a list of dicts describing the contents by the attributes:
     - chars (actual text)
-    - type (normal / quoted)
+    - type (todo / quoted)
     - color (text-coloring)
     """
 
@@ -81,7 +121,7 @@ def search_for_quotes(self, sstring) -> List[Dict]:  # TODO: ADAPT FOR DOUBLE QU
         tp1 = tp[1] - offset + 1  # adjusted end
 
         # append unqoted-area
-        dicts.append({'chars': sstring[0:tp0], 'type': 'normal', 'color': self.textColor})
+        dicts.append({'chars': sstring[0:tp0], 'type': 'todo', 'color': self.textColor})
         # append quoted-area
         dicts.append({'chars': sstring[tp0:tp1], 'type': 'quoted', 'color': self.textColor_quotes})
 
@@ -89,7 +129,7 @@ def search_for_quotes(self, sstring) -> List[Dict]:  # TODO: ADAPT FOR DOUBLE QU
         offset += tp1  # add to existing offset
 
     if len(sstring) > 0:  # append rest as un-quoted area -> if there is some left over
-        dicts.append({'chars': sstring, 'type': 'normal', 'color': self.textColor})
+        dicts.append({'chars': sstring, 'type': 'todo', 'color': self.textColor})
 
     return dicts
 
@@ -97,8 +137,8 @@ def search_for_quotes(self, sstring) -> List[Dict]:  # TODO: ADAPT FOR DOUBLE QU
 def search_for_comment(self, text) -> Tuple[str, str]:
     """
     Searches for the first comment outside of quotes.
-    Returns the text and the quotes as a tuple
-    :returns (text, comments)
+    Returns the normal-text and the comment-text as a tuple of Strings.
+    :returns (normal_text, comment_text)
     """
     quotes = self.get_quote_tuples(text)
     hashtags = self.get_hashtags(text)
@@ -131,8 +171,7 @@ def get_quote_tuples(self, text) -> List[Tuple[int, int]]:
     cont = 0
     for i, char in enumerate(text):
         if i > cont:  # only take a look at those necessary
-            # SINGLE and DOUBLE Quote
-            if char in ("'", '"'):
+            if char in ("'", '"'):  # SINGLE or DOUBLE Quote
                 start = i
                 end = text.find(char, i+1)  # find closing quote after starting quote
                 if end == -1:  # no closing quote found
@@ -150,10 +189,7 @@ def get_hashtags(self, text) -> List[int]:
     Returns an empty list if none are found.
     """
     comments = []
-    for j in range(1, 1000, 1):
-        index = find_nth(text, "#", j)
-        if index == -1:  # no more to be found, stop searching
-            break
-        comments.append(index)
+    for i, char in enumerate(text):
+        if char == '#':
+            comments.append(i)
     return comments
-

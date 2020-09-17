@@ -64,13 +64,22 @@ The editor offers the function ```get_text()``` to retrieve the entire text incl
 
 ##### Color-scheme customization
 
-The editor offers various methods to customize the color-scheme. All methods take three parameters for the traditional rgb code (red, green, blue). Below are the methods and the default color values.
+The editor uses customizable yaml files to customize the color-scheme. The yaml files are in the folder ```pygametexteditor/elements/colorstyles/```. 
+All keys must have a value in the yaml file. Values are rgb Strings in the following format: ```(255, 255, 255)```.
 
-- ```set_color_background``` (40, 44, 52)
-- ```set_color_Scrollbarbackground``` (40, 44, 52)
-- ```set_color_text``` (171, 178, 191)
-- ```set_color_lineNumber``` (73, 81, 97)
-- ```set_color_lineNumberBackground``` (40, 44, 52) 
+Editor colors by keys:
+- ```codingBackgroundColor```
+- ```codingScrollBarBackgroundColor```
+- ```lineNumberColor```
+- ```lineNumberBackgroundColor```
+- ```textColor```
+
+The following colors are used when syntax highlighting is turned on. 
+- ```textColor_comments```
+- ```textColor_quotes```
+- ```textColor_operators```
+- ```textColor_keywords```
+
 
 ##### Line Numbers 
 - Enable line numbers: ```set_line_numbers(True)```

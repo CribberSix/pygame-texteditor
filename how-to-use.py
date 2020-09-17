@@ -20,6 +20,7 @@ textAreaWidth = 800
 TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
 TX.set_line_numbers(True)
 TX.set_syntax_coloring(True)
+TX.set_colorcoding("dark")
 
 # TextEditor in the pygame-loop
 while True:

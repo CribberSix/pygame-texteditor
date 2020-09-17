@@ -31,7 +31,7 @@ class TextEditor:
     from ._rendering_highlighting import render_highlight, highlight_lines, highlight_entire_line, \
         highlight_from_letter_to_letter, highlight_from_start_to_letter, highlight_from_letter_to_end
     from ._render_syntax_coloring import get_syntax_coloring_dicts, get_single_color_dicts, \
-        search_for_comment, search_for_quotes, get_quote_tuples, get_hashtags
+        search_for_comment, search_for_quotes, get_quote_tuples, get_hashtags, tokenization
 
     from ._editor_getters import get_line_index, get_letter_index, line_is_visible, get_showable_lines, \
         get_number_of_letters_in_line_by_mouse, get_number_of_letters_in_line_by_index
@@ -39,8 +39,7 @@ class TextEditor:
     from ._other import jump_to_start, jump_to_end, reset_after_highlight
 
     # files for customization of the editor:
-    from ._customization import set_color_background, set_color_Scrollbarbackground, set_color_text, \
-        set_color_lineNumber, set_color_lineNumberBackground, set_syntax_coloring, set_line_numbers
+    from ._customization import set_syntax_coloring, set_line_numbers, set_colorcoding
     from ._usage import get_text_as_array, get_text_as_string
 
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen):
@@ -125,17 +124,19 @@ class TextEditor:
         self.last_clickup_cycle = 0
 
         # Colors
-        self.codingBackgroundColor = (40, 44, 52)  # (40, 44, 52)
-        self.codingScrollBarBackgroundColor = (40, 44, 52)  # (40, 44, 52)
-        self.textColor = (171, 178, 191)  # (171, 178, 191)
-        self.textColor_comments = (255, 0, 0)
-        self.textColor_quotes = (0, 255, 0)
-        self.lineNumberColor = (73, 81, 97)  # (73, 81, 97)
-        self.lineNumberBackgroundColor = (40, 44, 52)  # (0, 0, 0) # (0, 51, 102)
-
-        self.deleteCounter = 0
+        self.codingBackgroundColor = (40, 41, 41)  # (40, 44, 52)
+        self.codingScrollBarBackgroundColor = (49, 50, 50)  # (40, 44, 52)
+        self.lineNumberColor = (255, 255, 255)  # (73, 81, 97)
+        self.lineNumberBackgroundColor = (60, 61, 61)  # (0, 0, 0) # (0, 51, 102)
+        # Text and Syntax colors
+        self.textColor = (255, 255, 255)
+        self.textColor_comments = (119, 115, 115)
+        self.textColor_quotes = (227, 215, 115)
+        self.textColor_operators = (237, 36, 36)
+        self.textColor_keywords = (237, 36, 36)
 
         # Performance enhancing variables
+        self.deleteCounter = 0
         self.firstiteration_boolean = True
         self.rerenderLineNumbers = True
         self.click_hold = False

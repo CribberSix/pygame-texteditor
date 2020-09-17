@@ -1,2 +1,3 @@
 ###### Requirements with Version Specifiers ######`
 pygame == 1.9.6
+pyyaml == 5.3.1
