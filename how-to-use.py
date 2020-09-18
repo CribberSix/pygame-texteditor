@@ -17,7 +17,7 @@ textAreaHeight = 500
 textAreaWidth = 800
 
 # instantiation
-TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen,)
+TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
 TX.set_line_numbers(True)
 TX.set_syntax_highlighting(True)
 TX.set_colorscheme("dark")

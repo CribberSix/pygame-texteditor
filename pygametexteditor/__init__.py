@@ -45,7 +45,8 @@ class TextEditor:
     from ._customization import set_line_numbers, set_syntax_highlighting, set_colorscheme
     from ._usage import get_text_as_array, get_text_as_string
 
-    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, style='dark', syntax_highlighting=False):
+    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen,
+                 line_numbers_flag=False, style='dark', syntax_highlighting_flag=False):
         self.screen = screen
 
         # VISUALS
@@ -58,7 +59,7 @@ class TextEditor:
         current_dir = os.path.dirname(__file__)
         self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
         self.trennzeichen_image = pygame.image.load(os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
-        self.syntax_coloring = syntax_highlighting
+        self.syntax_coloring = syntax_highlighting_flag
         self.colorscheme = style
 
         # LINES
@@ -91,7 +92,7 @@ class TextEditor:
         self.scrollBarHeight = (self.textAreaHeight-self.scrollBarButtonHeight*2 -2) * self.showable_line_numbers_in_editor / len(self.line_String_array)
 
         # LINE NUMBERS
-        self.displayLineNumbers = False
+        self.displayLineNumbers = line_numbers_flag
         if self.displayLineNumbers:
             self.lineNumberWidth = 27  # line number background width and also offset for text!
         else:
@@ -134,7 +135,6 @@ class TextEditor:
         self.lineNumberBackgroundColor = (60, 61, 61)  # (0, 0, 0) # (0, 51, 102)
         self.textColor = (255, 255, 255)
 
-        self.syntax_highlighting = self.syntax_coloring
         self.lexer = PythonLexer() if self.syntax_coloring else None
         self.formatter = PybrainzzFormatter(self.colorscheme) if self.syntax_coloring else None
         self.set_colorscheme(self.colorscheme)
