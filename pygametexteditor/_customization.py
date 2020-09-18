@@ -41,5 +41,7 @@ def set_colorcoding(self, style) -> None:
         self.textColor_quotes = tuple([int(x) for x in re.findall(pattern, colors['textColor_quotes'])])
         self.textColor_operators = tuple([int(x) for x in re.findall(pattern, colors['textColor_operators'])])
         self.textColor_keywords = tuple([int(x) for x in re.findall(pattern, colors['textColor_keywords'])])
+        self.textColor_function = tuple([int(x) for x in re.findall(pattern, colors['textColor_function'])])
+        self.textColor_builtin = tuple([int(x) for x in re.findall(pattern, colors['textColor_builtin'])])
     except KeyError:
         raise KeyError("Not all color-keys were found in " + style + ".yaml. Please complete the file and restart.")

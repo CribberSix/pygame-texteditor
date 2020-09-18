@@ -1,3 +1,6 @@
+from pygments.lexers import PythonLexer
+from pygametexteditor.PybrainzzFormatter import PybrainzzFormatter
+
 import pygame
 import math
 import os
@@ -30,8 +33,7 @@ class TextEditor:
         reset_text_area_to_caret, get_rect_coord_from_indizes, get_rect_coord_from_mouse
     from ._rendering_highlighting import render_highlight, highlight_lines, highlight_entire_line, \
         highlight_from_letter_to_letter, highlight_from_start_to_letter, highlight_from_letter_to_end
-    from ._render_syntax_coloring import get_syntax_coloring_dicts, get_single_color_dicts, \
-        search_for_comment, search_for_quotes, get_quote_tuples, get_hashtags, tokenization
+    from ._render_syntax_coloring import get_syntax_coloring_dicts, get_single_color_dicts
 
     from ._editor_getters import get_line_index, get_letter_index, line_is_visible, get_showable_lines, \
         get_number_of_letters_in_line_by_mouse, get_number_of_letters_in_line_by_index
@@ -134,6 +136,8 @@ class TextEditor:
         self.textColor_quotes = (227, 215, 115)
         self.textColor_operators = (237, 36, 36)
         self.textColor_keywords = (237, 36, 36)
+        self.lexer = PythonLexer()
+        self.formatter = PybrainzzFormatter()
 
         # Performance enhancing variables
         self.deleteCounter = 0

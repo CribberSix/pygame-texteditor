@@ -81,6 +81,8 @@ The following keys are used when syntax highlighting is turned on:
 - ```textColor_quotes```
 - ```textColor_operators```
 - ```textColor_keywords```
+- ````textColor_function````
+- ````textColor_builtin````
 
 ##### Syntax Highlighting
 
