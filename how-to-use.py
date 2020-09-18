@@ -24,5 +24,5 @@ TX.set_colorscheme("dark")
 
 # TextEditor in the pygame-loop
 while True:
-    TX.display_editor()  # displays editor functionality - has to be called once per loop to capture input accurately
+    TX.display_editor()  # displays editor functionality once per loop
     pygame.display.flip()  # updates pygame window

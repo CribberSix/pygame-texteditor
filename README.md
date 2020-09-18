@@ -57,8 +57,8 @@ textAreaWidth = 800
 TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
 
 # TextEditor in a loop
-while True:
-    TX.display_editor()  # displays editor functionality - has to be called once per loop to capture input accurately
+while True:    
+    TX.display_editor()  # displays editor functionality once per loop
     pygame.display.flip()  # updates pygame window
 
 ```
