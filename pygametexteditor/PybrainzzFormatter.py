@@ -10,10 +10,10 @@ class PybrainzzFormatter:
     def __init__(self):
         self.textColor = (255, 255, 255)  # white
         self.textColor_comments = (119, 115, 115)  # brighter shade of background
-        self.textColor_quotes = (231, 219, 116)  # bright yellow
-        self.textColor_operators = (249, 36, 114)  # bright red
-        self.textColor_keywords = (237, 36, 36)   # bright blue -> def
-        self.textColor_function = (166, 226, 43)  # bright green -> function name
+        self.textColor_quotes = (231, 219, 116)  # bright yellow  -> quoted Strings
+        self.textColor_operators = (249, 36, 114)  # bright red  -> +,/,*,-,=,<,<=,==,>=,>
+        self.textColor_keywords = (237, 36, 36)   # bright blue -> def, (and, or?)
+        self.textColor_function = (166, 226, 43)  # bright green -> function names after def
         self.textColor_builtin = (104, 216, 239)  # bright blue -> print
 
     def format(self, tokensource) -> List[Dict]:
