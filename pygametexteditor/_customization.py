@@ -58,5 +58,5 @@ def set_colorscheme(self, style) -> None:
     except IndexError:
         raise IndexError("Could not find all necessary color-keys in the style file '" + style + ".yml'.")
 
-    if self.syntax_coloring:
+    if self.syntax_coloring:  # setting color for syntax highlighter
         self.formatter.set_colorscheme(style)
