@@ -1,10 +1,15 @@
-import pygame
-import yaml
 import os
 import re
+import pygame
+import yaml
+from pygametexteditor.PybrainzzFormatter import PybrainzzFormatter
+from pygments.lexers import PythonLexer
 
 
 def set_line_numbers(self, b) -> None:
+    """
+    Activates/deactivates showing the line numbers in the editor
+    """
     self.displayLineNumbers = b
     if self.displayLineNumbers:
         self.lineNumberWidth = 27  # line number background width and also offset for text!
@@ -16,32 +21,42 @@ def set_line_numbers(self, b) -> None:
         self.xline = self.editor_offset_X
 
 
-def set_syntax_coloring(self, b) -> None:
+def set_syntax_highlighting(self, b) -> None:
+    """
+    Activates / deactivates syntax highlighting.
+    If activated, creates the lexer and formatter and sets the formatter's style.
+    """
     self.syntax_coloring = b
+    if b:
+        self.lexer = PythonLexer()
+        self.formatter = PybrainzzFormatter()
+        self.formatter.set_colorscheme(self.colorscheme)
 
 
-def set_colorcoding(self, style) -> None:
+def set_colorscheme(self, style) -> None:
+    """
+    Sets the color scheme for the editor and for syntax highlighting if the latter is enabled
+    """
 
-    print(os.getcwd() + '\pygametexteditor\elements\colorstyles\\' + style + ".yml")
+    self.colorscheme = style
+
+    def get_rgb_by_key(dict, key):
+        return tuple([int(x) for x in re.findall(r'(\d{1,3})', dict[key])])
+
     try:
         with open(os.getcwd() + "\pygametexteditor\elements\colorstyles\\" + style + ".yml") as file:
-            colors = yaml.load(file, Loader=yaml.FullLoader)
-    except FileNotFoundError:
-        raise FileNotFoundError("No file named '" + style + ".yml' found in the searched directory \\elements\\colorstyles.")
+            color_dict = yaml.load(file, Loader=yaml.FullLoader)
 
-    pattern = r'(\d{1,3})'
-    try:
-        self.codingBackgroundColor = tuple([int(x) for x in re.findall(pattern, colors['codingBackgroundColor'])])
-        self.codingScrollBarBackgroundColor = tuple([int(x) for x in re.findall(pattern, colors['codingScrollBarBackgroundColor'])])
-        self.lineNumberColor = tuple([int(x) for x in re.findall(pattern, colors['lineNumberColor'])])
-        self.lineNumberBackgroundColor = tuple([int(x) for x in re.findall(pattern, colors['lineNumberBackgroundColor'])])
+            self.codingBackgroundColor = get_rgb_by_key(color_dict, 'codingBackgroundColor')
+            self.codingScrollBarBackgroundColor = get_rgb_by_key(color_dict, 'codingScrollBarBackgroundColor')
+            self.lineNumberColor = get_rgb_by_key(color_dict, 'lineNumberColor')
+            self.lineNumberBackgroundColor = get_rgb_by_key(color_dict, 'lineNumberBackgroundColor')
+            self.textColor = get_rgb_by_key(color_dict, 'textColor')
 
-        self.textColor = tuple([int(x) for x in re.findall(pattern, colors['textColor'])])
-        self.textColor_comments = tuple([int(x) for x in re.findall(pattern, colors['textColor_comments'])])
-        self.textColor_quotes = tuple([int(x) for x in re.findall(pattern, colors['textColor_quotes'])])
-        self.textColor_operators = tuple([int(x) for x in re.findall(pattern, colors['textColor_operators'])])
-        self.textColor_keywords = tuple([int(x) for x in re.findall(pattern, colors['textColor_keywords'])])
-        self.textColor_function = tuple([int(x) for x in re.findall(pattern, colors['textColor_function'])])
-        self.textColor_builtin = tuple([int(x) for x in re.findall(pattern, colors['textColor_builtin'])])
-    except KeyError:
-        raise KeyError("Not all color-keys were found in " + style + ".yaml. Please complete the file and restart.")
+    except FileNotFoundError:  # Default colors (style = dark)
+        raise FileNotFoundError("Could not find the style file '" + style + ".yml'.")
+    except IndexError:
+        raise IndexError("Could not find all necessary color-keys in the style file '" + style + ".yml'.")
+
+    if self.syntax_coloring:
+        self.formatter.set_colorscheme(style)

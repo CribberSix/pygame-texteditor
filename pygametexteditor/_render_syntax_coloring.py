@@ -14,7 +14,6 @@ def get_single_color_dicts(self) -> List[List[Dict]]:
     for line in self.line_String_array:
         # appends a single-item list
         rendering_list.append([{'chars': line, 'type': 'normal', 'color': self.textColor}])
-
     return rendering_list
 
 

@@ -74,9 +74,12 @@ Editor colors by keys:
 - ```codingScrollBarBackgroundColor```
 - ```lineNumberColor```
 - ```lineNumberBackgroundColor```
+
+The following key is additionally being used when syntax highlighting is turned off:
 - ```textColor```
 
 The following keys are used when syntax highlighting is turned on:
+- ```textColor_normal```
 - ```textColor_comments```
 - ```textColor_quotes```
 - ```textColor_operators```

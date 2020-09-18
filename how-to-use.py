@@ -17,14 +17,12 @@ textAreaHeight = 500
 textAreaWidth = 800
 
 # instantiation
-TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
+TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen,)
 TX.set_line_numbers(True)
-TX.set_syntax_coloring(True)
-TX.set_colorcoding("dark")
+TX.set_syntax_highlighting(True)
+TX.set_colorscheme("dark")
 
 # TextEditor in the pygame-loop
 while True:
-    # the method display_editor() has to be called once per loop to capture input accurately
-    TX.display_editor()
-
+    TX.display_editor()  # displays editor functionality - has to be called once per loop to capture input accurately
     pygame.display.flip()  # updates pygame window

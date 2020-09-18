@@ -1,9 +1,10 @@
 from pygments.lexers import PythonLexer
 from pygametexteditor.PybrainzzFormatter import PybrainzzFormatter
-
 import pygame
 import math
 import os
+import yaml
+import re
 
 
 class TextEditor:
@@ -41,10 +42,10 @@ class TextEditor:
     from ._other import jump_to_start, jump_to_end, reset_after_highlight
 
     # files for customization of the editor:
-    from ._customization import set_syntax_coloring, set_line_numbers, set_colorcoding
+    from ._customization import set_line_numbers, set_syntax_highlighting, set_colorscheme
     from ._usage import get_text_as_array, get_text_as_string
 
-    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen):
+    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen, style='dark', syntax_highlighting=False):
         self.screen = screen
 
         # VISUALS
@@ -57,7 +58,8 @@ class TextEditor:
         current_dir = os.path.dirname(__file__)
         self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
         self.trennzeichen_image = pygame.image.load(os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
-        self.syntax_coloring = False
+        self.syntax_coloring = syntax_highlighting
+        self.colorscheme = style
 
         # LINES
         self.Trenn_counter = 0
@@ -130,14 +132,12 @@ class TextEditor:
         self.codingScrollBarBackgroundColor = (49, 50, 50)  # (40, 44, 52)
         self.lineNumberColor = (255, 255, 255)  # (73, 81, 97)
         self.lineNumberBackgroundColor = (60, 61, 61)  # (0, 0, 0) # (0, 51, 102)
-        # Text and Syntax colors
         self.textColor = (255, 255, 255)
-        self.textColor_comments = (119, 115, 115)
-        self.textColor_quotes = (227, 215, 115)
-        self.textColor_operators = (237, 36, 36)
-        self.textColor_keywords = (237, 36, 36)
-        self.lexer = PythonLexer()
-        self.formatter = PybrainzzFormatter()
+
+        self.syntax_highlighting = self.syntax_coloring
+        self.lexer = PythonLexer() if self.syntax_coloring else None
+        self.formatter = PybrainzzFormatter(self.colorscheme) if self.syntax_coloring else None
+        self.set_colorscheme(self.colorscheme)
 
         # Performance enhancing variables
         self.deleteCounter = 0

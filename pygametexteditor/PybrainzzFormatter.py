@@ -2,26 +2,51 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatter import Formatter
 from pygments.token import Token, is_token_subtype
-from typing import List, Dict
+from typing import List, Dict, Tuple
+import os
+import yaml
+import re
 
 
 class PybrainzzFormatter:
 
-    def __init__(self):
-        self.textColor = (255, 255, 255)  # white
-        self.textColor_comments = (119, 115, 115)  # brighter shade of background
-        self.textColor_quotes = (231, 219, 116)  # bright yellow  -> quoted Strings
-        self.textColor_operators = (249, 36, 114)  # bright red  -> +,/,*,-,=,<,<=,==,>=,>
-        self.textColor_keywords = (237, 36, 36)   # bright blue -> def, (and, or?)
-        self.textColor_function = (166, 226, 43)  # bright green -> function names after def
-        self.textColor_builtin = (104, 216, 239)  # bright blue -> print
+    def __init__(self, style='dark'):
+        self.textColor_normal = (0, 0, 0)
+        self.textColor_comments = (0, 0, 0)
+        self.textColor_quotes = (0, 0, 0)
+        self.textColor_operators = (0, 0, 0)
+        self.textColor_keywords = (0, 0, 0)
+        self.textColor_function = (0, 0, 0)
+        self.textColor_builtin = (0, 0, 0)
+
+        self.set_colorscheme(style)
+
+    def set_colorscheme(self, style):
+        def get_rgb_by_key(key) -> Tuple:
+            pattern = r'(\d{1,3})'
+            return tuple([int(x) for x in re.findall(pattern, colors[key])])
+
+        try:
+            with open(os.getcwd() + r"\pygametexteditor\elements\colorstyles\\" + style + "-syntax.yml") as file:
+                colors = yaml.load(file, Loader=yaml.FullLoader)
+
+                self.textColor_normal = get_rgb_by_key('textColor_normal')
+                self.textColor_comments = get_rgb_by_key('textColor_comments')
+                self.textColor_quotes = get_rgb_by_key('textColor_quotes')
+                self.textColor_operators = get_rgb_by_key('textColor_operators')
+                self.textColor_keywords = get_rgb_by_key('textColor_keywords')
+                self.textColor_function = get_rgb_by_key('textColor_function')
+                self.textColor_builtin = get_rgb_by_key('textColor_builtin')
+
+        except FileNotFoundError:
+            raise FileNotFoundError("No file named '" + style +
+                                    r"-syntax.yml' found in the searched directory \elements\colorstyles.")
+        except KeyError:
+            raise KeyError("Not all necessary keys were found in the " + style + "-syntax.yml file.")
 
     def format(self, tokensource) -> List[Dict]:
         dicts = []
         for ttype, value in tokensource:
-            if ttype != Token.Text:
-                print(value + " - " + str(ttype))
-
             # NAME.FUNCTION
             if ttype == Token.Name.Function:
                 dicts.append({'chars': value, 'type': 'function', 'color': self.textColor_function})
@@ -53,6 +78,6 @@ class PybrainzzFormatter:
 
             # REST
             else:
-                dicts.append({'chars': value, 'type': 'text', 'color': self.textColor})
+                dicts.append({'chars': value, 'type': 'text', 'color': self.textColor_normal})
 
         return dicts
