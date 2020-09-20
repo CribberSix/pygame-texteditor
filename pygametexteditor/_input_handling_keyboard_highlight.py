@@ -39,20 +39,17 @@ def handle_input_with_highlight(self, input_event) -> None:
                     self.delete_letter_to_letter(line_start, letter_end, letter_start)
 
             else:  # multi-line delete
-                step = 1 if line_start < line_end else -1
-                for i, line_number in enumerate(range(line_start, line_end + step, step)):
+                if line_start > line_end:  # swap variables based on up/downward highlight to make code more readable
+                    line_start, line_end = line_end, line_start
+                    letter_start, letter_end = letter_end, letter_start
+
+                for i, line_number in enumerate(range(line_start, line_end + 1)):
                     if i == 0:  # first line
-                        if step > 0:  # downward highlighted
-                            self.delete_letter_to_end(line_start, letter_start)  # delete right side from start
-                        else:
-                            self.delete_start_to_letter(line_start, letter_start)  # delete left side from start
-                    elif i < len(range(line_start, line_end, 1)):  # middle line
-                        self.delete_entire_line(line_start + 1)  # doesn't it always stay at line_start +1?
+                        self.delete_letter_to_end(line_start, letter_start)  # delete right side from start
+                    elif i < len(range(line_start, line_end)):  # middle line
+                        self.delete_entire_line(line_start + 1)  # stays at line_start +1 as we delete on the fly (!)
                     else:  # last line
-                        if step > 0:
-                            self.delete_start_to_letter(line_start + 1, letter_end)  # delete left side
-                        else:
-                            self.delete_letter_to_end(line_start + 1, letter_end)  # delete right side
+                        self.delete_start_to_letter(line_start + 1, letter_end)  # delete left side of new last line
 
                 # join rest of start/end lines into new line in multiline delete
                 l1 = self.line_String_array[line_start]
@@ -112,21 +109,20 @@ def get_highlighted_characters(self) -> str:
     Returns the highlighted characters (single- and multiple-line) from the editor (self.line_String_array)
     """
     if self.dragged_finished and self.dragged_active:
+        line_start = self.drag_chosen_LineIndex_start
+        line_end = self.drag_chosen_LineIndex_end
         letter_start = self.drag_chosen_LetterIndex_start
         letter_end = self.drag_chosen_LetterIndex_end
 
         if self.drag_chosen_LineIndex_start == self.drag_chosen_LineIndex_end:
             # single-line highlight
-            return self.get_line_from_char_to_char(self.drag_chosen_LineIndex_start, letter_start, letter_end)
+            return self.get_line_from_char_to_char(self.drag_chosen_LineIndex_start, self.drag_chosen_LetterIndex_start,
+                                                   self.drag_chosen_LetterIndex_end)
 
         else:  # multi-line highlight
-            # set start and end in the correct order to append lines correctly
-            if self.drag_chosen_LineIndex_start < self.drag_chosen_LineIndex_end:
-                line_start = self.drag_chosen_LineIndex_start
-                line_end = self.drag_chosen_LineIndex_end
-            else:
-                line_start = self.drag_chosen_LineIndex_end
-                line_end = self.drag_chosen_LineIndex_start
+            if line_start > line_end:  # swap variables based on up/downward highlight to make code more readable
+                line_start, line_end = line_end, line_start
+                letter_start, letter_end = letter_end, letter_start
 
             # loop through highlighted lines
             copied_chars = ""

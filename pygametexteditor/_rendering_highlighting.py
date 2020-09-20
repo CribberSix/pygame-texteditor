@@ -24,8 +24,8 @@ def render_highlight(self, mouse_x, mouse_y) -> None:
             if line_end >= self.get_showable_lines():
                 line_end = self.get_showable_lines() - 1  # select last showable/existing line as line_end
 
-            # stop highlight not directly at the mouse, but at first or last letter depending on cursor positioning
-            if letter_end < 0:
+            # Correct letter_end based on cursor position / letters in the cursor's line
+            if letter_end < 0:  # cursor is left of the line
                 letter_end = 0
             elif letter_end > len(self.line_String_array[line_end]):
                 letter_end = len(self.line_String_array[line_end])
@@ -39,31 +39,18 @@ def highlight_lines(self, line_start, letter_start, line_end, letter_end) -> Non
     """
     if line_start == line_end:  # single-line highlight
         self.highlight_from_letter_to_letter(line_start, letter_start, letter_end)
-    else:  # fixed multi-line highlighting
-        # TODO: Code refactoring
-        # set start and end in the correct order to append lines correctly
-        #if line_start > line_end:
-        #    tmp = line_start
-        #    line_start = line_end
-        #    line_end = tmp
+    else:  # multi-line highlighting
+        if line_start > line_end:  # swap variables based on up/downward highlight to make code more readable
+            line_start, line_end = line_end, line_start
+            letter_start, letter_end = letter_end, letter_start
 
-        step = 1 if line_start < line_end else -1
-        for i, line_number in enumerate(range(line_start, line_end + step, step)):  # for each line
-
+        for i, line_number in enumerate(range(line_start, line_end + 1)):  # for each line
             if i == 0:  # first line
-                if line_start < line_end:
-                    self.highlight_from_letter_to_end(line_number, letter_start)  # right leaning highlight
-                else:
-                    self.highlight_from_start_to_letter(line_number, letter_start)  # left leaning highlight
-
-            elif i < len(range(line_start, line_end + step, step)) - 1:  # middle line
+                self.highlight_from_letter_to_end(line_number, letter_start)  # right leaning highlight
+            elif i < len(range(line_start, line_end)):  # middle line
                 self.highlight_entire_line(line_number)
-
             else:  # last line
-                if line_start < line_end:
-                    self.highlight_from_start_to_letter(line_number, letter_end)  # left leaning highlight
-                else:
-                    self.highlight_from_letter_to_end(line_number, letter_end)  # right leaning highlight
+                self.highlight_from_start_to_letter(line_number, letter_end)  # left leaning highlight
 
 
 def highlight_from_letter_to_end(self, line, letter) -> None:
