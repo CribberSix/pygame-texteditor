@@ -112,7 +112,6 @@ def handle_keyboard_backspace(self) -> None:
         self.line_String_array.pop(self.chosen_LineIndex + 1)
         self.maxLines -= 1
         # VISUAL lines
-        self.line_Text_array.pop(self.chosen_LineIndex + 1)
         self.rerenderLineNumbers = True
 
         # Handling of the resulting scrolling functionality of removing one line
@@ -156,8 +155,6 @@ def handle_keyboard_delete(self) -> None:
             self.line_String_array.pop(
                 self.chosen_LineIndex + 1)  # delete the Strings-line in order to move the following lines one upwards
             self.maxLines -= 1  # Keep the variable aligned
-            self.line_Text_array.pop(
-                self.chosen_LineIndex + 1)  # delete the Text-line in order to move the following lines one upwards
             self.rerenderLineNumbers = True
             if self.showStartLine > 0:
                 if (self.showStartLine + self.showable_line_numbers_in_editor) > self.maxLines:
@@ -273,9 +270,6 @@ def handle_keyboard_return(self) -> None:
     # Remove transfer letters from the current line
     self.line_String_array[self.chosen_LineIndex] = \
         self.line_String_array[self.chosen_LineIndex][:self.chosen_LetterIndex]
-    # re-render current line
-    self.line_Text_array[self.chosen_LineIndex] = self.courier_font.render(
-        self.line_String_array[self.chosen_LineIndex], 1, self.textColor)
 
     # set logical cursor indizes and add a new line
     self.chosen_LineIndex += 1
@@ -285,7 +279,6 @@ def handle_keyboard_return(self) -> None:
 
     # insert empty line
     self.line_String_array.insert(self.chosen_LineIndex, "")  # logical line
-    self.line_Text_array.insert(self.chosen_LineIndex, self.courier_font.render("", 1, (10, 10, 10)))  # visual line
 
     # Edit the new line -> append transfer letters
     self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex] + transferString

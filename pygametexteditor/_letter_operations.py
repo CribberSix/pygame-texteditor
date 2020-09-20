@@ -26,7 +26,6 @@ def delete_entire_line(self, line) -> None:
     Deletes an entire line
     """
     self.line_String_array.pop(line)
-    self.line_Text_array.pop(line)  # also delete surface (!)
     self.maxLines -= 1
 
 

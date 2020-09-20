@@ -35,7 +35,7 @@ class TextEditor:
         get_entire_line, get_line_from_start_to_char, get_line_from_char_to_end, get_line_from_char_to_char
 
     # rendering (basic, highlighting, syntax coloring)
-    from ._rendering import render_line_contents, render_line_contents_by_dicts, \
+    from ._rendering import render_line_contents_by_dicts, \
         render_caret, caret_within_texteditor, render_background_coloring, render_line_numbers, \
         reset_text_area_to_caret, get_rect_coord_from_indizes, get_rect_coord_from_mouse
     from ._rendering_highlighting import render_highlight, highlight_lines, highlight_entire_line, \
@@ -84,7 +84,6 @@ class TextEditor:
 
         for i in range(self.maxLines):  # from 0 to maxLines:
             self.line_String_array.append("")  # Add a line
-            self.line_Text_array.append(self.courier_font.render("", 1, (160, 160, 160)))
 
         # SCROLLBAR
         self.scrollDownButtonImg = pygame.image.load(os.path.join(current_dir, "elements/graphics/Scroll_Down.png")).convert()
