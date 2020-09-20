@@ -9,18 +9,18 @@ import re
 
 class TextEditor:
 
-    # scrollfunctionality
+    # Scroll functionality
     from ._scrollbar_vertical import render_scrollbar_vertical
 
-    # input handling KEYBOARD + MOUSE
+    # input handling KEYBOARD
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
         handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, insert_unicode, \
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down, \
         handle_paste
     from ._input_handling_keyboard_highlight import handle_input_with_highlight, handle_highlight_and_copy, \
-        handle_highlight_and_paste, handle_highlight_and_cut, handle_highlight_and_h_all, get_highlighted_characters
+        handle_highlight_and_paste, handle_highlight_and_cut, highlight_all, get_highlighted_characters
 
-
+    # input handling MOUSE
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # caret

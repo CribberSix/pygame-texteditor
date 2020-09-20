@@ -25,7 +25,7 @@ def handle_keyboard_input(self, pygame_events, pressed_keys, mods) -> None:
             # ___ COMBINATION KEYS ___
             # Can be applied whether something is highlighted or not!
             if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_a:
-                self.handle_highlight_and_h_all()
+                self.highlight_all()
 
             elif self.dragged_finished and self.dragged_active:
                 if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_x:

@@ -81,7 +81,7 @@ def handle_highlight_and_paste(self):
     Paste clipboard into cursor position.
     Replace highlighted area if highlight, else normal insert.
     """
-    print("pressed: CTRL+V")
+    print("pressed: CTRL+V (implementation TODO)")
     paste_string = pyperclip.paste()
 
 
@@ -99,7 +99,7 @@ def handle_highlight_and_cut(self):
     self.handle_input_with_highlight(delete_event)
 
 
-def handle_highlight_and_h_all(self):
+def highlight_all(self):
     """
     Highlight entire text.
     """
