@@ -34,9 +34,7 @@ def reset_after_highlight(self) -> None:
     self.update_caret_position()  # update caret position to chosen_Index (Line+Letter)
     self.last_clickdown_cycle = 0  # reset drag-cycle
     self.last_clickup_cycle = -1
-    # TODO: update first showable line if necessary !
+    self.rerenderLineNumbers = True
 
     if len(self.line_String_array) <= self.showable_line_numbers_in_editor:
-        self.showStartLine = 0
-    print("self.maxLines: " + str(self.maxLines))
-    print("showable_line_numbers_in_editor: " + str(self.showable_line_numbers_in_editor))
+        self.showStartLine = 0  # update first showable line

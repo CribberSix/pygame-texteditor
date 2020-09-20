@@ -1,7 +1,7 @@
 import pygame
 
 
-def handle_keyboard_input(self, pygame_events, pressed_keys, mods) -> None:
+def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
 
     self.deleteCounter += 1
     self.deleteCounter = self.deleteCounter % 5  # If FPS = 60; then we can delete 12 characters each second

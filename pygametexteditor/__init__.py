@@ -40,7 +40,7 @@ class TextEditor:
         reset_text_area_to_caret, get_rect_coord_from_indizes, get_rect_coord_from_mouse
     from ._rendering_highlighting import render_highlight, highlight_lines, highlight_entire_line, \
         highlight_from_letter_to_letter, highlight_from_start_to_letter, highlight_from_letter_to_end
-    from ._render_syntax_coloring import get_syntax_coloring_dicts, get_single_color_dicts
+    from ._rendering_syntax_coloring import get_syntax_coloring_dicts, get_single_color_dicts
 
     from ._editor_getters import get_line_index, get_letter_index, line_is_visible, get_showable_lines, \
         get_number_of_letters_in_line_by_mouse, get_number_of_letters_in_line_by_index
@@ -155,7 +155,7 @@ class TextEditor:
         self.clock = pygame.time.Clock()
         self.FPS = 60  # we need to limit the FPS so we don't trigger the same actions too often (e.g. deletions)
 
-    def display_editor(self):
+    def display_editor(self, pygame_events, pressed_keys, mouse_x, mouse_y):
         # needs to be called within a while loop to be able to catch key/mouse input and update visuals throughout use.
         self.cycleCounter = self.cycleCounter + 1
         # first iteration
@@ -170,18 +170,12 @@ class TextEditor:
             self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight))
             self.firstiteration_boolean = False
 
-        # INPUT - Mouse + Keyboard
-        pygame_events = pygame.event.get()
-        pygame.event.pump()
-        pressed_keys = pygame.key.get_pressed()
-        mods = pygame.key.get_mods()
-        mouse_x, mouse_y = pygame.mouse.get_pos()
         for event in pygame_events:  # handle QUIT operation
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
 
-        self.handle_keyboard_input(pygame_events, pressed_keys, mods)
+        self.handle_keyboard_input(pygame_events, pressed_keys)
         self.handle_mouse_input(pygame_events, mouse_x, mouse_y)
 
         # RENDERING 1 - Background objects

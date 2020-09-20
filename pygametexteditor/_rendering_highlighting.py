@@ -15,6 +15,8 @@ def render_highlight(self, mouse_x, mouse_y) -> None:
         if self.dragged_finished:  # highlighting operation is done, user "clicked-up" with the left mouse button
             line_end = self.drag_chosen_LineIndex_end
             letter_end = self.drag_chosen_LetterIndex_end
+            if letter_end < 0:
+                letter_end = 0
             self.highlight_lines(line_start, letter_start, line_end, letter_end)  # Actual highlighting
 
         else:  # active highlighting -> highlighted area follows mouse movements

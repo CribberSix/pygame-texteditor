@@ -46,3 +46,20 @@ Is set to FALSE upon an input (key or mouse-click) after a area was highlighted 
 - key-input → is being modified/replaced
 - the mouse was clicked somewhere else → nothing happens, deselection
 - arrow-key → nothing happens, deselection
+
+
+
+# Logical vs visual text
+
+The logical text is stored in an list of strings called ```self.line_String_array```.
+
+The visual text is stored in an list of lists of dicts called ```self.line_Text_array```. 
+For every line, there exists one sublist. The sublists are populated with surfaces which represent
+the differently blitted words / operators etc, based on syntax highlighting. If syntax highlighting
+is disabled, the sublist contains only one dict with the entire text. 
+
+The dicts have three keys: 
+- ```chars```: actual characters making up the portion of the text
+- ```type```: String, describing the content, e.g. 'quoted'
+- ```color```: rgb-color code, e.g. (0,0,0)
+

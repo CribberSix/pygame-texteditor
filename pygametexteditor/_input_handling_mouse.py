@@ -38,6 +38,7 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y) -> None:
                     self.dragged_finished = False
                     if self.mouse_within_texteditor(mouse_x, mouse_y):  # editor area
                         if self.mouse_within_existing_lines(mouse_y):  # in area of existing lines
+                            print("HERE")
                             self.set_drag_start_by_mouse(mouse_x, mouse_y)
                         else:  # clicked below the existing lines
                             self.set_drag_start_after_last_line()
@@ -59,13 +60,19 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y) -> None:
                 else:  # clicked beneath the existing lines
                     self.set_drag_end_after_last_line()
                 self.update_caret_position_by_drag_end()
+
             else:  # mouse-up outside of editor
                 if mouse_y < self.editor_offset_Y:
                     # Mouse-up above editor -> set to first visible line
                     self.drag_chosen_LineIndex_end = self.showStartLine
-                else:
-                    # Mouse-up below editor -> set to last visible line
-                    self.drag_chosen_LineIndex_end = self.showStartLine + self.showable_line_numbers_in_editor - 1
+                elif mouse_y > (self.editor_offset_Y + self.textAreaHeight - self.conclusionBarHeight):
+                    # Mouse-up below the editor -> set to last visible line
+                    if self.maxLines >= self.showable_line_numbers_in_editor:
+                        self.drag_chosen_LineIndex_end = self.showStartLine + self.showable_line_numbers_in_editor - 1
+                    else:
+                        self.drag_chosen_LineIndex_end = self.maxLines - 1
+                else:  # mouse left or right of the editor outside
+                    self.set_drag_end_line_by_mouse(mouse_y)
                 # Now we can determine the letter based on mouse_x (and selected line within the function)
                 self.set_drag_end_letter_by_mouse(mouse_x)
 

@@ -24,5 +24,10 @@ TX.set_colorscheme("dark")
 
 # TextEditor in the pygame-loop
 while True:
-    TX.display_editor()  # displays editor functionality once per loop
+    # INPUT - Mouse + Keyboard
+    pygame_events = pygame.event.get()
+    pressed_keys = pygame.key.get_pressed()
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+
+    TX.display_editor(pygame_events, pressed_keys, mouse_x, mouse_y)  # displays editor functionality once per loop
     pygame.display.flip()  # updates pygame window

@@ -11,11 +11,15 @@ def get_line_index(self, mouse_y) -> int:
 
 def get_letter_index(self, mouse_x) -> int:
     """
-    Returns possible letter-position of mouse -> does not take into account
-    how many letters there actually are in the line!
-    """
-    return int((mouse_x - self.xline_start) / self.letter_size_X)
+    Returns possible letter-position of mouse.
 
+    The function is independent from any specific line, so we could possible return a letter_index which
+    is bigger than the letters in the line.
+    Returns at least 0 to make sure it is possibly a valid index.
+    """
+    letter = int((mouse_x - self.xline_start) / self.letter_size_X)
+    letter = 0 if letter < 0 else letter
+    return letter
 
 def get_number_of_letters_in_line_by_mouse(self, mouse_y) -> int:
     line_index = get_line_index(self, mouse_y)
@@ -23,6 +27,7 @@ def get_number_of_letters_in_line_by_mouse(self, mouse_y) -> int:
 
 
 def get_number_of_letters_in_line_by_index(self, index) -> int:
+    print("index: " + str(index))
     return len(self.line_String_array[index])
 
 

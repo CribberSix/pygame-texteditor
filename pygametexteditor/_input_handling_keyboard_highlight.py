@@ -88,7 +88,6 @@ def handle_highlight_and_paste(self):
             self.line_String_array[self.chosen_LineIndex][self.chosen_LetterIndex:]
 
         self.chosen_LetterIndex = self.chosen_LetterIndex + len(line_split[0])
-        self.update_caret_position()
 
     else:
         rest_of_line = self.line_String_array[self.chosen_LineIndex][self.chosen_LetterIndex:]  # store for later
@@ -105,7 +104,9 @@ def handle_highlight_and_paste(self):
 
                 self.chosen_LetterIndex = len(line)
                 self.chosen_LineIndex = self.chosen_LineIndex + i
-                self.update_caret_position()
+
+    self.update_caret_position()
+    self.rerenderLineNumbers = True
 
 
 def handle_highlight_and_copy(self):
