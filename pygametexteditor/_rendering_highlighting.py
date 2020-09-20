@@ -40,6 +40,13 @@ def highlight_lines(self, line_start, letter_start, line_end, letter_end) -> Non
     if line_start == line_end:  # single-line highlight
         self.highlight_from_letter_to_letter(line_start, letter_start, letter_end)
     else:  # fixed multi-line highlighting
+        # TODO: Code refactoring
+        # set start and end in the correct order to append lines correctly
+        #if line_start > line_end:
+        #    tmp = line_start
+        #    line_start = line_end
+        #    line_end = tmp
+
         step = 1 if line_start < line_end else -1
         for i, line_number in enumerate(range(line_start, line_end + step, step)):  # for each line
 

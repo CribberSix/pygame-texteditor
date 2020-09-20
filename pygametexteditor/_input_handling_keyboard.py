@@ -1,80 +1,16 @@
 import pygame
 
 
-def handle_input_with_highlight(self, input_event) -> None:
-    # for readability & maintainability we use shorter variable names
-    line_start = self.drag_chosen_LineIndex_start
-    line_end = self.drag_chosen_LineIndex_end
-    letter_start = self.drag_chosen_LetterIndex_start
-    letter_end = self.drag_chosen_LetterIndex_end
+def handle_keyboard_input(self, pygame_events, pressed_keys, mods) -> None:
 
-    if self.dragged_finished and self.dragged_active:
-        if input_event.key in (pygame.K_DOWN, pygame.K_UP, pygame.K_RIGHT, pygame.K_LEFT):
-            # deselect highlight
-            if input_event.key == pygame.K_DOWN:
-                self.jump_to_end(line_start, line_end, letter_start, letter_end)
-            elif input_event.key == pygame.K_UP:
-                self.jump_to_start(line_start, line_end, letter_start, letter_end)
-            elif input_event.key == pygame.K_RIGHT:
-                self.jump_to_end(line_start, line_end, letter_start, letter_end)
-            elif input_event.key == pygame.K_LEFT:
-                self.jump_to_start(line_start, line_end, letter_start, letter_end)
-            self.reset_after_highlight()
-
-        elif input_event.key in (pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_CAPSLOCK):
-            pass  # nothing happens (?)
-        # Are there other keys which we have to take into account?
-
-        else:  # other key -> delete highlighted area and insert key (if not esc/delete)
-            if line_start == line_end:  # delete in single line (no line-rearranging)
-                if letter_start < letter_end:  # highlight from the left
-                    self.delete_letter_to_letter(line_start, letter_start, letter_end)
-                else:  # highlight from the right
-                    self.delete_letter_to_letter(line_start, letter_end, letter_start)
-
-            else:  # multi-line delete
-                step = 1 if line_start < line_end else -1
-                for i, line_number in enumerate(range(line_start, line_end + step, step)):
-                    if i == 0:  # first line
-                        if step > 0:  # downward highlighted
-                            self.delete_letter_to_end(line_start, letter_start)  # delete right side from start
-                        else:
-                            self.delete_start_to_letter(line_start, letter_start)  # delete left side from start
-                    elif i < len(range(line_start, line_end, 1)):  # middle line
-                        self.delete_entire_line(line_start + 1)  # doesn't it always stay at line_start +1?
-                    else:  # last line
-                        if step > 0:
-                            self.delete_start_to_letter(line_start + 1, letter_end)  # delete left side
-                        else:
-                            self.delete_letter_to_end(line_start + 1, letter_end)  # delete right side
-
-                # join rest of start/end lines into new line in multiline delete
-                l1 = self.line_String_array[line_start]
-                l2 = self.line_String_array[line_start + 1]  # which was formerly line_end
-                self.line_String_array[line_start] = l1 + l2
-                self.delete_entire_line(line_start + 1)  # after copying contents, we need to delete
-
-            # set caret and rerender line_numbers
-            self.chosen_LineIndex = line_start if line_start <= line_end else line_end  # start for single_line
-            self.chosen_LetterIndex = letter_start if line_start <= line_end else letter_end
-            self.rerenderLineNumbers = True
-            self.reset_after_highlight()
-            self.deleteCounter = 1
-            if input_event.key not in (pygame.K_DELETE, pygame.K_BACKSPACE):   # insert key unless delete/backaspace
-                self.insert_unicode(input_event.unicode)
-
-
-def handle_keyboard_input(self, pygame_events) -> None:
     self.deleteCounter += 1
-    self.deleteCounter = self.deleteCounter % 6  # If FPS = 60; then we can delete 10 characters each second
+    self.deleteCounter = self.deleteCounter % 5  # If FPS = 60; then we can delete 12 characters each second
 
     # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
-    pressed_keys = pygame.key.get_pressed()
     if self.dragged_finished and self.dragged_active and \
             (pressed_keys[pygame.K_DELETE] or pressed_keys[pygame.K_BACKSPACE]):
         delete_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DELETE)  # create the event
         self.handle_input_with_highlight(delete_event)  # delete and backspace have the same functionality
-
     elif pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
         self.handle_keyboard_delete()  # handle input
         self.reset_text_area_to_caret()  # reset caret if necessary
@@ -85,11 +21,30 @@ def handle_keyboard_input(self, pygame_events) -> None:
     # ___ OTHER KEYS ___ #
     for event in pygame_events:
         if event.type == pygame.KEYDOWN:
-            if self.dragged_finished and self.dragged_active:
-                self.handle_input_with_highlight(event)
+
+            # ___ COMBINATION KEYS ___
+            # Can be applied whether something is highlighted or not!
+            if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_a:
+                self.handle_highlight_and_h_all()
+
+            elif self.dragged_finished and self.dragged_active:
+                if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_x:
+                    self.handle_highlight_and_cut()
+                elif (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_c:
+                    self.handle_highlight_and_copy()
+                elif (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_v:
+                    self.handle_highlight_and_paste()
+                else:
+                    self.handle_input_with_highlight(event)  # handle char input on highlight
+
             else:
                 self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessaryss
-                if len(pygame.key.name(event.key)) == 1:  # This covers all letters and numbers (not on numpad).
+
+                if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_v:
+                    self.handle_paste()
+
+                # ___ NORMAL KEYS ___
+                elif len(pygame.key.name(event.key)) == 1:  # This covers all letters and numbers (not on numpad).
                     self.chosen_LetterIndex = int(self.chosen_LetterIndex)
                     self.insert_unicode(event.unicode)
                 # ___ SPECIAL KEYS ___
@@ -107,15 +62,21 @@ def handle_keyboard_input(self, pygame_events) -> None:
                     self.handle_keyboard_arrow_right()
                 elif event.key == pygame.K_LEFT:  # ___ARROW_LEFT
                     self.handle_keyboard_arrow_left()
+
+
                 else:
                     if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_DELETE,
-                                         pygame.K_BACKSPACE, pygame.K_CAPSLOCK]:
+                                         pygame.K_BACKSPACE, pygame.K_CAPSLOCK, pygame.K_LCTRL, pygame.K_RCTRL]:
                         # We handled the keys separately
                         # Capslock is apparently implicitly handled when using it in combination
 
                         # disabled for smooth development:
                         # raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
                         print("No key implementation: " + str(pygame.key.name(event.key)))
+
+
+def handle_paste(self) -> None:
+    pass
 
 
 def insert_unicode(self, unicode) -> None:

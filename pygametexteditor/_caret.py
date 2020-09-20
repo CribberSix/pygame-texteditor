@@ -50,6 +50,11 @@ def set_drag_start_after_last_line(self) -> None:
     self.drag_chosen_LetterIndex_start = len(self.line_String_array[self.drag_chosen_LineIndex_start])
 
 
+def set_drag_start_before_first_line(self) -> None:
+    self.drag_chosen_LineIndex_start = 0
+    self.drag_chosen_LetterIndex_start = 0
+
+
 def set_drag_end_after_last_line(self) -> None:
     # select last line
     self.drag_chosen_LineIndex_end = self.maxLines - 1

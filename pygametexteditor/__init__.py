@@ -16,13 +16,18 @@ class TextEditor:
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
         handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, insert_unicode, \
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down, \
-        handle_input_with_highlight
+        handle_paste
+    from ._input_handling_keyboard_highlight import handle_input_with_highlight, handle_highlight_and_copy, \
+        handle_highlight_and_paste, handle_highlight_and_cut, handle_highlight_and_h_all, get_highlighted_characters, \
+        get_line_from_char_to_char, get_entire_line, get_line_from_start_to_char, get_line_from_char_to_end
+
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
     # caret
     from ._caret import update_caret_position, update_caret_position_by_drag_end, update_caret_position_by_drag_start, \
         set_drag_start_after_last_line, set_drag_end_after_last_line, set_drag_start_by_mouse, \
-        set_drag_end_by_mouse, set_drag_end_line_by_mouse, set_drag_end_letter_by_mouse
+        set_drag_end_by_mouse, set_drag_end_line_by_mouse, set_drag_end_letter_by_mouse, \
+        set_drag_start_before_first_line
 
     # delete operations
     from ._delete_operations import delete_entire_line, delete_letter_to_end, delete_letter_to_letter, \
@@ -165,17 +170,18 @@ class TextEditor:
             self.screen.blit(self.scrollDownButtonImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight))
             self.firstiteration_boolean = False
 
-
         # INPUT - Mouse + Keyboard
         pygame_events = pygame.event.get()
-
+        pygame.event.pump()
+        pressed_keys = pygame.key.get_pressed()
+        mods = pygame.key.get_mods()
+        mouse_x, mouse_y = pygame.mouse.get_pos()
         for event in pygame_events:  # handle QUIT operation
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
 
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        self.handle_keyboard_input(pygame_events)
+        self.handle_keyboard_input(pygame_events, pressed_keys, mods)
         self.handle_mouse_input(pygame_events, mouse_x, mouse_y)
 
         # RENDERING 1 - Background objects
