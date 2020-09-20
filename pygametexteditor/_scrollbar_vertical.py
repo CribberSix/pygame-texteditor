@@ -8,13 +8,14 @@ def render_scrollbar_vertical(self) -> None:
     self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
     self.editor_offset_Y + self.scrollBarButtonHeight, self.scrollBarWidth,
     self.textAreaHeight - self.scrollBarButtonHeight * 2))  # Separator Coloring (below the coding area)
+
     # Scroll Buttons
     scrollButton(self, self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth, self.editor_offset_Y,
                       "ScrollUp")  # Scroll Up Button
     scrollButton(self, self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
                       self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight,
                       "ScrollDown")  # Scroll Down Button
-    # self.offset_X+self.textAreaWidth -self.scrollBarWidth, self.offset_Y + self.textAreaHeight - self.scrollBarButtonHeight
+
     # Scrollbar Buttons
     if self.showStartLine == 0:
         self.screen.blit(self.scrollUpButtonImg_Deactivated, (
@@ -33,9 +34,13 @@ def render_scrollbar_vertical(self) -> None:
            self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight))  # Scroll DownButton (active)
 
     # Scroll Bar
-    if len(self.line_String_array) >= self.showable_line_numbers_in_editor:
+    if len(self.line_String_array) >= self.showable_line_numbers_in_editor:  # scroll bar is a fraction of the space
         self.scrollBarHeight = int((self.textAreaHeight - (2 * self.scrollBarButtonHeight)) * (
                     (self.showable_line_numbers_in_editor * 1.0) / self.maxLines))
+    else:  # scrollbar fills the entire space
+        self.scrollBarHeight = int((self.textAreaHeight - (2 * self.scrollBarButtonHeight)) * (
+                    (self.showable_line_numbers_in_editor * 1.0) / self.showable_line_numbers_in_editor))
+
     self.scrollBarImg = pygame.transform.scale(self.scrollBarImg, (self.scrollBarWidth, self.scrollBarHeight))
     self.screen.blit(self.scrollBarImg, (self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth,
                                          self.editor_offset_Y + self.scrollBarButtonHeight + int(

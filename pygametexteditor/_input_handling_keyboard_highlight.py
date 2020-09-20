@@ -45,16 +45,15 @@ def handle_input_with_highlight(self, input_event) -> None:
                 for i, line_number in enumerate(range(line_start, line_end + 1)):
                     if i == 0:  # first line
                         self.delete_letter_to_end(line_start, letter_start)  # delete right side from start
-                    elif i < len(range(line_start, line_end)):  # middle line
+                    elif i < (line_end - line_start):
                         self.delete_entire_line(line_start + 1)  # stays at line_start +1 as we delete on the fly (!)
                     else:  # last line
                         self.delete_start_to_letter(line_start + 1, letter_end)  # delete left side of new last line
 
                 # join rest of start/end lines into new line in multiline delete
-                l1 = self.line_String_array[line_start]
-                l2 = self.line_String_array[line_start + 1]  # which was formerly line_end
-                self.line_String_array[line_start] = l1 + l2
-                self.delete_entire_line(line_start + 1)  # after copying contents, we need to delete
+                self.line_String_array[line_start] = self.line_String_array[line_start] + \
+                                                     self.line_String_array[line_start + 1]
+                self.delete_entire_line(line_start + 1)  # after copying contents, we need to delete the other line
 
             # set caret and rerender line_numbers
             self.chosen_LineIndex = line_start if line_start <= line_end else line_end  # start for single_line
@@ -68,21 +67,53 @@ def handle_input_with_highlight(self, input_event) -> None:
                 self.insert_unicode(input_event.unicode)
 
 
+def handle_highlight_and_paste(self):
+    """
+    Paste clipboard into cursor position.
+    Replace highlighted area if highlight, else normal insert.
+    """
+
+    # DELETE highlighted section if something is highlighted
+    if self.dragged_finished and self.dragged_active:
+        delete_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DELETE)  # create artifical delete event
+        self.handle_input_with_highlight(delete_event)
+
+    # PASTE from clipboard
+    paste_string = pyperclip.paste()
+    line_split = paste_string.split("\r\n")  # split into lines
+    if len(line_split) == 1:  # no linebreaks
+        self.line_String_array[self.chosen_LineIndex] = \
+            self.line_String_array[self.chosen_LineIndex][:self.chosen_LetterIndex] \
+            + line_split[0] + \
+            self.line_String_array[self.chosen_LineIndex][self.chosen_LetterIndex:]
+
+        self.chosen_LetterIndex = self.chosen_LetterIndex + len(line_split[0])
+        self.update_caret_position()
+
+    else:
+        rest_of_line = self.line_String_array[self.chosen_LineIndex][self.chosen_LetterIndex:]  # store for later
+        for i, line in enumerate(line_split):
+            if i == 0:  # first line to insert
+                self.line_String_array[self.chosen_LineIndex] = \
+                    self.line_String_array[self.chosen_LineIndex][:self.chosen_LetterIndex] + line
+            elif i < len(line_split) - 1:  # middle line -> insert new line!
+                self.line_String_array[self.chosen_LineIndex + i: self.chosen_LineIndex + i] = [line]
+                self.maxLines += 1
+            else:  # last line
+                self.line_String_array[self.chosen_LineIndex + i: self.chosen_LineIndex + i] = [line + rest_of_line]
+                self.maxLines += 1
+
+                self.chosen_LetterIndex = len(line)
+                self.chosen_LineIndex = self.chosen_LineIndex + i
+                self.update_caret_position()
+
+
 def handle_highlight_and_copy(self):
     """
     Copy highlighted String into clipboard if anything is highlighted, else no action.
     """
     copy_string = self.get_highlighted_characters()
     pyperclip.copy(copy_string)
-
-
-def handle_highlight_and_paste(self):
-    """
-    Paste clipboard into cursor position.
-    Replace highlighted area if highlight, else normal insert.
-    """
-    print("pressed: CTRL+V (implementation TODO)")
-    paste_string = pyperclip.paste()
 
 
 def handle_highlight_and_cut(self):
@@ -98,6 +129,7 @@ def handle_highlight_and_cut(self):
     delete_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DELETE)  # create artifical event
     self.handle_input_with_highlight(delete_event)
 
+    self.update_caret_position()
 
 def highlight_all(self):
     """
@@ -136,11 +168,11 @@ def get_highlighted_characters(self) -> str:
             copied_chars = ""
             for i, line_index in enumerate(range(line_start, line_end+1)):
                 if i == 0:  # first line
-                    copied_chars = copied_chars + "\n" + self.get_line_from_char_to_end(line_index, letter_start)
+                    copied_chars = self.get_line_from_char_to_end(line_index, letter_start)
                 elif i < len(range(line_start, line_end)):  # middle line
-                    copied_chars = copied_chars + "\n" + self.get_entire_line(line_index)
+                    copied_chars = copied_chars + "\r\n" + self.get_entire_line(line_index)
                 else:  # last line
-                    copied_chars = copied_chars + "\n" + self.get_line_from_start_to_char(line_index, letter_end)
+                    copied_chars = copied_chars + "\r\n" + self.get_line_from_start_to_char(line_index, letter_end)
 
             return copied_chars
     else:

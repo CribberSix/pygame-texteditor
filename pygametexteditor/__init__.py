@@ -15,8 +15,8 @@ class TextEditor:
     # input handling KEYBOARD
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
         handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, insert_unicode, \
-        handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down, \
-        handle_paste
+        handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down
+
     from ._input_handling_keyboard_highlight import handle_input_with_highlight, handle_highlight_and_copy, \
         handle_highlight_and_paste, handle_highlight_and_cut, highlight_all, get_highlighted_characters
 
@@ -72,7 +72,7 @@ class TextEditor:
         self.Trenn_counter = 0
         self.MaxLinecounter = 0
         self.line_String_array = []  # LOGIC: Array of actual Strings
-        self.line_Text_array = []  # VISUAL: Array of the rendered surfaces of the Strings
+        self.line_Text_array = []  # VISUAL: Array of the rendered surfaces
         self.lineHeight = 18
         self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.lineHeight))
 

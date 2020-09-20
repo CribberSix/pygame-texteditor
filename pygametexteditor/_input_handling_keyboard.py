@@ -26,25 +26,23 @@ def handle_keyboard_input(self, pygame_events, pressed_keys, mods) -> None:
             # Can be applied whether something is highlighted or not!
             if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_a:
                 self.highlight_all()
+            elif (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_v:
+                self.handle_highlight_and_paste()
 
             elif self.dragged_finished and self.dragged_active:
+                # Only work if something is highlighted!
                 if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_x:
                     self.handle_highlight_and_cut()
                 elif (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_c:
                     self.handle_highlight_and_copy()
-                elif (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_v:
-                    self.handle_highlight_and_paste()
                 else:
                     self.handle_input_with_highlight(event)  # handle char input on highlight
 
             else:
                 self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessaryss
 
-                if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_v:
-                    self.handle_paste()
-
                 # ___ NORMAL KEYS ___
-                elif len(pygame.key.name(event.key)) == 1:  # This covers all letters and numbers (not on numpad).
+                if len(pygame.key.name(event.key)) == 1:  # This covers all letters and numbers (not on numpad).
                     self.chosen_LetterIndex = int(self.chosen_LetterIndex)
                     self.insert_unicode(event.unicode)
                 # ___ SPECIAL KEYS ___
@@ -74,9 +72,6 @@ def handle_keyboard_input(self, pygame_events, pressed_keys, mods) -> None:
                         # raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
                         print("No key implementation: " + str(pygame.key.name(event.key)))
 
-
-def handle_paste(self) -> None:
-    pass
 
 
 def insert_unicode(self, unicode) -> None:

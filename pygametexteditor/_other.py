@@ -25,7 +25,7 @@ def jump_to_end(self, line_start, line_end, letter_start, letter_end) -> None:
         self.chosen_LetterIndex = letter_start
 
 
-def reset_after_highlight(self)  -> None:
+def reset_after_highlight(self) -> None:
     """
     Reset caret, clickdown_cycles and dragged booleans.
     """
@@ -34,4 +34,9 @@ def reset_after_highlight(self)  -> None:
     self.update_caret_position()  # update caret position to chosen_Index (Line+Letter)
     self.last_clickdown_cycle = 0  # reset drag-cycle
     self.last_clickup_cycle = -1
+    # TODO: update first showable line if necessary !
 
+    if len(self.line_String_array) <= self.showable_line_numbers_in_editor:
+        self.showStartLine = 0
+    print("self.maxLines: " + str(self.maxLines))
+    print("showable_line_numbers_in_editor: " + str(self.showable_line_numbers_in_editor))
