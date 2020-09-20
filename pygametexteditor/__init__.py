@@ -18,8 +18,8 @@ class TextEditor:
         handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down, \
         handle_paste
     from ._input_handling_keyboard_highlight import handle_input_with_highlight, handle_highlight_and_copy, \
-        handle_highlight_and_paste, handle_highlight_and_cut, handle_highlight_and_h_all, get_highlighted_characters, \
-        get_line_from_char_to_char, get_entire_line, get_line_from_start_to_char, get_line_from_char_to_end
+        handle_highlight_and_paste, handle_highlight_and_cut, handle_highlight_and_h_all, get_highlighted_characters
+
 
     from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
 
@@ -29,9 +29,10 @@ class TextEditor:
         set_drag_end_by_mouse, set_drag_end_line_by_mouse, set_drag_end_letter_by_mouse, \
         set_drag_start_before_first_line
 
-    # delete operations
-    from ._delete_operations import delete_entire_line, delete_letter_to_end, delete_letter_to_letter, \
-        delete_start_to_letter
+    # letter operations (delete, get)
+    from ._letter_operations import \
+        delete_entire_line, delete_start_to_letter, delete_letter_to_end, delete_letter_to_letter, \
+        get_entire_line, get_line_from_start_to_char, get_line_from_char_to_end, get_line_from_char_to_char
 
     # rendering (basic, highlighting, syntax coloring)
     from ._rendering import render_line_contents, render_line_contents_by_dicts, \

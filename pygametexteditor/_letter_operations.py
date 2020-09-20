@@ -29,3 +29,21 @@ def delete_entire_line(self, line) -> None:
     self.line_Text_array.pop(line)  # also delete surface (!)
     self.maxLines -= 1
 
+
+def get_entire_line(self, line_index) -> str:
+    return self.line_String_array[line_index]
+
+
+def get_line_from_start_to_char(self, line_index, char_index) -> str:
+    return self.line_String_array[line_index][0:char_index]
+
+
+def get_line_from_char_to_end(self, line_index, char_index) -> str:
+    return self.line_String_array[line_index][char_index:]
+
+
+def get_line_from_char_to_char(self, line_index, char1, char2) -> str:
+    if char1 < char2:
+        return self.line_String_array[line_index][char1:char2]
+    else:
+        return self.line_String_array[line_index][char2:char1]

@@ -32,11 +32,10 @@ def handle_input_with_highlight(self, input_event) -> None:
             pass  # nothing happens, we wait for the second key with which it is being used in combination
 
         else:  # other key -> delete highlighted area and insert key (if not esc/delete)
-            if line_start == line_end:  # delete in single line (no line-rearranging)
-                if letter_start < letter_end:  # highlight from the left
-                    self.delete_letter_to_letter(line_start, letter_start, letter_end)
-                else:  # highlight from the right
-                    self.delete_letter_to_letter(line_start, letter_end, letter_start)
+            if line_start == line_end:  # delete in single line
+                if letter_start > letter_end:  # swap variables based on left/right highlight to make code more readable
+                    letter_start, letter_end = letter_end, letter_start
+                self.delete_letter_to_letter(line_start, letter_start, letter_end)
 
             else:  # multi-line delete
                 if line_start > line_end:  # swap variables based on up/downward highlight to make code more readable
@@ -63,7 +62,9 @@ def handle_input_with_highlight(self, input_event) -> None:
             self.rerenderLineNumbers = True
             self.reset_after_highlight()
             self.deleteCounter = 1
-            if input_event.key not in (pygame.K_DELETE, pygame.K_BACKSPACE):   # insert key unless delete/backaspace
+
+            # insert key unless delete/backspace
+            if input_event.key not in (pygame.K_DELETE, pygame.K_BACKSPACE):
                 self.insert_unicode(input_event.unicode)
 
 
@@ -80,8 +81,8 @@ def handle_highlight_and_paste(self):
     Paste clipboard into cursor position.
     Replace highlighted area if highlight, else normal insert.
     """
-    paste_string = pyperclip.paste()
     print("pressed: CTRL+V")
+    paste_string = pyperclip.paste()
 
 
 def handle_highlight_and_cut(self):
@@ -89,17 +90,24 @@ def handle_highlight_and_cut(self):
     Copy highlighted String into clipboard if anything is highlighted, else no action.
     Delete highlighted part of the text.
     """
-    pyperclip.copy("copy_string")
-    print("pressed: CTRL+X")
+    # Copy functionality
+    copy_string = self.get_highlighted_characters()  # copy characters
+    pyperclip.copy(copy_string)
+
+    # Cut / delete functionality
+    delete_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DELETE)  # create artifical event
+    self.handle_input_with_highlight(delete_event)
 
 
 def handle_highlight_and_h_all(self):
     """
     Highlight entire text.
     """
+    # set artifical drag and cursor position
     self.set_drag_start_before_first_line()
     self.set_drag_end_after_last_line()
     self.update_caret_position_by_drag_end()
+    # activate highlight
     self.dragged_finished = True
     self.dragged_active = True
 
@@ -138,21 +146,3 @@ def get_highlighted_characters(self) -> str:
     else:
         return ""
 
-
-def get_entire_line(self, line_index) -> str:
-    return self.line_String_array[line_index]
-
-
-def get_line_from_start_to_char(self, line_index, char_index) -> str:
-    return self.line_String_array[line_index][0:char_index]
-
-
-def get_line_from_char_to_end(self, line_index, char_index) -> str:
-    return self.line_String_array[line_index][char_index:]
-
-
-def get_line_from_char_to_char(self, line_index, char1, char2) -> str:
-    if char1 < char2:
-        return self.line_String_array[line_index][char1:char2]
-    else:
-        return self.line_String_array[line_index][char2:char1]
