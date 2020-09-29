@@ -18,7 +18,7 @@ setup(
     python_requires=">=3.6",
     author='CribberSix',
     author_email='cribbersix@gmail.com',
-    install_requires=['pygame==1.9.6', 'math', 'os', 'sys'],
+    install_requires=['pygame==1.9.6'],
     classifiers=[
         # Trove classifiers
         # (https://pypi.python.org/pypi?%3Aaction=list_classifiers)
