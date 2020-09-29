@@ -52,7 +52,7 @@ class PybrainzzFormatter:
         except KeyError:
             raise KeyError("Not all necessary keys were found in the " + style + "-syntax.yml file.")
 
-    def format(self, tokensource: List[Tuple[Token, str]]) -> List[Dict]:
+    def format(self, tokensource: List[Tuple]) -> List[Dict]:
         """
         Input is a list of tuples. Each tuple contains the Token and the corresponding characters of said token.
         For different types of tokens the function creates a dict with the three keys:
