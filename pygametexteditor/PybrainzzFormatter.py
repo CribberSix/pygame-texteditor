@@ -22,6 +22,14 @@ class PybrainzzFormatter:
         self.set_colorscheme(style)
 
     def set_colorscheme(self, style):
+        """
+        Loads a colorscheme from a yaml file by specific keys.
+        Throws FileNotFoundError / KeyError on wrong input.
+
+        Tries to access a yaml file in the elements\colorstyles\ folder.
+        The parameter given combined with '-syntax.yml' must correspond to the desired file.
+        """
+
         def get_rgb_by_key(key) -> Tuple:
             pattern = r'(\d{1,3})'
             return tuple([int(x) for x in re.findall(pattern, colors[key])])
@@ -44,7 +52,16 @@ class PybrainzzFormatter:
         except KeyError:
             raise KeyError("Not all necessary keys were found in the " + style + "-syntax.yml file.")
 
-    def format(self, tokensource) -> List[Dict]:
+    def format(self, tokensource: List[Tuple[Token, str]]) -> List[Dict]:
+        """
+        Input is a list of tuples. Each tuple contains the Token and the corresponding characters of said token.
+        For different types of tokens the function creates a dict with the three keys:
+        - chars -> String
+        - type -> String
+        - color (rgb color -> (0,0,0) )
+        Depending on the type of token a color is assigned.
+        """
+
         dicts = []
         for ttype, value in tokensource:
             # NAME.FUNCTION

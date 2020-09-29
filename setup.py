@@ -1,22 +1,24 @@
 from setuptools import setup
 from os import path
 
-#this_directory = path.abspath(path.dirname(__file__))
-#with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
-#    long_description = f.read()
+# The directory containing this file
+HERE = pathlib.Path(__file__).parent
+
+# The text of the README file
+README = (HERE / "README.md").read_text()
 
 setup(
     name='pygametexteditor',
     packages=['pygametexteditor'],
     license='MIT',
-    description='A simple WYSIWYG-texteditor based on pygame.',
-    long_description=read('README.md'), #long_description,
+    description='A WYSIWYG-texteditor based on pygame.',
+    long_description=README,
     long_description_content_type='text/markdown',
     version='0.0.51',
     python_requires=">=3.6",
     author='CribberSix',
     author_email='cribbersix@gmail.com',
-    install_requires=['pygame', 'math', 'os', 'sys'],
+    install_requires=['pygame==1.9.6', 'math', 'os', 'sys'],
     classifiers=[
         # Trove classifiers
         # (https://pypi.python.org/pypi?%3Aaction=list_classifiers)
