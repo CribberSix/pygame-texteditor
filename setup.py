@@ -8,13 +8,13 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 setup(
-    name='pygame-texteditor',
+    name='pygametexteditor',
     packages=['pygametexteditor'],
     license='MIT',
     description='A WYSIWYG-texteditor based on pygame.',
     long_description=README,
     long_description_content_type='text/markdown',
-    version='0.0.52.5',
+    version='0.0.52.6',
     python_requires=">=3.6",
     author='CribberSix',
     author_email='cribbersix@gmail.com',
