@@ -23,6 +23,7 @@ TX.set_syntax_highlighting(True)
 TX.set_colorscheme("dark")
 
 # TextEditor in the pygame-loop
+c = 0
 while True:
     # INPUT - Mouse + Keyboard
     pygame_events = pygame.event.get()
@@ -31,3 +32,7 @@ while True:
 
     TX.display_editor(pygame_events, pressed_keys, mouse_x, mouse_y)  # displays editor functionality once per loop
     pygame.display.flip()  # updates pygame window
+    c = c + 1
+    if c == 250:
+        TX.clear_text()
+    print(c)

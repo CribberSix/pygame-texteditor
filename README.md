@@ -65,7 +65,11 @@ while True:
 
 ##### Retrieving text from the editor
 
-The editor offers the function ```get_text()``` to retrieve the entire text including empty lines as a String from the editor. Lines are separated by the new line character ```\n```.
+The editor offers the function `get_text()` to retrieve the entire text including empty lines as a String from the editor. Lines are separated by the new line character ```\n```.
+
+#### Removing text from the editor
+
+The editor offers the function `clear_text()` to clear the editor of any text.
 
 ## Customization
 
