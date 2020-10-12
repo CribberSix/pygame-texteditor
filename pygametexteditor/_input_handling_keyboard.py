@@ -3,20 +3,25 @@ import pygame
 
 def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
 
-    self.deleteCounter += 1
-    self.deleteCounter = self.deleteCounter % 5  # If FPS = 60; then we can delete 12 characters each second
+    if self.deleteCounter > 0:
+        self.deleteCounter -= 1
+    #self.deleteCounter = self.deleteCounter % 5  # If FPS = 60; then we can delete 12 characters each second
+
 
     # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
     if self.dragged_finished and self.dragged_active and \
             (pressed_keys[pygame.K_DELETE] or pressed_keys[pygame.K_BACKSPACE]):
         delete_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DELETE)  # create the event
         self.handle_input_with_highlight(delete_event)  # delete and backspace have the same functionality
+        self.deleteCounter = 5
     elif pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
         self.handle_keyboard_delete()  # handle input
         self.reset_text_area_to_caret()  # reset caret if necessary
+        self.deleteCounter = 5
     elif pressed_keys[pygame.K_BACKSPACE] and self.deleteCounter == 0:
         self.handle_keyboard_backspace()  # handle input
         self.reset_text_area_to_caret()  # reset caret if necessary
+        self.deleteCounter = 5
 
     # ___ OTHER KEYS ___ #
     for event in pygame_events:
@@ -73,9 +78,7 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
                         print("No key implementation: " + str(pygame.key.name(event.key)))
 
 
-
 def insert_unicode(self, unicode) -> None:
-    #self.chosen_LetterIndex = int(self.chosen_LetterIndex)
     self.line_String_array[self.chosen_LineIndex] = self.line_String_array[self.chosen_LineIndex][
                                                     :self.chosen_LetterIndex] + unicode + \
                                                     self.line_String_array[self.chosen_LineIndex][

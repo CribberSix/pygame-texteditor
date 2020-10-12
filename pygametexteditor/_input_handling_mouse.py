@@ -38,7 +38,6 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y) -> None:
                     self.dragged_finished = False
                     if self.mouse_within_texteditor(mouse_x, mouse_y):  # editor area
                         if self.mouse_within_existing_lines(mouse_y):  # in area of existing lines
-                            print("HERE")
                             self.set_drag_start_by_mouse(mouse_x, mouse_y)
                         else:  # clicked below the existing lines
                             self.set_drag_start_after_last_line()

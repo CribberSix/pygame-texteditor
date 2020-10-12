@@ -60,7 +60,6 @@ def handle_input_with_highlight(self, input_event) -> None:
             self.chosen_LetterIndex = letter_start if line_start <= line_end else letter_end
             self.rerenderLineNumbers = True
             self.reset_after_highlight()
-            self.deleteCounter = 1
 
             # insert key unless delete/backspace
             if input_event.key not in (pygame.K_DELETE, pygame.K_BACKSPACE):

@@ -32,7 +32,3 @@ while True:
 
     TX.display_editor(pygame_events, pressed_keys, mouse_x, mouse_y)  # displays editor functionality once per loop
     pygame.display.flip()  # updates pygame window
-    c = c + 1
-    if c == 250:
-        TX.clear_text()
-    print(c)
