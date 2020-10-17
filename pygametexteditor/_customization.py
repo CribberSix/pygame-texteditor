@@ -1,7 +1,8 @@
 import os
 import re
-import pygame
+import pathlib
 import yaml
+import pygame
 from pygametexteditor.PybrainzzFormatter import PybrainzzFormatter
 from pygments.lexers import PythonLexer
 
@@ -65,7 +66,7 @@ def set_colorscheme(self, style) -> None:
     one of the editor's default styles.
     """
     if style in ("bright", "dark"):
-        default_path = os.getcwd() + "\pygametexteditor\elements\colorstyles\\" + style + ".yml"
+        default_path = str(pathlib.Path(__file__).parent.absolute()) + "\\elements\colorstyles\\" + style + ".yml"
         self.set_colorscheme_from_yaml(default_path)
     else:
         raise ValueError("No default style with the name '" + style + "' available. " +
