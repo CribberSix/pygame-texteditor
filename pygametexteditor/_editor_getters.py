@@ -27,7 +27,7 @@ def get_number_of_letters_in_line_by_mouse(self, mouse_y) -> int:
 
 
 def get_number_of_letters_in_line_by_index(self, index) -> int:
-    return len(self.line_String_array[index])
+    return len(self.line_string_list[index])
 
 
 def get_showable_lines(self) -> int:

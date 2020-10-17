@@ -10,7 +10,8 @@ import re
 class TextEditor:
 
     # Scroll functionality
-    from ._scrollbar_vertical import render_scrollbar_vertical
+    from ._scrollbar_vertical import render_scrollbar_vertical, display_scrollbuttons, display_scrollbar, scroll_up, \
+        scroll_down, scroll_button, display_background
 
     # input handling KEYBOARD
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
@@ -67,12 +68,11 @@ class TextEditor:
         self.trennzeichen_image = pygame.image.load(os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
         self.syntax_coloring = syntax_highlighting_flag
         self.colorscheme = style
-
+        
         # LINES
         self.Trenn_counter = 0
         self.MaxLinecounter = 0
-        self.line_String_array = []  # LOGIC: Array of actual Strings
-        self.line_Text_array = []  # VISUAL: Array of the rendered surfaces
+        self.line_string_list = []  # LOGIC: Array of actual Strings
         self.lineHeight = 18
         self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.lineHeight))
 
@@ -83,7 +83,7 @@ class TextEditor:
         self.line_gap = 3 + self.letter_size_Y
 
         for i in range(self.maxLines):  # from 0 to maxLines:
-            self.line_String_array.append("")  # Add a line
+            self.line_string_list.append("")  # Add a line
 
         # SCROLLBAR
         self.scrollDownButtonImg = pygame.image.load(os.path.join(current_dir, "elements/graphics/Scroll_Down.png")).convert()
@@ -94,7 +94,7 @@ class TextEditor:
         self.scrollBarWidth = 20
         self.scrollBarButtonHeight = 17
         self.conclusionBarHeight = 18
-        self.scrollBarHeight = (self.textAreaHeight-self.scrollBarButtonHeight*2 -2) * self.showable_line_numbers_in_editor / len(self.line_String_array)
+        self.scrollBarHeight = (self.textAreaHeight-self.scrollBarButtonHeight*2 -2) * self.showable_line_numbers_in_editor / len(self.line_string_list)
 
         # LINE NUMBERS
         self.displayLineNumbers = line_numbers_flag

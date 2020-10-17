@@ -45,7 +45,8 @@ def render_line_numbers(self) -> None:
                              (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
             # line number
             if x < self.get_showable_lines():
-                text = self.courier_font.render(str(x).zfill(2), 1, self.lineNumberColor)
+                # x + 1 in order to start with line 1 (only display, logical it's the 0th item in the list
+                text = self.courier_font.render(str(x + 1).zfill(2), 1, self.lineNumberColor)
                 self.screen.blit(text, (self.editor_offset_X + 5, line_numbers_Y + 3))  # center of bg block
 
             line_numbers_Y += self.line_gap
@@ -55,7 +56,7 @@ def render_line_contents_by_dicts(self, dicts) -> None:
     # Preparation of the rendering:
     self.yline = self.yline_start
     first_line = self.showStartLine
-    if self.showable_line_numbers_in_editor < len(self.line_String_array):
+    if self.showable_line_numbers_in_editor < len(self.line_string_list):
         # we got more text than we are able to display
         last_line = self.showStartLine + self.showable_line_numbers_in_editor
     else:

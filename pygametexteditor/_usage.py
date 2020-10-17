@@ -10,7 +10,7 @@ def get_text_as_string(self) -> str:
     :param self:  Texteditor-Class
     :return: String
     """
-    return "\n".join(self.line_String_array)
+    return "\n".join(self.line_string_list)
 
 
 def get_text_as_array(self) -> List:
@@ -19,7 +19,7 @@ def get_text_as_array(self) -> List:
     :param self:  Texteditor-Class
     :return: List of lines containing the text. Lines cane be empty Strings.
     """
-    return self.line_String_array
+    return self.line_string_list
 
 
 def clear_text(self) -> None:
@@ -28,12 +28,11 @@ def clear_text(self) -> None:
     :param self: Texteditor-Class
     :return: None
     """
-    self.line_String_array = []  # LOGIC: Array of actual Strings
-    self.line_Text_array = []  # VISUAL: Array of the rendered surfaces
+    self.line_string_list = []  # LOGIC: List of actual Strings for each line
     self.maxLines = int(math.floor(self.textAreaHeight / self.lineHeight))
     self.showStartLine = 0
     for i in range(self.maxLines):  # from 0 to maxLines:
-        self.line_String_array.append("")  # Add a line
+        self.line_string_list.append("")  # Add a line
 
     # reset caret
     self.chosen_LineIndex = 0

@@ -1,5 +1,5 @@
 import pygame
-from ._scrollbar_vertical import scrollDown, scrollUp
+from ._scrollbar_vertical import scroll_down, scroll_up
 
 
 def handle_mouse_input(self, pygame_events, mouse_x, mouse_y) -> None:
@@ -23,9 +23,9 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y) -> None:
         if event.type == pygame.MOUSEBUTTONDOWN and self.mouse_within_texteditor(mouse_x, mouse_y):
             # ___ MOUSE SCROLLING ___ #
             if event.button == 4 and self.showStartLine > 0:
-                scrollUp(self)
+                self.scroll_up()
             elif event.button == 5 and self.showStartLine + self.showable_line_numbers_in_editor < self.maxLines:
-                scrollDown(self)
+                self.scroll_down()
 
             # ___ MOUSE LEFT CLICK DOWN ___ #
             elif event.button == 1:  # left mouse button

@@ -29,8 +29,8 @@ def render_highlight(self, mouse_x, mouse_y) -> None:
             # Correct letter_end based on cursor position / letters in the cursor's line
             if letter_end < 0:  # cursor is left of the line
                 letter_end = 0
-            elif letter_end > len(self.line_String_array[line_end]):
-                letter_end = len(self.line_String_array[line_end])
+            elif letter_end > len(self.line_string_list[line_end]):
+                letter_end = len(self.line_string_list[line_end])
 
             self.highlight_lines(line_start, letter_start, line_end, letter_end)  # Actual highlighting
 
@@ -61,7 +61,7 @@ def highlight_from_letter_to_end(self, line, letter) -> None:
     """
     if self.line_is_visible(line):
         x1, y1 = self.get_rect_coord_from_indizes(line, letter)
-        x2, y2 = self.get_rect_coord_from_indizes(line, len(self.line_String_array[line]))
+        x2, y2 = self.get_rect_coord_from_indizes(line, len(self.line_string_list[line]))
         pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
 
 
@@ -81,7 +81,7 @@ def highlight_entire_line(self, line) -> None:
     """
     if self.line_is_visible(line):
         x1, y1 = self.get_rect_coord_from_indizes(line, 0)
-        x2, y2 = self.get_rect_coord_from_indizes(line, len(self.line_String_array[line]))
+        x2, y2 = self.get_rect_coord_from_indizes(line, len(self.line_string_list[line]))
         pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
 
 

@@ -51,8 +51,8 @@ def handle_input_with_highlight(self, input_event) -> None:
                         self.delete_start_to_letter(line_start + 1, letter_end)  # delete left side of new last line
 
                 # join rest of start/end lines into new line in multiline delete
-                self.line_String_array[line_start] = self.line_String_array[line_start] + \
-                                                     self.line_String_array[line_start + 1]
+                self.line_string_list[line_start] = self.line_string_list[line_start] + \
+                                                     self.line_string_list[line_start + 1]
                 self.delete_entire_line(line_start + 1)  # after copying contents, we need to delete the other line
 
             # set caret and rerender line_numbers
@@ -81,24 +81,24 @@ def handle_highlight_and_paste(self):
     paste_string = pyperclip.paste()
     line_split = paste_string.split("\r\n")  # split into lines
     if len(line_split) == 1:  # no linebreaks
-        self.line_String_array[self.chosen_LineIndex] = \
-            self.line_String_array[self.chosen_LineIndex][:self.chosen_LetterIndex] \
+        self.line_string_list[self.chosen_LineIndex] = \
+            self.line_string_list[self.chosen_LineIndex][:self.chosen_LetterIndex] \
             + line_split[0] + \
-            self.line_String_array[self.chosen_LineIndex][self.chosen_LetterIndex:]
+            self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex:]
 
         self.chosen_LetterIndex = self.chosen_LetterIndex + len(line_split[0])
 
     else:
-        rest_of_line = self.line_String_array[self.chosen_LineIndex][self.chosen_LetterIndex:]  # store for later
+        rest_of_line = self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex:]  # store for later
         for i, line in enumerate(line_split):
             if i == 0:  # first line to insert
-                self.line_String_array[self.chosen_LineIndex] = \
-                    self.line_String_array[self.chosen_LineIndex][:self.chosen_LetterIndex] + line
+                self.line_string_list[self.chosen_LineIndex] = \
+                    self.line_string_list[self.chosen_LineIndex][:self.chosen_LetterIndex] + line
             elif i < len(line_split) - 1:  # middle line -> insert new line!
-                self.line_String_array[self.chosen_LineIndex + i: self.chosen_LineIndex + i] = [line]
+                self.line_string_list[self.chosen_LineIndex + i: self.chosen_LineIndex + i] = [line]
                 self.maxLines += 1
             else:  # last line
-                self.line_String_array[self.chosen_LineIndex + i: self.chosen_LineIndex + i] = [line + rest_of_line]
+                self.line_string_list[self.chosen_LineIndex + i: self.chosen_LineIndex + i] = [line + rest_of_line]
                 self.maxLines += 1
 
                 self.chosen_LetterIndex = len(line)
@@ -146,7 +146,7 @@ def highlight_all(self):
 
 def get_highlighted_characters(self) -> str:
     """
-    Returns the highlighted characters (single- and multiple-line) from the editor (self.line_String_array)
+    Returns the highlighted characters (single- and multiple-line) from the editor (self.line_string_list)
     """
     if self.dragged_finished and self.dragged_active:
         line_start = self.drag_chosen_LineIndex_start
