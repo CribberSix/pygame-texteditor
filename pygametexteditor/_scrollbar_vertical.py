@@ -42,8 +42,8 @@ def display_scrollbuttons(self) -> None:
     y_down = self.editor_offset_Y + self.textAreaHeight - self.scrollBarButtonHeight
 
     # Logical buttons
-    scroll_button(self, x, y_up, "ScrollUp")
-    scroll_button(self, x, y_down, "ScrollDown")
+    self.scroll_button(x, y_up, "ScrollUp")
+    self.scroll_button(x, y_down, "ScrollDown")
 
     # Visual button representations
     # ____ UP

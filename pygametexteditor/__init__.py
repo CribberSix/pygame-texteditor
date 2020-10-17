@@ -11,7 +11,7 @@ class TextEditor:
 
     # Scroll functionality
     from ._scrollbar_vertical import render_scrollbar_vertical, display_scrollbuttons, display_scrollbar, scroll_up, \
-        scroll_down, scroll_button, display_background
+        scroll_down, scroll_button, display_background, scroll_button
 
     # input handling KEYBOARD
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
