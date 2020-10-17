@@ -49,8 +49,8 @@ class TextEditor:
     from ._other import jump_to_start, jump_to_end, reset_after_highlight
 
     # files for customization of the editor:
-    from ._customization import set_line_numbers, set_syntax_highlighting, set_colorscheme
-    from ._usage import get_text_as_array, get_text_as_string, clear_text
+    from ._customization import set_line_numbers, set_syntax_highlighting, set_colorscheme, set_colorscheme_from_yaml
+    from ._usage import get_text_as_list, get_text_as_string, clear_text
 
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen,
                  line_numbers_flag=False, style='dark', syntax_highlighting_flag=False):
@@ -67,7 +67,6 @@ class TextEditor:
         self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y)
         self.trennzeichen_image = pygame.image.load(os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
         self.syntax_coloring = syntax_highlighting_flag
-        self.colorscheme = style
         
         # LINES
         self.Trenn_counter = 0
@@ -134,15 +133,15 @@ class TextEditor:
         self.last_clickup_cycle = 0
 
         # Colors
-        self.codingBackgroundColor = (40, 41, 41)  # (40, 44, 52)
-        self.codingScrollBarBackgroundColor = (49, 50, 50)  # (40, 44, 52)
-        self.lineNumberColor = (255, 255, 255)  # (73, 81, 97)
-        self.lineNumberBackgroundColor = (60, 61, 61)  # (0, 0, 0) # (0, 51, 102)
+        self.codingBackgroundColor = (40, 41, 41)
+        self.codingScrollBarBackgroundColor = (49, 50, 50) 
+        self.lineNumberColor = (255, 255, 255)  
+        self.lineNumberBackgroundColor = (60, 61, 61)  
         self.textColor = (255, 255, 255)
 
-        self.lexer = PythonLexer() if self.syntax_coloring else None
-        self.formatter = PybrainzzFormatter(self.colorscheme) if self.syntax_coloring else None
-        self.set_colorscheme(self.colorscheme)
+        self.lexer = PythonLexer()
+        self.formatter = PybrainzzFormatter()
+        self.set_colorscheme(style)
 
         # Performance enhancing variables
         self.deleteCounter = 0

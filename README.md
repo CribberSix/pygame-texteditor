@@ -1,9 +1,5 @@
 # A WYSIWYG-texteditor based on pygame for pygame
 
-## Project status
-
-The texteditor is currently under development. More features (e.g. copy-paste, shift+strg+arrow highlighting and other common texteditor functions) will be implemented in the future.
-
 ## Usage
 
 The text editor can be inserted into any existing pygame window. 
@@ -27,7 +23,7 @@ The texteditor takes 5 obligatory parameters and 3 optional parameters.
 - ```syntax_highlighting_flag``` - a boolean enabling syntax highlighting for Python code 
     > Default: ```False```
 
-#### Setup
+## Setup
 
 ##### Minimal pygame setup
 
@@ -65,55 +61,63 @@ while True:
 
 ##### Retrieving text from the editor
 
-The editor offers the function `get_text()` to retrieve the entire text including empty lines as a String from the editor. Lines are separated by the new line character ```\n```.
+The editor offers the function `get_text_as_string()` to retrieve the entire text 
+as a String from the editor. Lines are separated by the new line character ```\n```.
 
-#### Removing text from the editor
+The editor offers the function `get_text_as_list()` to retrieve the entire text as a list from the editor. 
+Each String-item in the list represents one line from the editor.
+
+##### Removing text from the editor
 
 The editor offers the function `clear_text()` to clear the editor of any text.
 
 ## Customization
 
-##### Line Numbers 
+#### Line Numbers 
 Line numbers can be shown on the left side of the editor. Line numbers begin with 0 as is the Pythonian way. 
 
 Line numbers can be enabled and disabled with ```set_line_numbers(Boolean)```.
 
-##### Color-scheme customization
 
-The editor uses yaml files to customize the color-scheme. The yaml files are stored in the project folder ```pygametexteditor/elements/colorstyles/```. 
-All keys must be present with values. Acceptable values are rgb strings in the following format: ```(255, 255, 255)``` or ```255, 255, 255```.
-
-Any arbitrary names can be used for the style. A file named ```stylename.yml``` specifies the RGB colors by keys. 
-Per default the editor comes with two different color-schemes (```dark``` and ```bright```).
-
-The following keys are required in the ```stylename.yml``` file:
-- ```codingBackgroundColor```
-- ```codingScrollBarBackgroundColor```
-- ```lineNumberColor```
-- ```lineNumberBackgroundColor```
-- ```textColor```
-
-##### Syntax Highlighting
+#### Syntax Highlighting
 
 The editor comes with syntax highlighting for Python code. Tokenization is based on the ```pygment``` package. 
 
-Syntax highlighting can be enabled/disabled with ```set_syntax_coloring(Boolean)```.
+Syntax highlighting can be enabled/disabled with ```set_syntax_coloring(boolean_value)```.
 
-For the syntax highlighting colors, a file named ```stylename-syntax.yml``` is required. 
-All keys must be present with values. Acceptable values are rgb strings in the following format: ```(255, 255, 255)``` or ```255, 255, 255```.
-The filename of the syntax-colors has to match the filename for the editor-colors. 
+The syntax colors being used are also specified in the yml style file.
 
-The following keys are required in the ```stylename-syntax.yml``` file:
-- ```textColor_normal```
-- ```textColor_comments```
-- ```textColor_quotes```
-- ```textColor_operators```
-- ```textColor_keywords```
-- ````textColor_function````
-- ````textColor_builtin````
 
-##### Setting the color-scheme for editor and syntax
+#### Color-scheme customization
 
-The color scheme can be set with  ```set_colorscheme('dark')```. In this example
-- the file ```dark.yml``` is being used for editor-colors.
-- If syntax highlighting is enabled, the file ```dark-syntax.yml``` is used for syntax-colors. 
+The editor uses a yml file to set the color-scheme for the editor itself and for the syntax coloring. 
+
+Two styles are delivered with the editor, they can be activated respectively by:
+- `set_colorscheme("dark")`
+- `set_colorscheme("bright")`
+
+A custom style can be loaded with the following method from a created yml file: 
+- `set_colorscheme_from_yaml("X:\path\to\custom\filename.yml")`
+
+All keys must be present with values. Acceptable values are 
+RGB colors in the following format: ```(255, 255, 255)``` or ```255, 255, 255```.
+
+The following keys are required in the ```stylename.yml``` file, syntax colors are only used if syntax
+highlighting is enabled, but are still required to be included.
+
+*Editor colors*
+- `codingBackgroundColor`
+- `codingScrollBarBackgroundColor`
+- `lineNumberColor`
+- `lineNumberBackgroundColor`
+- `textColor`
+
+*Syntax colors*
+- `textColor_normal`
+- `textColor_comments`
+- `textColor_quotes`
+- `textColor_operators`
+- `textColor_keywords`
+- `textColor_function`
+- `textColor_builtin`
+

@@ -13,7 +13,7 @@ def get_text_as_string(self) -> str:
     return "\n".join(self.line_string_list)
 
 
-def get_text_as_array(self) -> List:
+def get_text_as_list(self) -> List:
     """
     Returns the text in it's logical form as a list of lines.
     :param self:  Texteditor-Class

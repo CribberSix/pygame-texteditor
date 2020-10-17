@@ -1,5 +1,14 @@
-codingBackgroundColor: (40, 41, 41)
+# Editor colors
+codingBackgroundColor: (255, 255, 255)
 codingScrollBarBackgroundColor: (49, 50, 50)
 lineNumberColor: (255, 255, 255)
 lineNumberBackgroundColor: (60, 61, 61)
 textColor: (255, 255, 255)
+# Syntax colors
+textColor_normal: (0, 255, 255)
+textColor_comments: (119, 115, 115)
+textColor_quotes: (227, 215, 115)
+textColor_operators: (237, 36, 36)
+textColor_keywords: (237, 36, 36)
+textColor_function: (50, 150, 36)
+textColor_builtin: (50, 50, 136)

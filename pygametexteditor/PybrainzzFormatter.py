@@ -10,7 +10,7 @@ import re
 
 class PybrainzzFormatter:
 
-    def __init__(self, style='dark'):
+    def __init__(self):
         self.textColor_normal = (0, 0, 0)
         self.textColor_comments = (0, 0, 0)
         self.textColor_quotes = (0, 0, 0)
@@ -18,39 +18,6 @@ class PybrainzzFormatter:
         self.textColor_keywords = (0, 0, 0)
         self.textColor_function = (0, 0, 0)
         self.textColor_builtin = (0, 0, 0)
-
-        self.set_colorscheme(style)
-
-    def set_colorscheme(self, style):
-        """
-        Loads a colorscheme from a yaml file by specific keys.
-        Throws FileNotFoundError / KeyError on wrong input.
-
-        Tries to access a yaml file in the elements\colorstyles\ folder.
-        The parameter given combined with '-syntax.yml' must correspond to the desired file.
-        """
-
-        def get_rgb_by_key(key) -> Tuple:
-            pattern = r'(\d{1,3})'
-            return tuple([int(x) for x in re.findall(pattern, colors[key])])
-
-        try:
-            with open(os.getcwd() + r"\pygametexteditor\elements\colorstyles\\" + style + "-syntax.yml") as file:
-                colors = yaml.load(file, Loader=yaml.FullLoader)
-
-                self.textColor_normal = get_rgb_by_key('textColor_normal')
-                self.textColor_comments = get_rgb_by_key('textColor_comments')
-                self.textColor_quotes = get_rgb_by_key('textColor_quotes')
-                self.textColor_operators = get_rgb_by_key('textColor_operators')
-                self.textColor_keywords = get_rgb_by_key('textColor_keywords')
-                self.textColor_function = get_rgb_by_key('textColor_function')
-                self.textColor_builtin = get_rgb_by_key('textColor_builtin')
-
-        except FileNotFoundError:
-            raise FileNotFoundError("No file named '" + style +
-                                    r"-syntax.yml' found in the searched directory \elements\colorstyles.")
-        except KeyError:
-            raise KeyError("Not all necessary keys were found in the " + style + "-syntax.yml file.")
 
     def format(self, tokensource: List[Tuple]) -> List[Dict]:
         """
