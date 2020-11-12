@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import pathlib
 
 # The directory containing this file
@@ -8,21 +8,22 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 setup(
-    name='pygametexteditor',
-    packages=['pygametexteditor'],
+    name='pygame-texteditor',
+    packages=['pygame_texteditor'],
+    package_data={'pygame_texteditor': ['pygame_texteditor/elements/graphics/*.png', 'pygame_texteditor/elements/fonts/.ttf', 'pygame_texteditor/elements/colorstyles/*.yml']},
+    include_package_data=True,
     license='MIT',
     description='A WYSIWYG-texteditor based on pygame.',
     long_description=README,
     long_description_content_type='text/markdown',
-    version='0.5.3',
+    version='0.6',
     python_requires=">=3.6",
     author='CribberSix',
     author_email='cribbersix@gmail.com',
-    install_requires=['pygame==1.9.6'],
+    install_requires=['pygame==1.9.6', 'pyyaml >= 5.3.1', 'pygments >= 2.6.1', 'pyperclip >= 1.8.1'],
     classifiers=[
-        # Trove classifiers
-        # (https://pypi.python.org/pypi?%3Aaction=list_classifiers)
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
+        # 'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
@@ -33,7 +34,5 @@ setup(
         'Topic :: Software Development',
     ],
     keywords=['pygame', 'texteditor', 'text', 'editor'],
-    package_data={'pygametexteditor': ['pygametexteditor/elements/*.png', 'pygametexteditor/elements/*.ttf']},
-    include_package_data=True,
 )
 

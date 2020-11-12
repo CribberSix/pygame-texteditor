@@ -29,7 +29,7 @@ The texteditor takes 5 obligatory parameters and 3 optional parameters.
 
 ```
 import pygame
-from pygametexteditor import TextEditor
+from pygame_texteditor import TextEditor
 
 pygame.init()
 screenHeight = 600
@@ -51,11 +51,22 @@ textAreaWidth = 800
 
 # Instantiation
 TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
+TX.set_line_numbers(True)  # optional 
+TX.set_syntax_highlighting(True)  # optional
 
-# TextEditor in a loop
-while True:    
-    TX.display_editor()  # displays editor functionality once per loop
-    pygame.display.flip()  # updates pygame window
+while True:  # pygame-loop
+    # capture input
+    pygame_events = pygame.event.get()
+    pressed_keys = pygame.key.get_pressed()
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    mouse_pressed = pygame.mouse.get_pressed()
+
+    # display editor functionality once per loop
+    TX.display_editor(pygame_events, pressed_keys, mouse_x, mouse_y, mouse_pressed)
+
+    # update pygame window
+    pygame.display.flip()  
+
 
 ```
 

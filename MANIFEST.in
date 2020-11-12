@@ -1,5 +1,5 @@
-include ./pygametexteditor/elements/fonts/*.ttf
-include ./pygametexteditor/elements/graphics/*.png
-include ./pygametexteditor/elements/colorstyles/*.yml
+include ./pygame_texteditor/elements/fonts/*.ttf
+include ./pygame_texteditor/elements/graphics/*.png
+include ./pygame_texteditor/elements/colorstyles/*.yml
 
 include LICENSE

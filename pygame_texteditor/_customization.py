@@ -3,7 +3,7 @@ import re
 import pathlib
 import yaml
 import pygame
-from pygametexteditor.PybrainzzFormatter import PybrainzzFormatter
+from .PybrainzzFormatter import PybrainzzFormatter
 from pygments.lexers import PythonLexer
 
 

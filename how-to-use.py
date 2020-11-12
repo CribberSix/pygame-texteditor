@@ -1,5 +1,5 @@
 import pygame
-from pygametexteditor.TextEditor import TextEditor
+from pygame_texteditor.TextEditor import TextEditor
 
 # minimal pygame setup
 pygame.init()
@@ -19,9 +19,6 @@ textAreaWidth = 800
 # instantiation
 TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
 TX.set_line_numbers(True)
-#TX.set_colorscheme_from_yaml(r"C:\Users\Victor\Desktop\test\custom.yml")
-#TX.set_colorscheme("bright")
-#TX.set_colorscheme("dark")
 TX.set_syntax_highlighting(True)
 
 # TextEditor in the pygame-loop

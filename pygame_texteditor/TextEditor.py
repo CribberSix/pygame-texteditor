@@ -1,5 +1,5 @@
 from pygments.lexers import PythonLexer
-from pygametexteditor.PybrainzzFormatter import PybrainzzFormatter
+from .PybrainzzFormatter import PybrainzzFormatter
 import pygame
 import math
 import os
