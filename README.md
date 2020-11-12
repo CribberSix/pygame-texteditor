@@ -1,5 +1,8 @@
 # A WYSIWYG-texteditor based on pygame for pygame
 
+![PyPI](https://img.shields.io/pypi/v/pygame-texteditor?color=%233775A9&label=pypi%20package&style=plastic)
+![GitHub](https://img.shields.io/github/license/CribberSix/pygame-texteditor?style=plastic)
+
 ## Usage
 
 The text editor can be inserted into any existing pygame window. 
