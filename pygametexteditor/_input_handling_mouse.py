@@ -2,7 +2,7 @@ import pygame
 from ._scrollbar_vertical import scroll_down, scroll_up
 
 
-def handle_mouse_input(self, pygame_events, mouse_x, mouse_y) -> None:
+def handle_mouse_input(self, pygame_events, mouse_x, mouse_y, mouse_pressed) -> None:
     """
     Handles mouse input based on mouse events (Buttons down/up + coordinates).
     Handles drag-and-drop-select as well as single-click.
