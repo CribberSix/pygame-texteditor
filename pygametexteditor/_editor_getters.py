@@ -21,6 +21,7 @@ def get_letter_index(self, mouse_x) -> int:
     letter = 0 if letter < 0 else letter
     return letter
 
+
 def get_number_of_letters_in_line_by_mouse(self, mouse_y) -> int:
     line_index = get_line_index(self, mouse_y)
     return get_number_of_letters_in_line_by_index(self, line_index)

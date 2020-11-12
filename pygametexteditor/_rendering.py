@@ -81,7 +81,7 @@ def caret_within_texteditor(self) -> bool:
     the caret is in the first line.
     """
     return self.editor_offset_X + self.lineNumberWidth < self.cursor_X < (
-                self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth) \
+                self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth - 2) \
            and self.editor_offset_Y <= self.cursor_Y < (
                        self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight)
 

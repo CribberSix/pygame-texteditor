@@ -9,8 +9,8 @@ import re
 
 class TextEditor:
     # Scroll functionality
-    from ._scrollbar_vertical import render_scrollbar_vertical, display_scrollbar, scroll_up, \
-        scroll_down
+    from ._scrollbar_vertical import render_scrollbar_vertical, display_scrollbar, scrollbar_up, \
+        scrollbar_down
 
     # input handling KEYBOARD
     from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
@@ -60,6 +60,7 @@ class TextEditor:
         self.editor_offset_Y = offset_y
         self.textAreaWidth = text_area_width
         self.textAreaHeight = text_area_height
+        self.conclusionBarHeight = 18
         self.letter_size_Y = 15
         self.letter_size_X = 9
         current_dir = os.path.dirname(__file__)
@@ -88,9 +89,11 @@ class TextEditor:
         # SCROLLBAR
         self.scrollBarImg = pygame.image.load(os.path.join(current_dir, "elements/graphics/Scroll_Bar.png")).convert()
         self.scrollBarWidth = 8  # must be an even number
-        self.conclusionBarHeight = 18
-        self.scrollBarHeight = (self.textAreaHeight - 2 ) * self.showable_line_numbers_in_editor / len(
-            self.line_string_list)
+
+        self.scrollbar: pygame.Rect = None
+        self.scroll_start_y: int = None
+        self.scroll_dragging: bool = False
+
 
         # LINE NUMBERS
         self.displayLineNumbers = line_numbers_flag

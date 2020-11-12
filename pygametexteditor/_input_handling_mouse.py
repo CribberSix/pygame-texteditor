@@ -1,5 +1,5 @@
 import pygame
-from ._scrollbar_vertical import scroll_down, scroll_up
+from ._scrollbar_vertical import scrollbar_up, scrollbar_up
 
 
 def handle_mouse_input(self, pygame_events, mouse_x, mouse_y, mouse_pressed) -> None:
@@ -13,19 +13,26 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y, mouse_pressed) -> 
     - left-click (selecting as drag-and-drop or single-click)
     - mouse-wheel (scrolling)
     TODO:
-    - right-cliuck
+    - right-click
     """
 
     # ___ MOUSE ___ #
     for event in pygame_events:
         # ___ MOUSE CLICKING DOWN ___ #
-        # Mouse scrolling wheel should only work if it is within the coding area.
+        # Scrollbar-handling
+        if event.type == pygame.MOUSEBUTTONDOWN and not self.mouse_within_texteditor(mouse_x, mouse_y):
+            if self.scrollbar is not None:
+                if self.scrollbar.collidepoint(mouse_x, mouse_y):
+                    self.scroll_start_y = mouse_y
+                    self.scroll_dragging = True
+
+        # Mouse scrolling wheel should only work if it is within the coding area (excluding scrollbar area)
         if event.type == pygame.MOUSEBUTTONDOWN and self.mouse_within_texteditor(mouse_x, mouse_y):
             # ___ MOUSE SCROLLING ___ #
             if event.button == 4 and self.showStartLine > 0:
-                self.scroll_up()
+                self.scrollbar_up()
             elif event.button == 5 and self.showStartLine + self.showable_line_numbers_in_editor < self.maxLines:
-                self.scroll_down()
+                self.scrollbar_down()
 
             # ___ MOUSE LEFT CLICK DOWN ___ #
             elif event.button == 1:  # left mouse button
@@ -46,34 +53,38 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y, mouse_pressed) -> 
                         pass
 
         # ___ MOUSE LEFT CLICK UP ___ #
-        if event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.click_hold:
-            # mouse dragging only with left mouse up
-            # mouse-up only valid if we registered a mouse-down within the editor via click_hold earlier
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
 
-            self.last_clickup_cycle = self.cycleCounter
-            self.click_hold = False
+            self.scroll_dragging = False  # reset scroll (if necessary)
 
-            if self.mouse_within_texteditor(mouse_x, mouse_y):  # editor area
-                if self.mouse_within_existing_lines(mouse_y):  # in area of existing lines
-                    self.set_drag_end_by_mouse(mouse_x, mouse_y)
-                else:  # clicked beneath the existing lines
-                    self.set_drag_end_after_last_line()
-                self.update_caret_position_by_drag_end()
+            if self.click_hold:
+                # mouse dragging only with left mouse up
+                # mouse-up only valid if we registered a mouse-down within the editor via click_hold earlier
 
-            else:  # mouse-up outside of editor
-                if mouse_y < self.editor_offset_Y:
-                    # Mouse-up above editor -> set to first visible line
-                    self.drag_chosen_LineIndex_end = self.showStartLine
-                elif mouse_y > (self.editor_offset_Y + self.textAreaHeight - self.conclusionBarHeight):
-                    # Mouse-up below the editor -> set to last visible line
-                    if self.maxLines >= self.showable_line_numbers_in_editor:
-                        self.drag_chosen_LineIndex_end = self.showStartLine + self.showable_line_numbers_in_editor - 1
-                    else:
-                        self.drag_chosen_LineIndex_end = self.maxLines - 1
-                else:  # mouse left or right of the editor outside
-                    self.set_drag_end_line_by_mouse(mouse_y)
-                # Now we can determine the letter based on mouse_x (and selected line within the function)
-                self.set_drag_end_letter_by_mouse(mouse_x)
+                self.last_clickup_cycle = self.cycleCounter
+                self.click_hold = False
+
+                if self.mouse_within_texteditor(mouse_x, mouse_y):  # editor area
+                    if self.mouse_within_existing_lines(mouse_y):  # in area of existing lines
+                        self.set_drag_end_by_mouse(mouse_x, mouse_y)
+                    else:  # clicked beneath the existing lines
+                        self.set_drag_end_after_last_line()
+                    self.update_caret_position_by_drag_end()
+
+                else:  # mouse-up outside of editor
+                    if mouse_y < self.editor_offset_Y:
+                        # Mouse-up above editor -> set to first visible line
+                        self.drag_chosen_LineIndex_end = self.showStartLine
+                    elif mouse_y > (self.editor_offset_Y + self.textAreaHeight - self.conclusionBarHeight):
+                        # Mouse-up below the editor -> set to last visible line
+                        if self.maxLines >= self.showable_line_numbers_in_editor:
+                            self.drag_chosen_LineIndex_end = self.showStartLine + self.showable_line_numbers_in_editor - 1
+                        else:
+                            self.drag_chosen_LineIndex_end = self.maxLines - 1
+                    else:  # mouse left or right of the editor outside
+                        self.set_drag_end_line_by_mouse(mouse_y)
+                    # Now we can determine the letter based on mouse_x (and selected line within the function)
+                    self.set_drag_end_letter_by_mouse(mouse_x)
 
         # _______ CHECK FOR MOUSE DRAG AND HANDLE CLICK _______ #
         if (self.last_clickup_cycle - self.last_clickdown_cycle) >= 0:
@@ -98,6 +109,16 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y, mouse_pressed) -> 
             self.last_clickdown_cycle = 0
             self.last_clickup_cycle = -1
 
+    # Scrollbar - Dragging
+    if mouse_pressed[0] == 1 and self.scroll_dragging:
+        # left mouse is being pressed after click on scrollbar
+        if mouse_y < self.scroll_start_y and self.showStartLine > 0:
+            # dragged higher
+            self.scrollbar_up()
+        elif mouse_y > self.scroll_start_y \
+                and self.showStartLine + self.showable_line_numbers_in_editor < self.maxLines:
+            # dragged lower
+            self.scrollbar_down()
 
 def mouse_within_texteditor(self, mouse_x, mouse_y) -> bool:
     """
