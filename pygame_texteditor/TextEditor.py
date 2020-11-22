@@ -94,7 +94,6 @@ class TextEditor:
         self.scroll_start_y: int = None
         self.scroll_dragging: bool = False
 
-
         # LINE NUMBERS
         self.displayLineNumbers = line_numbers_flag
         if self.displayLineNumbers:

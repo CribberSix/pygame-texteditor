@@ -35,11 +35,19 @@ def clear_text(self) -> None:
         self.line_string_list.append("")  # Add a line
 
     # reset caret
+    self.firstiteration_boolean = True  # redraws background
+    self.rerenderLineNumbers = True
     self.chosen_LineIndex = 0
     self.chosen_LetterIndex = 0
     self.dragged_active = False
     self.dragged_finished = True
+    self.scroll_dragging = False
+    self.drag_chosen_LineIndex_start = 0
+    self.drag_chosen_LetterIndex_start = 0
+    self.drag_chosen_LineIndex_end = 0
+    self.drag_chosen_LetterIndex_end = 0
     self.last_clickdown_cycle = 0
     self.last_clickup_cycle = 0
     self.cycleCounter = 0
     self.update_caret_position()
+    self.cycleCounter = 0

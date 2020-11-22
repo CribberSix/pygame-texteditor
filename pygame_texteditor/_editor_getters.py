@@ -1,4 +1,3 @@
-import pygame
 
 
 def get_line_index(self, mouse_y) -> int:
