@@ -16,7 +16,7 @@ setup(
     description='A WYSIWYG-texteditor based on pygame.',
     long_description=README,
     long_description_content_type='text/markdown',
-    version='0.6',
+    version='0.6.1',
     python_requires=">=3.6",
     author='CribberSix',
     author_email='cribbersix@gmail.com',

@@ -11,7 +11,7 @@
     - drag_chosen_LineIndex_end
     - drag_chosen_LetterIndex_end
 
-If the two have the same position (line_index + letter_index) then it is a "**click**" as in as it functions like a click, if the two have a different start- and end-point, then we drag and highlight some text between the two points. 
+If the two have the same position (line_index + letter_index) then it is a "**click**" as it functions like a click, if the two have a different start- and end-point, then we drag and highlight some text between the two points. 
 
 The following variables are used when typing to keep the caret in the correct place. They are also set AFTER a mouse drag has been finished.
 

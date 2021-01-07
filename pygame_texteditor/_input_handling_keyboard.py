@@ -5,8 +5,6 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
 
     if self.deleteCounter > 0:
         self.deleteCounter -= 1
-    #self.deleteCounter = self.deleteCounter % 5  # If FPS = 60; then we can delete 12 characters each second
-
 
     # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
     if self.dragged_finished and self.dragged_active and \

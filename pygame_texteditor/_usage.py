@@ -51,3 +51,23 @@ def clear_text(self) -> None:
     self.cycleCounter = 0
     self.update_caret_position()
     self.cycleCounter = 0
+
+
+def set_text_from_list(self, text_list) -> None:
+    """
+    Sets the text of the editor based on a list of strings. Each item in the list represents one line.
+    """
+    self.clear_text()
+    self.line_string_list = text_list
+    self.maxLines = len(self.line_string_list)
+    self.rerenderLineNumbers = True
+
+
+def set_text_from_string(self, string) -> None:
+    """
+    Sets the text of the editor based on a string. Linebreak characters are parsed.
+    """
+    self.clear_text()
+    self.line_string_list = string.split('\n')
+    self.maxLines = len(self.line_string_list)
+    self.rerenderLineNumbers = True

@@ -85,6 +85,18 @@ Each String-item in the list represents one line from the editor.
 
 The editor offers the function `clear_text()` to clear the editor of any text.
 
+
+##### Inserting text into the editor
+
+Inserting text can be done by using one of the two available functions: 
+1. With a list of strings in which each string represents one line, or
+2. With a string which includes linebreak characters which get parsed. 
+
+```
+set_text_from_list(["First line", "Second Line.", "Third Line."]
+set_text_from_string("First line.\nSecond line.\nThird Line")
+```
+
 ## Customization
 
 #### Line Numbers 

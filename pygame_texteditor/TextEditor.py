@@ -49,7 +49,7 @@ class TextEditor:
 
     # files for customization of the editor:
     from ._customization import set_line_numbers, set_syntax_highlighting, set_colorscheme, set_colorscheme_from_yaml
-    from ._usage import get_text_as_list, get_text_as_string, clear_text
+    from ._usage import get_text_as_list, get_text_as_string, clear_text, set_text
 
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen,
                  line_numbers_flag=False, style='dark', syntax_highlighting_flag=False):
