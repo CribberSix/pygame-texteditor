@@ -41,14 +41,16 @@ def render_line_numbers(self) -> None:
         for x in range(self.showStartLine, self.showStartLine + self.showable_line_numbers_in_editor):
 
             # background
-            pygame.draw.rect(self.screen, self.lineNumberBackgroundColor,
-                             (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, 17))
+            r = (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, self.line_gap)
+            pygame.draw.rect(self.screen, self.lineNumberBackgroundColor, r)
+
             # line number
             if x < self.get_showable_lines():
                 # x + 1 in order to start with line 1 (only display, logical it's the 0th item in the list
                 text = self.courier_font.render(str(x + 1).zfill(2), 1, self.lineNumberColor)
-                self.screen.blit(text, (self.editor_offset_X + 5, line_numbers_Y + 3))  # center of bg block
-
+                text_rect = text.get_rect()
+                text_rect.center = pygame.Rect(r).center
+                self.screen.blit(text, text_rect)  # render on center of bg block
             line_numbers_Y += self.line_gap
 
 

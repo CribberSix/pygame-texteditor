@@ -1,10 +1,25 @@
 import os
 import re
+import math
 import pathlib
 import yaml
 import pygame
 from .PybrainzzFormatter import PybrainzzFormatter
 from pygments.lexers import PythonLexer
+
+
+def set_font_size(self, size=16) -> None:
+    """
+    Sets the given size as font size and re-calculates necessary changes.
+    """
+    self.letter_size_Y = size
+    current_dir = os.path.dirname(__file__)
+    self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"),
+                                         self.letter_size_Y)
+    letter_width = self.courier_font.render(" ", 1, (0, 0, 0)).get_width()
+    self.letter_size_X = letter_width
+    self.line_gap = 3 + self.letter_size_Y
+    self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.line_gap))
 
 
 def set_line_numbers(self, b) -> None:

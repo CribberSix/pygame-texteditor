@@ -48,7 +48,8 @@ class TextEditor:
     from ._other import jump_to_start, jump_to_end, reset_after_highlight
 
     # files for customization of the editor:
-    from ._customization import set_line_numbers, set_syntax_highlighting, set_colorscheme, set_colorscheme_from_yaml
+    from ._customization import set_line_numbers, set_syntax_highlighting, set_colorscheme, \
+                                set_colorscheme_from_yaml, set_font_size
     from ._usage import get_text_as_list, get_text_as_string, clear_text, set_text_from_list, set_text_from_string
 
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen,
@@ -60,12 +61,16 @@ class TextEditor:
         self.editor_offset_Y = offset_y
         self.textAreaWidth = text_area_width
         self.textAreaHeight = text_area_height
+
         self.conclusionBarHeight = 18
-        self.letter_size_Y = 15
-        self.letter_size_X = 9
+        self.letter_size_Y = 16
         current_dir = os.path.dirname(__file__)
         self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"),
                                              self.letter_size_Y)
+
+        letter_width = self.courier_font.render(" ", 1, (0, 0, 0)).get_width()
+        self.letter_size_X = letter_width
+
         self.trennzeichen_image = pygame.image.load(
             os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
         self.syntax_coloring = syntax_highlighting_flag
@@ -74,14 +79,14 @@ class TextEditor:
         self.Trenn_counter = 0
         self.MaxLinecounter = 0
         self.line_string_list = []  # LOGIC: Array of actual Strings
-        self.lineHeight = 18
-        self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.lineHeight))
+        self.lineHeight = self.letter_size_Y
 
         # self.maxLines is the variable keeping count how many lines we currently have -
         # in the beginning we fill the entire editor with empty lines.
         self.maxLines = int(math.floor(self.textAreaHeight / self.lineHeight))
         self.showStartLine = 0  # first line (shown at the top of the editor) <- must be zero during init!
         self.line_gap = 3 + self.letter_size_Y
+        self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.line_gap))
 
         for i in range(self.maxLines):  # from 0 to maxLines:
             self.line_string_list.append("")  # Add a line

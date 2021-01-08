@@ -99,6 +99,11 @@ set_text_from_string("First line.\nSecond line.\nThird Line")
 
 ## Customization
 
+#### Font size
+
+Font size can be customized with the command `set_font_size(size)` - the parameter is an integer 
+with the default value `12` to be able to reset it. 
+
 #### Line Numbers 
 Line numbers can be shown on the left side of the editor. Line numbers begin with 0 as is the Pythonian way. 
 
