@@ -1,5 +1,8 @@
 # Changelog for package 'pygame-texteditor"
 
+### 0.6.4
+
+Fixed highlight-rendering (adjusted to actual line height + gap!)
 
 ### 0.6.3
 

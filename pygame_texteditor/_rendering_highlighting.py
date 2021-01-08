@@ -62,7 +62,7 @@ def highlight_from_letter_to_end(self, line, letter) -> None:
     if self.line_is_visible(line):
         x1, y1 = self.get_rect_coord_from_indizes(line, letter)
         x2, y2 = self.get_rect_coord_from_indizes(line, len(self.line_string_list[line]))
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.line_gap))
 
 
 def highlight_from_start_to_letter(self, line, letter) -> None:
@@ -72,7 +72,7 @@ def highlight_from_start_to_letter(self, line, letter) -> None:
     if self.line_is_visible(line):
         x1, y1 = self.get_rect_coord_from_indizes(line, 0)
         x2, y2 = self.get_rect_coord_from_indizes(line, letter)
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.line_gap))
 
 
 def highlight_entire_line(self, line) -> None:
@@ -82,7 +82,7 @@ def highlight_entire_line(self, line) -> None:
     if self.line_is_visible(line):
         x1, y1 = self.get_rect_coord_from_indizes(line, 0)
         x2, y2 = self.get_rect_coord_from_indizes(line, len(self.line_string_list[line]))
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.line_gap))
 
 
 def highlight_from_letter_to_letter(self, line, letter_start, letter_end) -> None:
@@ -92,4 +92,4 @@ def highlight_from_letter_to_letter(self, line, letter_start, letter_end) -> Non
     if self.line_is_visible(line):
         x1, y1 = self.get_rect_coord_from_indizes(line, letter_start)
         x2, y2 = self.get_rect_coord_from_indizes(line, letter_end)
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.lineHeight))
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(x1, y1, x2 - x1, self.line_gap))
