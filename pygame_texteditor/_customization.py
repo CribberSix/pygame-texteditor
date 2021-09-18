@@ -4,7 +4,6 @@ import math
 import pathlib
 import yaml
 import pygame
-from .PybrainzzFormatter import PybrainzzFormatter
 from pygments.lexers import PythonLexer
 
 

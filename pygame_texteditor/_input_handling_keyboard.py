@@ -1,5 +1,5 @@
 import pygame
-
+import warnings
 
 def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
 
@@ -24,7 +24,7 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
     # ___ OTHER KEYS ___ #
     for event in pygame_events:
         if event.type == pygame.KEYDOWN:
-
+            
             # ___ COMBINATION KEYS ___
             # Can be applied whether something is highlighted or not!
             if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_a:
@@ -70,10 +70,7 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
                                          pygame.K_BACKSPACE, pygame.K_CAPSLOCK, pygame.K_LCTRL, pygame.K_RCTRL]:
                         # We handled the keys separately
                         # Capslock is apparently implicitly handled when using it in combination
-
-                        # disabled for smooth development:
-                        # raise ValueError("No key implementation: " + str(pygame.key.name(event.key)))
-                        print("No key implementation: " + str(pygame.key.name(event.key)))
+                        warnings.warn("No implementation for key: " + str(pygame.key.name(event.key)), Warning)
 
 
 def insert_unicode(self, unicode) -> None:

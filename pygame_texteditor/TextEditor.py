@@ -1,10 +1,11 @@
 from pygments.lexers import PythonLexer
-from .PybrainzzFormatter import PybrainzzFormatter
 import pygame
 import math
 import os
 import yaml
 import re
+
+from .ColorFormatter import ColorFormatter
 
 
 class TextEditor:
@@ -145,15 +146,17 @@ class TextEditor:
         self.color_scrollbar = (60, 61, 61)
 
         self.lexer = PythonLexer()
-        self.formatter = PybrainzzFormatter()
+        self.formatter = ColorFormatter()
         self.set_colorscheme(style)
 
+        # Key input variables
+        pygame.key.set_repeat(300, 30) 
+        self.deleteCounter = 0  # variable to keep track of frames
+
         # Performance enhancing variables
-        self.deleteCounter = 0
         self.firstiteration_boolean = True
         self.rerenderLineNumbers = True
         self.click_hold = False
-
         self.cycleCounter = 0  # Used to be able to tell whether a mouse-drag action has been handled already or not.
 
         self.clock = pygame.time.Clock()
@@ -167,7 +170,6 @@ class TextEditor:
             # paint entire area to avoid pixel error beneath line numbers
             pygame.draw.rect(self.screen, self.codingBackgroundColor,
                              (self.editor_offset_X, self.editor_offset_Y, self.textAreaWidth, self.textAreaHeight))
-
             self.firstiteration_boolean = False
 
         for event in pygame_events:  # handle QUIT operation

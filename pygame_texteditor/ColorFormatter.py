@@ -8,7 +8,7 @@ import yaml
 import re
 
 
-class PybrainzzFormatter:
+class ColorFormatter:
 
     def __init__(self):
         self.textColor_normal = (0, 0, 0)

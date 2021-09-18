@@ -1,7 +1,6 @@
 from typing import List, Dict, Tuple
 import re as re
 from pygments.lexers import PythonLexer
-from .PybrainzzFormatter import PybrainzzFormatter
 
 
 def get_single_color_dicts(self) -> List[List[Dict]]:
