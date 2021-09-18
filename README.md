@@ -99,6 +99,16 @@ set_text_from_string("First line.\nSecond line.\nThird Line")
 
 ## Customization
 
+#### Key repetition speeds
+
+While a key is being held, multiple key events are being triggered. 
+The delay of the first repetition as well as the intervall between all sequential key triggers can be 
+customized by using the function `set_key_repetition(delay=300, intervall=30)`. 
+
+From the [official documentation](http://www.pygame.org/docs/ref/key.html#pygame.key.set_repeat): 
+> The delay parameter is the number of milliseconds before the first repeated pygame.KEYDOWN event will be sent.
+> After that, another pygame.KEYDOWN event will be sent every interval milliseconds.
+
 #### Font size
 
 Font size can be customized with the command `set_font_size(size)` - the parameter is an integer 

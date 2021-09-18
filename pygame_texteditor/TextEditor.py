@@ -149,9 +149,10 @@ class TextEditor:
         self.formatter = ColorFormatter()
         self.set_colorscheme(style)
 
-        # Key input variables
-        pygame.key.set_repeat(300, 30) 
-        self.deleteCounter = 0  # variable to keep track of frames
+        # Key input variables+
+        self.key_initial_delay = 300
+        self.key_continued_intervall = 30
+        pygame.key.set_repeat(self.key_initial_delay, self.key_continued_intervall) 
 
         # Performance enhancing variables
         self.firstiteration_boolean = True

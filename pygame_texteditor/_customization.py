@@ -4,7 +4,16 @@ import math
 import pathlib
 import yaml
 import pygame
-from pygments.lexers import PythonLexer
+
+
+def set_key_repetition(self, delay=300, intervall=30) -> None:
+    """
+    The delay parameter is the number of milliseconds before the first repeated pygame.KEYDOWN event will be sent.
+    After that, another pygame.KEYDOWN event will be sent every interval milliseconds.
+    """
+    self.key_initial_delay = delay
+    self.key_continued_intervall = intervall 
+    pygame.key.set_repeat(self.key_initial_delay, self.key_continued_intervall) 
 
 
 def set_font_size(self, size=16) -> None:

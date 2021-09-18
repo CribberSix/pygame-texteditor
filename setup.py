@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 import pathlib
 
 # The directory containing this file
@@ -16,14 +16,13 @@ setup(
     description='A WYSIWYG-texteditor based on pygame.',
     long_description=README,
     long_description_content_type='text/markdown',
-    version='0.6.5',
+    version='0.6.6',
     python_requires=">=3.6",
     author='CribberSix',
     author_email='cribbersix@gmail.com',
     install_requires=['pygame>=1.9.6', 'pyyaml >= 5.3.1', 'pygments >= 2.6.1', 'pyperclip >= 1.8.1'],
     classifiers=[
-        'Development Status :: 4 - Beta',
-        # 'Development Status :: 5 - Production/Stable',
+        'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',

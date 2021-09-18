@@ -1,39 +1,21 @@
 import pygame
 import warnings
 
+
 def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
 
-    if self.deleteCounter > 0:
-        self.deleteCounter -= 1
-
-    # Detect tapping/holding of the "DELETE" and "BACKSPACE" key
-    if self.dragged_finished and self.dragged_active and \
-            (pressed_keys[pygame.K_DELETE] or pressed_keys[pygame.K_BACKSPACE]):
-        delete_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DELETE)  # create the event
-        self.handle_input_with_highlight(delete_event)  # delete and backspace have the same functionality
-        self.deleteCounter = 5
-    elif pressed_keys[pygame.K_DELETE] and self.deleteCounter == 0:
-        self.handle_keyboard_delete()  # handle input
-        self.reset_text_area_to_caret()  # reset caret if necessary
-        self.deleteCounter = 5
-    elif pressed_keys[pygame.K_BACKSPACE] and self.deleteCounter == 0:
-        self.handle_keyboard_backspace()  # handle input
-        self.reset_text_area_to_caret()  # reset caret if necessary
-        self.deleteCounter = 5
-
-    # ___ OTHER KEYS ___ #
     for event in pygame_events:
         if event.type == pygame.KEYDOWN:
             
-            # ___ COMBINATION KEYS ___
-            # Can be applied whether something is highlighted or not!
+            # ___ COMBINATION KEY INPUTS ___
+            # Functionality whether something is highlighted or not (highlight all / paste)
             if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_a:
                 self.highlight_all()
             elif (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_v:
                 self.handle_highlight_and_paste()
 
+            # Functionality for when something is highlighted (cut / copy)
             elif self.dragged_finished and self.dragged_active:
-                # Only work if something is highlighted!
                 if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_x:
                     self.handle_highlight_and_cut()
                 elif (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_c:
@@ -41,28 +23,57 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
                 else:
                     self.handle_input_with_highlight(event)  # handle char input on highlight
 
+            # ___ SINGLE KEY INPUTS ___
             else:
-                self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessaryss
+                self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessary
+                self.chosen_LetterIndex = int(self.chosen_LetterIndex)
+
+                print("event",event)
+
+                # Detect tapping/holding of the "DELETE" and "BACKSPACE" key while something is highlighted
+                if self.dragged_finished and self.dragged_active and \
+                        (event.unicode == '\x08' or event.unicode == '\x7f'):
+                    # create the uniform event for both keys so we don't have to write two functions
+                    deletion_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DELETE)
+                    self.handle_input_with_highlight(deletion_event)  # delete and backspace have the same functionality
+
+                # ___ DELETIONS ___
+                elif event.unicode == '\x08':  # K_BACKSPACE
+                    self.handle_keyboard_backspace()
+                    self.reset_text_area_to_caret()  # reset caret if necessary
+                elif event.unicode == '\x7f':  # K_DELETE
+                    self.handle_keyboard_delete()
+                    self.reset_text_area_to_caret()  # reset caret if necessary
 
                 # ___ NORMAL KEYS ___
-                if len(pygame.key.name(event.key)) == 1:  # This covers all letters and numbers (not on numpad).
-                    self.chosen_LetterIndex = int(self.chosen_LetterIndex)
+                # This covers all letters and numbers (not those on numpad).
+                elif len(pygame.key.name(event.key)) == 1:
                     self.insert_unicode(event.unicode)
+
+                # ___ NUMPAD KEYS ___
+                # for the numbers, numpad must be activated (mod = 4096)
+                elif event.mod == 4096 and 1073741913 <= event.key <= 1073741922:
+                    self.insert_unicode(event.unicode)
+                # all other numpad keys can be triggered with & without mod
+                elif event.key in [pygame.K_KP_PERIOD, pygame.K_KP_DIVIDE, pygame.K_KP_MULTIPLY, pygame.K_KP_MINUS, pygame.K_KP_PLUS, pygame.K_KP_EQUALS]:
+                    self.insert_unicode(event.unicode)
+
                 # ___ SPECIAL KEYS ___
-                elif event.key == pygame.K_TAB:  # ___TABULATOR
+                elif event.key == pygame.K_TAB:  # TABULATOR
                     self.handle_keyboard_tab()
-                elif event.key == pygame.K_SPACE:  # ___SPACEBAR
+                elif event.key == pygame.K_SPACE:  # SPACEBAR
                     self.handle_keyboard_space()
-                elif event.key == pygame.K_RETURN:  # ___RETURN
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:  # RETURN
                     self.handle_keyboard_return()
-                elif event.key == pygame.K_UP:  # ___ARROW_UP
+                elif event.key == pygame.K_UP:  # ARROW_UP
                     self.handle_keyboard_arrow_up()
-                elif event.key == pygame.K_DOWN:  # ___ARROW_DOWN
+                elif event.key == pygame.K_DOWN:  # ARROW_DOWN
                     self.handle_keyboard_arrow_down()
-                elif event.key == pygame.K_RIGHT:  # ___ARROW_RIGHT
+                elif event.key == pygame.K_RIGHT:  # ARROW_RIGHT
                     self.handle_keyboard_arrow_right()
-                elif event.key == pygame.K_LEFT:  # ___ARROW_LEFT
+                elif event.key == pygame.K_LEFT:  # ARROW_LEFT
                     self.handle_keyboard_arrow_left()
+
 
 
                 else:
