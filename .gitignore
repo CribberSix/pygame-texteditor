@@ -6,3 +6,6 @@ venv/
 dist/
 build/
 *.egg-info/
+.vs/
+.vscode/
+pygame_texteditor_env/
