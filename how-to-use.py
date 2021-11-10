@@ -3,18 +3,18 @@ from pygame_texteditor.TextEditor import TextEditor
 
 # minimal pygame setup
 pygame.init()
-screenHeight = 600
-screenWidth = 900
+screenHeight = 400# 600
+screenWidth = 300 # 900
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("Pygame")
 pygame.display.get_surface().fill((200, 200, 200))  # background coloring
 
 # parameters
 screen = pygame.display.get_surface()  # get existing pygame window/screen
-offset_X = 50  # offset from the left border of the pygame window
-offset_Y = 50  # offset from the top border of the pygame window
-textAreaHeight = 500
-textAreaWidth = 800
+offset_X = 25 # 50  # offset from the left border of the pygame window
+offset_Y = 25 # 50  # offset from the top border of the pygame window
+textAreaHeight = 350  #400
+textAreaWidth =  250 #800
 
 # instantiation
 TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
