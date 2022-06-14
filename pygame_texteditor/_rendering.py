@@ -96,7 +96,7 @@ def render_caret(self) -> None:
     Creates 'blinking' animation
     """
     self.Trenn_counter += 1
-    if self.Trenn_counter > (self.FPS / 5) and self.caret_within_texteditor() and self.dragged_finished:
+    if self.static_cursor or (self.Trenn_counter > (self.FPS / 5) and self.caret_within_texteditor() and self.dragged_finished):
         self.screen.blit(self.trennzeichen_image, (self.cursor_X, self.cursor_Y))
         self.Trenn_counter = self.Trenn_counter % ((self.FPS / 5) * 2)
 

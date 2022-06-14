@@ -97,3 +97,12 @@ def set_colorscheme(self, style) -> None:
                          "\n\tAvailable styles are 'dark' and 'bright'. \n\tFor your " +
                          "own custom styles, use the method 'set_colorscheme_from_yaml(path_to_yaml)' " +
                          "and have a look at the docs.")
+
+
+def set_cursor_mode(self, mode: str = "blinking"):
+    if mode == "blinking":
+        self.static_cursor = False
+    elif mode == "static":
+        self.static_cursor = True
+    else:
+        raise ValueError(f"Value '{mode}' is not a valid cursor mode. Set either to 'blinking' or 'static'.")

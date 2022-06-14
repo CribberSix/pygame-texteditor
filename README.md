@@ -3,10 +3,18 @@
 ![PyPI](https://img.shields.io/pypi/v/pygame-texteditor?color=%233775A9&label=pypi%20package&style=plastic)
 ![GitHub](https://img.shields.io/github/license/CribberSix/pygame-texteditor?style=plastic)
 
-## Usage
+## Introduction & examples
 
 The text editor can be inserted into any existing pygame window. 
-A minimal example of it being activated within an existing pygame window can be found below.
+A minimal code example of it being activated within an existing pygame window can be found below.
+
+The code editor comes with line numbers and syntax highlighting for python if enabled:
+![](./resources/example_one.png)
+
+Example with default configuration:
+![](./resources/example_two.png)
+
+## Usage
 
 The texteditor takes 5 obligatory parameters and 3 optional parameters.
 
@@ -99,10 +107,19 @@ set_text_from_string("First line.\nSecond line.\nThird Line")
 
 ## Customization
 
+#### Cursor mode 
+
+Cursor mode can either be `static` or `blinking` (=default). 
+
+```python
+set_cursor_mode("static")
+set_cursor_mode("blinking")
+```
+
 #### Key repetition speeds
 
 While a key is being held, multiple key events are being triggered. 
-The delay of the first repetition as well as the intervall between all sequential key triggers can be 
+The delay of the first repetition as well as the interval between all sequential key triggers can be 
 customized by using the function `set_key_repetition(delay=300, intervall=30)`. 
 
 From the [official documentation](http://www.pygame.org/docs/ref/key.html#pygame.key.set_repeat): 

@@ -50,7 +50,7 @@ class TextEditor:
 
     # files for customization of the editor:
     from ._customization import set_line_numbers, set_syntax_highlighting, set_colorscheme, \
-                                set_colorscheme_from_yaml, set_font_size
+                                set_colorscheme_from_yaml, set_font_size, set_cursor_mode
     from ._usage import get_text_as_list, get_text_as_string, clear_text, set_text_from_list, set_text_from_string
 
     def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen,
@@ -122,6 +122,7 @@ class TextEditor:
             self.xline = self.editor_offset_X
 
         # CURSOR - coordinates for displaying the caret while typing
+        self.static_cursor = False
         self.cursor_Y = self.yline_start - 3
         self.cursor_X = self.xline_start
 

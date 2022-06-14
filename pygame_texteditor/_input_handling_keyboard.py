@@ -28,8 +28,6 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
                 self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessary
                 self.chosen_LetterIndex = int(self.chosen_LetterIndex)
 
-                print("event",event)
-
                 # Detect tapping/holding of the "DELETE" and "BACKSPACE" key while something is highlighted
                 if self.dragged_finished and self.dragged_active and \
                         (event.unicode == '\x08' or event.unicode == '\x7f'):
