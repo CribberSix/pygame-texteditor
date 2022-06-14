@@ -9,9 +9,11 @@ The text editor can be inserted into any existing pygame window.
 A minimal code example of it being activated within an existing pygame window can be found below.
 
 The code editor comes with line numbers and syntax highlighting for python if enabled:
+
 ![](./resources/example_one.png)
 
 Example with default configuration:
+
 ![](./resources/example_two.png)
 
 ## Usage
