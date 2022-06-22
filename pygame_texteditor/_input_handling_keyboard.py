@@ -6,22 +6,32 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
 
     for event in pygame_events:
         if event.type == pygame.KEYDOWN:
-            
+
             # ___ COMBINATION KEY INPUTS ___
             # Functionality whether something is highlighted or not (highlight all / paste)
-            if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_a:
+            if (
+                pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]
+            ) and event.key == pygame.K_a:
                 self.highlight_all()
-            elif (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_v:
+            elif (
+                pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]
+            ) and event.key == pygame.K_v:
                 self.handle_highlight_and_paste()
 
             # Functionality for when something is highlighted (cut / copy)
             elif self.dragged_finished and self.dragged_active:
-                if (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_x:
+                if (
+                    pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]
+                ) and event.key == pygame.K_x:
                     self.handle_highlight_and_cut()
-                elif (pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]) and event.key == pygame.K_c:
+                elif (
+                    pressed_keys[pygame.K_LCTRL] or pressed_keys[pygame.K_RCTRL]
+                ) and event.key == pygame.K_c:
                     self.handle_highlight_and_copy()
                 else:
-                    self.handle_input_with_highlight(event)  # handle char input on highlight
+                    self.handle_input_with_highlight(
+                        event
+                    )  # handle char input on highlight
 
             # ___ SINGLE KEY INPUTS ___
             else:
@@ -29,17 +39,24 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
                 self.chosen_LetterIndex = int(self.chosen_LetterIndex)
 
                 # Detect tapping/holding of the "DELETE" and "BACKSPACE" key while something is highlighted
-                if self.dragged_finished and self.dragged_active and \
-                        (event.unicode == '\x08' or event.unicode == '\x7f'):
+                if (
+                    self.dragged_finished
+                    and self.dragged_active
+                    and (event.unicode == "\x08" or event.unicode == "\x7f")
+                ):
                     # create the uniform event for both keys so we don't have to write two functions
-                    deletion_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DELETE)
-                    self.handle_input_with_highlight(deletion_event)  # delete and backspace have the same functionality
+                    deletion_event = pygame.event.Event(
+                        pygame.KEYDOWN, key=pygame.K_DELETE
+                    )
+                    self.handle_input_with_highlight(
+                        deletion_event
+                    )  # delete and backspace have the same functionality
 
                 # ___ DELETIONS ___
-                elif event.unicode == '\x08':  # K_BACKSPACE
+                elif event.unicode == "\x08":  # K_BACKSPACE
                     self.handle_keyboard_backspace()
                     self.reset_text_area_to_caret()  # reset caret if necessary
-                elif event.unicode == '\x7f':  # K_DELETE
+                elif event.unicode == "\x7f":  # K_DELETE
                     self.handle_keyboard_delete()
                     self.reset_text_area_to_caret()  # reset caret if necessary
 
@@ -53,7 +70,14 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
                 elif event.mod == 4096 and 1073741913 <= event.key <= 1073741922:
                     self.insert_unicode(event.unicode)
                 # all other numpad keys can be triggered with & without mod
-                elif event.key in [pygame.K_KP_PERIOD, pygame.K_KP_DIVIDE, pygame.K_KP_MULTIPLY, pygame.K_KP_MINUS, pygame.K_KP_PLUS, pygame.K_KP_EQUALS]:
+                elif event.key in [
+                    pygame.K_KP_PERIOD,
+                    pygame.K_KP_DIVIDE,
+                    pygame.K_KP_MULTIPLY,
+                    pygame.K_KP_MINUS,
+                    pygame.K_KP_PLUS,
+                    pygame.K_KP_EQUALS,
+                ]:
                     self.insert_unicode(event.unicode)
 
                 # ___ SPECIAL KEYS ___
@@ -61,7 +85,9 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
                     self.handle_keyboard_tab()
                 elif event.key == pygame.K_SPACE:  # SPACEBAR
                     self.handle_keyboard_space()
-                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:  # RETURN
+                elif (
+                    event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER
+                ):  # RETURN
                     self.handle_keyboard_return()
                 elif event.key == pygame.K_UP:  # ARROW_UP
                     self.handle_keyboard_arrow_up()
@@ -72,21 +98,31 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
                 elif event.key == pygame.K_LEFT:  # ARROW_LEFT
                     self.handle_keyboard_arrow_left()
 
-
-
                 else:
-                    if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_DELETE,
-                                         pygame.K_BACKSPACE, pygame.K_CAPSLOCK, pygame.K_LCTRL, pygame.K_RCTRL]:
+                    if event.key not in [
+                        pygame.K_RSHIFT,
+                        pygame.K_LSHIFT,
+                        pygame.K_DELETE,
+                        pygame.K_BACKSPACE,
+                        pygame.K_CAPSLOCK,
+                        pygame.K_LCTRL,
+                        pygame.K_RCTRL,
+                    ]:
                         # We handled the keys separately
                         # Capslock is apparently implicitly handled when using it in combination
-                        warnings.warn("No implementation for key: " + str(pygame.key.name(event.key)), Warning)
+                        warnings.warn(
+                            "No implementation for key: "
+                            + str(pygame.key.name(event.key)),
+                            Warning,
+                        )
 
 
 def insert_unicode(self, unicode) -> None:
-    self.line_string_list[self.chosen_LineIndex] = self.line_string_list[self.chosen_LineIndex][
-                                                    :self.chosen_LetterIndex] + unicode + \
-                                                    self.line_string_list[self.chosen_LineIndex][
-                                                    self.chosen_LetterIndex:]
+    self.line_string_list[self.chosen_LineIndex] = (
+        self.line_string_list[self.chosen_LineIndex][: self.chosen_LetterIndex]
+        + unicode
+        + self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex :]
+    )
     self.cursor_X += self.letter_size_X
     self.chosen_LetterIndex += 1
 
@@ -103,11 +139,15 @@ def handle_keyboard_backspace(self) -> None:
         self.chosen_LetterIndex = len(self.line_string_list[self.chosen_LineIndex])
         # set visual cursor one line above and at the end of the line
         self.cursor_Y -= self.line_gap
-        self.cursor_X = self.xline_start + (len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X)
+        self.cursor_X = self.xline_start + (
+            len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X
+        )
 
         # take the rest of the former line into the current line
-        self.line_string_list[self.chosen_LineIndex] = self.line_string_list[self.chosen_LineIndex] + \
-            self.line_string_list[self.chosen_LineIndex + 1]
+        self.line_string_list[self.chosen_LineIndex] = (
+            self.line_string_list[self.chosen_LineIndex]
+            + self.line_string_list[self.chosen_LineIndex + 1]
+        )
 
         # delete the former line
         # LOGICAL lines
@@ -118,11 +158,15 @@ def handle_keyboard_backspace(self) -> None:
 
         # Handling of the resulting scrolling functionality of removing one line
         if self.showStartLine > 0:
-            if (self.showStartLine + self.showable_line_numbers_in_editor) > self.maxLines:
+            if (
+                self.showStartLine + self.showable_line_numbers_in_editor
+            ) > self.maxLines:
                 # The scrollbar is all the way down. We delete a line,
                 # so we have to "pull everything one visual line down"
                 self.showStartLine -= 1  # "pull one visual line down" (array-based)
-                self.cursor_Y += self.line_gap  # move the curser one down.  (visually based)
+                self.cursor_Y += (
+                    self.line_gap
+                )  # move the curser one down.  (visually based)
         if self.chosen_LineIndex == (self.showStartLine - 1):
             # Im in the first rendered line (but NOT  the "0" line) and at the beginning of the line.
             # => move one upward, change showstartLine & cursor placement.
@@ -131,42 +175,67 @@ def handle_keyboard_backspace(self) -> None:
 
     elif self.chosen_LetterIndex > 0:
         # mid-line or end of the line -> Delete a letter
-        self.line_string_list[self.chosen_LineIndex] = self.line_string_list[self.chosen_LineIndex]\
-            [:(self.chosen_LetterIndex - 1)] + self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex:]
+        self.line_string_list[self.chosen_LineIndex] = (
+            self.line_string_list[self.chosen_LineIndex][
+                : (self.chosen_LetterIndex - 1)
+            ]
+            + self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex :]
+        )
 
         self.cursor_X -= self.letter_size_X
         self.chosen_LetterIndex -= 1
     else:
-        raise ValueError("INVALID CONSTRUCT: handle_keyboard_backspace. \
-                         \nLine:" + str(self.chosen_LineIndex) + "\nLetter: " + str(self.chosen_LetterIndex))
+        raise ValueError(
+            "INVALID CONSTRUCT: handle_keyboard_backspace. \
+                         \nLine:"
+            + str(self.chosen_LineIndex)
+            + "\nLetter: "
+            + str(self.chosen_LetterIndex)
+        )
 
 
 def handle_keyboard_delete(self) -> None:
 
     if self.chosen_LetterIndex < (len(self.line_string_list[self.chosen_LineIndex])):
         # start of the line or mid-line (Cursor stays on point), cut one letter out
-        self.line_string_list[self.chosen_LineIndex] = self.line_string_list[self.chosen_LineIndex] \
-             [:self.chosen_LetterIndex] + self.line_string_list[self.chosen_LineIndex][(self.chosen_LetterIndex + 1):]
+        self.line_string_list[self.chosen_LineIndex] = (
+            self.line_string_list[self.chosen_LineIndex][: self.chosen_LetterIndex]
+            + self.line_string_list[self.chosen_LineIndex][
+                (self.chosen_LetterIndex + 1) :
+            ]
+        )
 
     elif self.chosen_LetterIndex == len(self.line_string_list[self.chosen_LineIndex]):
         # End of a line  (choose next line)
         if self.chosen_LineIndex != (
-                self.maxLines - 1):  # NOT in the last line &(prev) at the end of the line, I cannot delete anything
+            self.maxLines - 1
+        ):  # NOT in the last line &(prev) at the end of the line, I cannot delete anything
             self.line_string_list[self.chosen_LineIndex] += self.line_string_list[
-                self.chosen_LineIndex + 1]  # add the contents of the next line to the current one
+                self.chosen_LineIndex + 1
+            ]  # add the contents of the next line to the current one
             self.line_string_list.pop(
-                self.chosen_LineIndex + 1)  # delete the Strings-line in order to move the following lines one upwards
+                self.chosen_LineIndex + 1
+            )  # delete the Strings-line in order to move the following lines one upwards
             self.maxLines -= 1  # Keep the variable aligned
             self.rerenderLineNumbers = True
             if self.showStartLine > 0:
-                if (self.showStartLine + self.showable_line_numbers_in_editor) > self.maxLines:
+                if (
+                    self.showStartLine + self.showable_line_numbers_in_editor
+                ) > self.maxLines:
                     # The scrollbar is all the way down.
                     # We delete a line, so we have to "pull everything one visual line down"
                     self.showStartLine -= 1  # "pull one visual line down" (array-based)
-                    self.cursor_Y += self.line_gap  # move the curser one down.  (visually based)
+                    self.cursor_Y += (
+                        self.line_gap
+                    )  # move the curser one down.  (visually based)
     else:
-        raise ValueError(" INVALID CONSTRUCT: handle_keyboard_delete. \
-                         \nLine:" + str(self.chosen_LineIndex) + "\nLetter: " + str(self.chosen_LetterIndex))
+        raise ValueError(
+            " INVALID CONSTRUCT: handle_keyboard_delete. \
+                         \nLine:"
+            + str(self.chosen_LineIndex)
+            + "\nLetter: "
+            + str(self.chosen_LetterIndex)
+        )
 
 
 def handle_keyboard_arrow_left(self) -> None:
@@ -176,10 +245,16 @@ def handle_keyboard_arrow_left(self) -> None:
     elif self.chosen_LetterIndex == 0 and self.chosen_LineIndex == 0:
         # first line, first position, nothing happens
         pass
-    elif self.chosen_LetterIndex == 0 and self.chosen_LineIndex > 0:  # Move over into previous Line (if there is any)
+    elif (
+        self.chosen_LetterIndex == 0 and self.chosen_LineIndex > 0
+    ):  # Move over into previous Line (if there is any)
         self.chosen_LineIndex -= 1
-        self.chosen_LetterIndex = len(self.line_string_list[self.chosen_LineIndex])  # end of previous line
-        self.cursor_X = self.xline_start + (len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X)
+        self.chosen_LetterIndex = len(
+            self.line_string_list[self.chosen_LineIndex]
+        )  # end of previous line
+        self.cursor_X = self.xline_start + (
+            len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X
+        )
         self.cursor_Y -= self.line_gap
         if self.chosen_LineIndex < self.showStartLine:
             # handling scroll functionality if necessary (moved above shown lines)
@@ -193,15 +268,18 @@ def handle_keyboard_arrow_right(self) -> None:
         # mid-line or start of the line
         self.chosen_LetterIndex += 1
         self.cursor_X += self.letter_size_X
-    elif self.chosen_LetterIndex == len(self.line_string_list[self.chosen_LineIndex]) and \
-            not (self.chosen_LineIndex == (self.maxLines - 1)):
+    elif self.chosen_LetterIndex == len(
+        self.line_string_list[self.chosen_LineIndex]
+    ) and not (self.chosen_LineIndex == (self.maxLines - 1)):
         # end of line => move over into the start of the next line
 
         self.chosen_LetterIndex = 0
         self.chosen_LineIndex += 1
         self.cursor_X = self.xline_start
         self.cursor_Y += self.line_gap
-        if self.chosen_LineIndex > (self.showStartLine + self.showable_line_numbers_in_editor - 1):
+        if self.chosen_LineIndex > (
+            self.showStartLine + self.showable_line_numbers_in_editor - 1
+        ):
             # handling scroll functionality if necessary (moved below showed lines)
             self.showStartLine += 1
             self.cursor_Y -= self.line_gap
@@ -217,16 +295,25 @@ def handle_keyboard_arrow_down(self) -> None:
         if len(self.line_string_list[self.chosen_LineIndex]) < self.chosen_LetterIndex:
             # reset letter-index to the end
             self.chosen_LetterIndex = len(self.line_string_list[self.chosen_LineIndex])
-            self.cursor_X = (len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X) + self.xline_start
+            self.cursor_X = (
+                len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X
+            ) + self.xline_start
 
-        if self.chosen_LineIndex > (self.showStartLine + self.showable_line_numbers_in_editor - 1):
+        if self.chosen_LineIndex > (
+            self.showStartLine + self.showable_line_numbers_in_editor - 1
+        ):
             # handle scrolling functionality if necessary (moved below shown lines)
             self.scrollDown()
 
-    elif self.chosen_LineIndex == (self.maxLines - 1):  # im in the last line and want to jump to its end.
-        self.chosen_LetterIndex = len(self.line_string_list[self.chosen_LineIndex])  # end of the line
+    elif self.chosen_LineIndex == (
+        self.maxLines - 1
+    ):  # im in the last line and want to jump to its end.
+        self.chosen_LetterIndex = len(
+            self.line_string_list[self.chosen_LineIndex]
+        )  # end of the line
         self.cursor_X = self.xline_start + (
-                len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X)
+            len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X
+        )
 
 
 def handle_keyboard_arrow_up(self) -> None:
@@ -243,7 +330,9 @@ def handle_keyboard_arrow_up(self) -> None:
         if len(self.line_string_list[self.chosen_LineIndex]) < self.chosen_LetterIndex:
             # less letters in this line, reset toward the end of the line (to the left)
             self.chosen_LetterIndex = len(self.line_string_list[self.chosen_LineIndex])
-            self.cursor_X = (len(self.line_string_list[self.chosen_LineIndex])) * self.letter_size_X + self.xline_start
+            self.cursor_X = (
+                len(self.line_string_list[self.chosen_LineIndex])
+            ) * self.letter_size_X + self.xline_start
 
         if self.chosen_LineIndex < self.showStartLine:  # scroll up one line
             self.scrollUp()
@@ -256,9 +345,11 @@ def handle_keyboard_tab(self) -> None:
 
 def handle_keyboard_space(self) -> None:
     # insert 1 space
-    self.line_string_list[self.chosen_LineIndex] = \
-        self.line_string_list[self.chosen_LineIndex][:self.chosen_LetterIndex] + " " + \
-        self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex:]
+    self.line_string_list[self.chosen_LineIndex] = (
+        self.line_string_list[self.chosen_LineIndex][: self.chosen_LetterIndex]
+        + " "
+        + self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex :]
+    )
 
     self.cursor_X += self.letter_size_X
     self.chosen_LetterIndex += 1
@@ -267,11 +358,14 @@ def handle_keyboard_space(self) -> None:
 def handle_keyboard_return(self) -> None:
     # Get "transfer letters" behind cursor up to the end of the line to next line
     # If the cursor is at the end of the line, transferString is an empty String ("")
-    transferString = self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex:]
+    transferString = self.line_string_list[self.chosen_LineIndex][
+        self.chosen_LetterIndex :
+    ]
 
     # Remove transfer letters from the current line
-    self.line_string_list[self.chosen_LineIndex] = \
-        self.line_string_list[self.chosen_LineIndex][:self.chosen_LetterIndex]
+    self.line_string_list[self.chosen_LineIndex] = self.line_string_list[
+        self.chosen_LineIndex
+    ][: self.chosen_LetterIndex]
 
     # set logical cursor indizes and add a new line
     self.chosen_LineIndex += 1
@@ -283,12 +377,15 @@ def handle_keyboard_return(self) -> None:
     self.line_string_list.insert(self.chosen_LineIndex, "")  # logical line
 
     # Edit the new line -> append transfer letters
-    self.line_string_list[self.chosen_LineIndex] = self.line_string_list[self.chosen_LineIndex] + transferString
+    self.line_string_list[self.chosen_LineIndex] = (
+        self.line_string_list[self.chosen_LineIndex] + transferString
+    )
     self.rerenderLineNumbers = True
 
     # handle scrolling functionality
-    if self.chosen_LineIndex > (self.showable_line_numbers_in_editor - 1):  # Last row, visual representation moves down
+    if self.chosen_LineIndex > (
+        self.showable_line_numbers_in_editor - 1
+    ):  # Last row, visual representation moves down
         self.showStartLine += 1
     else:  # not in last row, put courser one line down without changing the shown line numbers
         self.cursor_Y += self.line_gap
-

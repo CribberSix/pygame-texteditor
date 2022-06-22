@@ -1,4 +1,3 @@
-
 def jump_to_start(self, line_start, line_end, letter_start, letter_end) -> None:
     """
     Chosen LineIndex set to start of highlighted area

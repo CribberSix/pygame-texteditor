@@ -1,11 +1,11 @@
-
-
 def get_line_index(self, mouse_y) -> int:
     """
     Returns possible line-position of mouse -> does not take into account
     how many lines there actually are!
     """
-    return int(((mouse_y - self.editor_offset_Y) / self.line_gap) + (self.showStartLine))
+    return int(
+        ((mouse_y - self.editor_offset_Y) / self.line_gap) + (self.showStartLine)
+    )
 
 
 def get_letter_index(self, mouse_x) -> int:
@@ -44,5 +44,8 @@ def line_is_visible(self, line) -> bool:
     """
     Calculate whether the line is being shown in the editor
     """
-    return self.showStartLine <= line < self.showStartLine + self.showable_line_numbers_in_editor
-
+    return (
+        self.showStartLine
+        <= line
+        < self.showStartLine + self.showable_line_numbers_in_editor
+    )

@@ -68,6 +68,6 @@ def set_text_from_string(self, string) -> None:
     Sets the text of the editor based on a string. Linebreak characters are parsed.
     """
     self.clear_text()
-    self.line_string_list = string.split('\n')
+    self.line_string_list = string.split("\n")
     self.maxLines = len(self.line_string_list)
     self.rerenderLineNumbers = True

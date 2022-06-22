@@ -10,51 +10,133 @@ from .ColorFormatter import ColorFormatter
 
 class TextEditor:
     # Scroll functionality
-    from ._scrollbar_vertical import render_scrollbar_vertical, display_scrollbar, scrollbar_up, \
-        scrollbar_down
+    from ._scrollbar_vertical import (
+        render_scrollbar_vertical,
+        display_scrollbar,
+        scrollbar_up,
+        scrollbar_down,
+    )
 
     # input handling KEYBOARD
-    from ._input_handling_keyboard import handle_keyboard_input, handle_keyboard_delete, handle_keyboard_backspace, \
-        handle_keyboard_return, handle_keyboard_space, handle_keyboard_tab, insert_unicode, \
-        handle_keyboard_arrow_left, handle_keyboard_arrow_right, handle_keyboard_arrow_up, handle_keyboard_arrow_down
+    from ._input_handling_keyboard import (
+        handle_keyboard_input,
+        handle_keyboard_delete,
+        handle_keyboard_backspace,
+        handle_keyboard_return,
+        handle_keyboard_space,
+        handle_keyboard_tab,
+        insert_unicode,
+        handle_keyboard_arrow_left,
+        handle_keyboard_arrow_right,
+        handle_keyboard_arrow_up,
+        handle_keyboard_arrow_down,
+    )
 
-    from ._input_handling_keyboard_highlight import handle_input_with_highlight, handle_highlight_and_copy, \
-        handle_highlight_and_paste, handle_highlight_and_cut, highlight_all, get_highlighted_characters
+    from ._input_handling_keyboard_highlight import (
+        handle_input_with_highlight,
+        handle_highlight_and_copy,
+        handle_highlight_and_paste,
+        handle_highlight_and_cut,
+        highlight_all,
+        get_highlighted_characters,
+    )
 
     # input handling MOUSE
-    from ._input_handling_mouse import handle_mouse_input, mouse_within_texteditor, mouse_within_existing_lines
+    from ._input_handling_mouse import (
+        handle_mouse_input,
+        mouse_within_texteditor,
+        mouse_within_existing_lines,
+    )
 
     # caret
-    from ._caret import update_caret_position, update_caret_position_by_drag_end, update_caret_position_by_drag_start, \
-        set_drag_start_after_last_line, set_drag_end_after_last_line, set_drag_start_by_mouse, \
-        set_drag_end_by_mouse, set_drag_end_line_by_mouse, set_drag_end_letter_by_mouse, \
-        set_drag_start_before_first_line
+    from ._caret import (
+        update_caret_position,
+        update_caret_position_by_drag_end,
+        update_caret_position_by_drag_start,
+        set_drag_start_after_last_line,
+        set_drag_end_after_last_line,
+        set_drag_start_by_mouse,
+        set_drag_end_by_mouse,
+        set_drag_end_line_by_mouse,
+        set_drag_end_letter_by_mouse,
+        set_drag_start_before_first_line,
+    )
 
     # letter operations (delete, get)
-    from ._letter_operations import \
-        delete_entire_line, delete_start_to_letter, delete_letter_to_end, delete_letter_to_letter, \
-        get_entire_line, get_line_from_start_to_char, get_line_from_char_to_end, get_line_from_char_to_char
+    from ._letter_operations import (
+        delete_entire_line,
+        delete_start_to_letter,
+        delete_letter_to_end,
+        delete_letter_to_letter,
+        get_entire_line,
+        get_line_from_start_to_char,
+        get_line_from_char_to_end,
+        get_line_from_char_to_char,
+    )
 
     # rendering (basic, highlighting, syntax coloring)
-    from ._rendering import render_line_contents_by_dicts, \
-        render_caret, caret_within_texteditor, render_background_coloring, render_line_numbers, \
-        reset_text_area_to_caret, get_rect_coord_from_indizes, get_rect_coord_from_mouse
-    from ._rendering_highlighting import render_highlight, highlight_lines, highlight_entire_line, \
-        highlight_from_letter_to_letter, highlight_from_start_to_letter, highlight_from_letter_to_end
-    from ._rendering_syntax_coloring import get_syntax_coloring_dicts, get_single_color_dicts
+    from ._rendering import (
+        render_line_contents_by_dicts,
+        render_caret,
+        caret_within_texteditor,
+        render_background_coloring,
+        render_line_numbers,
+        reset_text_area_to_caret,
+        get_rect_coord_from_indizes,
+        get_rect_coord_from_mouse,
+    )
+    from ._rendering_highlighting import (
+        render_highlight,
+        highlight_lines,
+        highlight_entire_line,
+        highlight_from_letter_to_letter,
+        highlight_from_start_to_letter,
+        highlight_from_letter_to_end,
+    )
+    from ._rendering_syntax_coloring import (
+        get_syntax_coloring_dicts,
+        get_single_color_dicts,
+    )
 
-    from ._editor_getters import get_line_index, get_letter_index, line_is_visible, get_showable_lines, \
-        get_number_of_letters_in_line_by_mouse, get_number_of_letters_in_line_by_index
+    from ._editor_getters import (
+        get_line_index,
+        get_letter_index,
+        line_is_visible,
+        get_showable_lines,
+        get_number_of_letters_in_line_by_mouse,
+        get_number_of_letters_in_line_by_index,
+    )
 
     from ._other import jump_to_start, jump_to_end, reset_after_highlight
 
     # files for customization of the editor:
-    from ._customization import set_line_numbers, set_syntax_highlighting, set_colorscheme, \
-                                set_colorscheme_from_yaml, set_font_size, set_cursor_mode
-    from ._usage import get_text_as_list, get_text_as_string, clear_text, set_text_from_list, set_text_from_string
+    from ._customization import (
+        set_line_numbers,
+        set_syntax_highlighting,
+        set_colorscheme,
+        set_colorscheme_from_yaml,
+        set_font_size,
+        set_cursor_mode,
+    )
+    from ._usage import (
+        get_text_as_list,
+        get_text_as_string,
+        clear_text,
+        set_text_from_list,
+        set_text_from_string,
+    )
 
-    def __init__(self, offset_x, offset_y, text_area_width, text_area_height, screen,
-                 line_numbers_flag=False, style='dark', syntax_highlighting_flag=False):
+    def __init__(
+        self,
+        offset_x,
+        offset_y,
+        text_area_width,
+        text_area_height,
+        screen,
+        line_numbers_flag=False,
+        style="dark",
+        syntax_highlighting_flag=False,
+    ):
         self.screen = screen
 
         # VISUALS
@@ -66,14 +148,16 @@ class TextEditor:
         self.conclusionBarHeight = 18
         self.letter_size_Y = 16
         current_dir = os.path.dirname(__file__)
-        self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"),
-                                             self.letter_size_Y)
+        self.courier_font = pygame.font.Font(
+            os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y
+        )
 
         letter_width = self.courier_font.render(" ", 1, (0, 0, 0)).get_width()
         self.letter_size_X = letter_width
 
         self.trennzeichen_image = pygame.image.load(
-            os.path.join(current_dir, "elements/graphics/Trennzeichen.png")).convert_alpha()
+            os.path.join(current_dir, "elements/graphics/Trennzeichen.png")
+        ).convert_alpha()
         self.syntax_coloring = syntax_highlighting_flag
 
         # LINES
@@ -87,13 +171,17 @@ class TextEditor:
         self.maxLines = int(math.floor(self.textAreaHeight / self.lineHeight))
         self.showStartLine = 0  # first line (shown at the top of the editor) <- must be zero during init!
         self.line_gap = 3 + self.letter_size_Y
-        self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.line_gap))
+        self.showable_line_numbers_in_editor = int(
+            math.floor(self.textAreaHeight / self.line_gap)
+        )
 
         for i in range(self.maxLines):  # from 0 to maxLines:
             self.line_string_list.append("")  # Add a line
 
         # SCROLLBAR
-        self.scrollBarImg = pygame.image.load(os.path.join(current_dir, "elements/graphics/Scroll_Bar.png")).convert()
+        self.scrollBarImg = pygame.image.load(
+            os.path.join(current_dir, "elements/graphics/Scroll_Bar.png")
+        ).convert()
         self.scrollBarWidth = 8  # must be an even number
 
         self.scrollbar: pygame.Rect = None
@@ -103,7 +191,9 @@ class TextEditor:
         # LINE NUMBERS
         self.displayLineNumbers = line_numbers_flag
         if self.displayLineNumbers:
-            self.lineNumberWidth = 27  # line number background width and also offset for text!
+            self.lineNumberWidth = (
+                27  # line number background width and also offset for text!
+            )
         else:
             self.lineNumberWidth = 0
         self.line_numbers_Y = self.editor_offset_Y
@@ -153,7 +243,7 @@ class TextEditor:
         # Key input variables+
         self.key_initial_delay = 300
         self.key_continued_intervall = 30
-        pygame.key.set_repeat(self.key_initial_delay, self.key_continued_intervall) 
+        pygame.key.set_repeat(self.key_initial_delay, self.key_continued_intervall)
 
         # Performance enhancing variables
         self.firstiteration_boolean = True
@@ -164,14 +254,24 @@ class TextEditor:
         self.clock = pygame.time.Clock()
         self.FPS = 60  # we need to limit the FPS so we don't trigger the same actions too often (e.g. deletions)
 
-    def display_editor(self, pygame_events, pressed_keys, mouse_x, mouse_y, mouse_pressed):
+    def display_editor(
+        self, pygame_events, pressed_keys, mouse_x, mouse_y, mouse_pressed
+    ):
         # needs to be called within a while loop to be able to catch key/mouse input and update visuals throughout use.
         self.cycleCounter = self.cycleCounter + 1
         # first iteration
         if self.firstiteration_boolean:
             # paint entire area to avoid pixel error beneath line numbers
-            pygame.draw.rect(self.screen, self.codingBackgroundColor,
-                             (self.editor_offset_X, self.editor_offset_Y, self.textAreaWidth, self.textAreaHeight))
+            pygame.draw.rect(
+                self.screen,
+                self.codingBackgroundColor,
+                (
+                    self.editor_offset_X,
+                    self.editor_offset_Y,
+                    self.textAreaWidth,
+                    self.textAreaHeight,
+                ),
+            )
             self.firstiteration_boolean = False
 
         for event in pygame_events:  # handle QUIT operation

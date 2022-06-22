@@ -1,4 +1,3 @@
-
 def delete_letter_to_end(self, line, letter) -> None:
     """
     Deletes within a line from a letter by index to the end of the line.
@@ -17,8 +16,10 @@ def delete_letter_to_letter(self, line, letter_start, letter_end) -> None:
     """
     Deletes within a line from a letter to a letter by index..
     """
-    self.line_string_list[line] = self.line_string_list[line][:letter_start] + \
-            self.line_string_list[line][letter_end:]
+    self.line_string_list[line] = (
+        self.line_string_list[line][:letter_start]
+        + self.line_string_list[line][letter_end:]
+    )
 
 
 def delete_entire_line(self, line) -> None:

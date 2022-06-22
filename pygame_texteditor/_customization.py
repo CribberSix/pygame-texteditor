@@ -12,8 +12,8 @@ def set_key_repetition(self, delay=300, intervall=30) -> None:
     After that, another pygame.KEYDOWN event will be sent every interval milliseconds.
     """
     self.key_initial_delay = delay
-    self.key_continued_intervall = intervall 
-    pygame.key.set_repeat(self.key_initial_delay, self.key_continued_intervall) 
+    self.key_continued_intervall = intervall
+    pygame.key.set_repeat(self.key_initial_delay, self.key_continued_intervall)
 
 
 def set_font_size(self, size=16) -> None:
@@ -22,12 +22,15 @@ def set_font_size(self, size=16) -> None:
     """
     self.letter_size_Y = size
     current_dir = os.path.dirname(__file__)
-    self.courier_font = pygame.font.Font(os.path.join(current_dir, "elements/fonts/Courier.ttf"),
-                                         self.letter_size_Y)
+    self.courier_font = pygame.font.Font(
+        os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y
+    )
     letter_width = self.courier_font.render(" ", 1, (0, 0, 0)).get_width()
     self.letter_size_X = letter_width
     self.line_gap = 3 + self.letter_size_Y
-    self.showable_line_numbers_in_editor = int(math.floor(self.textAreaHeight / self.line_gap))
+    self.showable_line_numbers_in_editor = int(
+        math.floor(self.textAreaHeight / self.line_gap)
+    )
 
 
 def set_line_numbers(self, b) -> None:
@@ -36,7 +39,9 @@ def set_line_numbers(self, b) -> None:
     """
     self.displayLineNumbers = b
     if self.displayLineNumbers:
-        self.lineNumberWidth = 27  # line number background width and also offset for text!
+        self.lineNumberWidth = (
+            27  # line number background width and also offset for text!
+        )
         self.xline_start = self.editor_offset_X + self.xline_start_offset
         self.xline = self.editor_offset_X + self.xline_start_offset
     else:
@@ -54,33 +59,57 @@ def set_syntax_highlighting(self, b) -> None:
 
 
 def set_colorscheme_from_yaml(self, path_to_yaml) -> None:
-
     def get_rgb_by_key(dict, key):
-        return tuple([int(x) for x in re.findall(r'(\d{1,3})', dict[key])])
+        return tuple([int(x) for x in re.findall(r"(\d{1,3})", dict[key])])
 
     try:
         with open(path_to_yaml) as file:
             color_dict = yaml.load(file, Loader=yaml.FullLoader)
 
-            self.codingBackgroundColor = get_rgb_by_key(color_dict, 'codingBackgroundColor')
-            self.codingScrollBarBackgroundColor = get_rgb_by_key(color_dict, 'codingScrollBarBackgroundColor')
-            self.lineNumberColor = get_rgb_by_key(color_dict, 'lineNumberColor')
-            self.lineNumberBackgroundColor = get_rgb_by_key(color_dict, 'lineNumberBackgroundColor')
-            self.textColor = get_rgb_by_key(color_dict, 'textColor')
+            self.codingBackgroundColor = get_rgb_by_key(
+                color_dict, "codingBackgroundColor"
+            )
+            self.codingScrollBarBackgroundColor = get_rgb_by_key(
+                color_dict, "codingScrollBarBackgroundColor"
+            )
+            self.lineNumberColor = get_rgb_by_key(color_dict, "lineNumberColor")
+            self.lineNumberBackgroundColor = get_rgb_by_key(
+                color_dict, "lineNumberBackgroundColor"
+            )
+            self.textColor = get_rgb_by_key(color_dict, "textColor")
 
-            self.formatter.textColor_normal = get_rgb_by_key(color_dict, 'textColor_normal')
-            self.formatter.textColor_comments = get_rgb_by_key(color_dict, 'textColor_comments')
-            self.formatter.textColor_quotes = get_rgb_by_key(color_dict, 'textColor_quotes')
-            self.formatter.textColor_operators = get_rgb_by_key(color_dict, 'textColor_operators')
-            self.formatter.textColor_keywords = get_rgb_by_key(color_dict, 'textColor_keywords')
-            self.formatter.textColor_function = get_rgb_by_key(color_dict, 'textColor_function')
-            self.formatter.textColor_builtin = get_rgb_by_key(color_dict, 'textColor_builtin')
+            self.formatter.textColor_normal = get_rgb_by_key(
+                color_dict, "textColor_normal"
+            )
+            self.formatter.textColor_comments = get_rgb_by_key(
+                color_dict, "textColor_comments"
+            )
+            self.formatter.textColor_quotes = get_rgb_by_key(
+                color_dict, "textColor_quotes"
+            )
+            self.formatter.textColor_operators = get_rgb_by_key(
+                color_dict, "textColor_operators"
+            )
+            self.formatter.textColor_keywords = get_rgb_by_key(
+                color_dict, "textColor_keywords"
+            )
+            self.formatter.textColor_function = get_rgb_by_key(
+                color_dict, "textColor_function"
+            )
+            self.formatter.textColor_builtin = get_rgb_by_key(
+                color_dict, "textColor_builtin"
+            )
 
     except FileNotFoundError:
         raise FileNotFoundError("Could not find the style file '" + path_to_yaml + "'.")
     except KeyError as e:
-        raise KeyError("Could not find all necessary color-keys in the style file '" + path_to_yaml + "'. " +
-                       "Missing key: " + str(e))
+        raise KeyError(
+            "Could not find all necessary color-keys in the style file '"
+            + path_to_yaml
+            + "'. "
+            + "Missing key: "
+            + str(e)
+        )
 
 
 def set_colorscheme(self, style) -> None:
@@ -89,14 +118,22 @@ def set_colorscheme(self, style) -> None:
     one of the editor's default styles.
     """
     if style in ("bright", "dark"):
-        default_path = os.path.join(str(pathlib.Path(__file__).parent.absolute()),
-            'elements', 'colorstyles', style + ".yml")
+        default_path = os.path.join(
+            str(pathlib.Path(__file__).parent.absolute()),
+            "elements",
+            "colorstyles",
+            style + ".yml",
+        )
         self.set_colorscheme_from_yaml(default_path)
     else:
-        raise ValueError("No default style with the name '" + style + "' available. " +
-                         "\n\tAvailable styles are 'dark' and 'bright'. \n\tFor your " +
-                         "own custom styles, use the method 'set_colorscheme_from_yaml(path_to_yaml)' " +
-                         "and have a look at the docs.")
+        raise ValueError(
+            "No default style with the name '"
+            + style
+            + "' available. "
+            + "\n\tAvailable styles are 'dark' and 'bright'. \n\tFor your "
+            + "own custom styles, use the method 'set_colorscheme_from_yaml(path_to_yaml)' "
+            + "and have a look at the docs."
+        )
 
 
 def set_cursor_mode(self, mode: str = "blinking"):
@@ -105,4 +142,6 @@ def set_cursor_mode(self, mode: str = "blinking"):
     elif mode == "static":
         self.static_cursor = True
     else:
-        raise ValueError(f"Value '{mode}' is not a valid cursor mode. Set either to 'blinking' or 'static'.")
+        raise ValueError(
+            f"Value '{mode}' is not a valid cursor mode. Set either to 'blinking' or 'static'."
+        )

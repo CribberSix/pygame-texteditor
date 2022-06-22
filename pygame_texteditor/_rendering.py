@@ -27,7 +27,9 @@ def render_background_coloring(self) -> None:
     bg_top = self.editor_offset_Y
     bg_width = self.textAreaWidth - self.lineNumberWidth
     bg_height = self.textAreaHeight
-    pygame.draw.rect(self.screen, self.codingBackgroundColor, (bg_left, bg_top, bg_width, bg_height))
+    pygame.draw.rect(
+        self.screen, self.codingBackgroundColor, (bg_left, bg_top, bg_width, bg_height)
+    )
 
 
 def render_line_numbers(self) -> None:
@@ -38,16 +40,26 @@ def render_line_numbers(self) -> None:
     if self.displayLineNumbers and self.rerenderLineNumbers:
         self.rerenderLineNumbers = False
         line_numbers_Y = self.editor_offset_Y  # init for first line
-        for x in range(self.showStartLine, self.showStartLine + self.showable_line_numbers_in_editor):
+        for x in range(
+            self.showStartLine,
+            self.showStartLine + self.showable_line_numbers_in_editor,
+        ):
 
             # background
-            r = (self.editor_offset_X, line_numbers_Y, self.lineNumberWidth, self.line_gap)
+            r = (
+                self.editor_offset_X,
+                line_numbers_Y,
+                self.lineNumberWidth,
+                self.line_gap,
+            )
             pygame.draw.rect(self.screen, self.lineNumberBackgroundColor, r)
 
             # line number
             if x < self.get_showable_lines():
                 # x + 1 in order to start with line 1 (only display, logical it's the 0th item in the list
-                text = self.courier_font.render(str(x + 1).zfill(2), 1, self.lineNumberColor)
+                text = self.courier_font.render(
+                    str(x + 1).zfill(2), 1, self.lineNumberColor
+                )
                 text_rect = text.get_rect()
                 text_rect.center = pygame.Rect(r).center
                 self.screen.blit(text, text_rect)  # render on center of bg block
@@ -65,12 +77,16 @@ def render_line_contents_by_dicts(self, dicts) -> None:
         last_line = self.maxLines
 
     # Actual line rendering based on dict-keys
-    for line_list in dicts[first_line: last_line]:
+    for line_list in dicts[first_line:last_line]:
         xcoord = self.xline_start
         for dict in line_list:
-            surface = self.courier_font.render(dict['chars'], 1, dict['color'])  # create surface
+            surface = self.courier_font.render(
+                dict["chars"], 1, dict["color"]
+            )  # create surface
             self.screen.blit(surface, (xcoord, self.yline))  # blit surface onto screen
-            xcoord = xcoord + (len(dict['chars']) * self.letter_size_X)  # next line-part prep
+            xcoord = xcoord + (
+                len(dict["chars"]) * self.letter_size_X
+            )  # next line-part prep
 
         self.yline += self.line_gap  # next line prep
 
@@ -83,9 +99,10 @@ def caret_within_texteditor(self) -> bool:
     the caret is in the first line.
     """
     return self.editor_offset_X + self.lineNumberWidth < self.cursor_X < (
-                self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth - 2) \
-           and self.editor_offset_Y <= self.cursor_Y < (
-                       self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight)
+        self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth - 2
+    ) and self.editor_offset_Y <= self.cursor_Y < (
+        self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight
+    )
 
 
 def render_caret(self) -> None:
@@ -96,7 +113,11 @@ def render_caret(self) -> None:
     Creates 'blinking' animation
     """
     self.Trenn_counter += 1
-    if self.static_cursor or (self.Trenn_counter > (self.FPS / 5) and self.caret_within_texteditor() and self.dragged_finished):
+    if self.static_cursor or (
+        self.Trenn_counter > (self.FPS / 5)
+        and self.caret_within_texteditor()
+        and self.dragged_finished
+    ):
         self.screen.blit(self.trennzeichen_image, (self.cursor_X, self.cursor_Y))
         self.Trenn_counter = self.Trenn_counter % ((self.FPS / 5) * 2)
 
@@ -110,8 +131,12 @@ def reset_text_area_to_caret(self) -> None:
         self.showStartLine = self.chosen_LineIndex
         self.rerenderLineNumbers = True
         self.update_caret_position()
-    elif self.chosen_LineIndex > (self.showStartLine + self.showable_line_numbers_in_editor - 1):  # below visible area
-        self.showStartLine = self.chosen_LineIndex - self.showable_line_numbers_in_editor + 1
+    elif self.chosen_LineIndex > (
+        self.showStartLine + self.showable_line_numbers_in_editor - 1
+    ):  # below visible area
+        self.showStartLine = (
+            self.chosen_LineIndex - self.showable_line_numbers_in_editor + 1
+        )
         self.rerenderLineNumbers = True
         self.update_caret_position()
     # TODO: set cursor coordinates
