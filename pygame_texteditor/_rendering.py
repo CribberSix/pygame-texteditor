@@ -44,7 +44,6 @@ def render_line_numbers(self) -> None:
             self.showStartLine,
             self.showStartLine + self.showable_line_numbers_in_editor,
         ):
-
             # background
             r = (
                 self.editor_offset_X,
@@ -57,7 +56,7 @@ def render_line_numbers(self) -> None:
             # line number
             if x < self.get_showable_lines():
                 # x + 1 in order to start with line 1 (only display, logical it's the 0th item in the list
-                text = self.courier_font.render(
+                text = self.editor_font.render(
                     str(x + 1).zfill(2), 1, self.lineNumberColor
                 )
                 text_rect = text.get_rect()
@@ -80,7 +79,7 @@ def render_line_contents_by_dicts(self, dicts) -> None:
     for line_list in dicts[first_line:last_line]:
         xcoord = self.xline_start
         for dict in line_list:
-            surface = self.courier_font.render(
+            surface = self.editor_font.render(
                 dict["chars"], 1, dict["color"]
             )  # create surface
             self.screen.blit(surface, (xcoord, self.yline))  # blit surface onto screen

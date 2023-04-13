@@ -128,6 +128,17 @@ From the [official documentation](http://www.pygame.org/docs/ref/key.html#pygame
 > The delay parameter is the number of milliseconds before the first repeated pygame.KEYDOWN event will be sent.
 > After that, another pygame.KEYDOWN event will be sent every interval milliseconds.
 
+
+#### Font Customization
+
+The editor uses a ttf file to set the font for the editor. 
+
+By default, the Courier default is used
+
+A custom font can be loaded with the following method: 
+- `set_font_from_ttf("X:\path\to\custom\font.ttf")`
+
+
 #### Font size
 
 Font size can be customized with the command `set_font_size(size)` - the parameter is an integer 

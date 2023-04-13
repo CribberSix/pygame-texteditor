@@ -16,16 +16,27 @@ def set_key_repetition(self, delay=300, intervall=30) -> None:
     pygame.key.set_repeat(self.key_initial_delay, self.key_continued_intervall)
 
 
+def set_font_from_ttf(self, path_to_ttf):
+    """
+    Sets the font given a ttf file.
+    """
+    self.ttf_path = path_to_ttf
+
+    # force all the font settings to re-render
+    set_font_size(self, self.letter_size_Y)
+
+
 def set_font_size(self, size=16) -> None:
     """
     Sets the given size as font size and re-calculates necessary changes.
     """
     self.letter_size_Y = size
     current_dir = os.path.dirname(__file__)
-    self.courier_font = pygame.font.Font(
-        os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y
+
+    self.editor_font = pygame.font.Font(
+        os.path.join(current_dir, self.ttf_path), self.letter_size_Y
     )
-    letter_width = self.courier_font.render(" ", 1, (0, 0, 0)).get_width()
+    letter_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width()
     self.letter_size_X = letter_width
     self.line_gap = 3 + self.letter_size_Y
     self.showable_line_numbers_in_editor = int(
