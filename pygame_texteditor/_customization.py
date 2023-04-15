@@ -16,9 +16,13 @@ def set_key_repetition(self, delay=300, intervall=30) -> None:
     pygame.key.set_repeat(self.key_initial_delay, self.key_continued_intervall)
 
 
-def set_font_from_ttf(self, path_to_ttf):
+def set_font_from_ttf(self, path_to_ttf: str) -> None:
     """
     Sets the font given a ttf file.
+
+    As the width of a letter (space) is only calculated once after setting the font_size, any fonts that are not
+    monospace will lead to the editor not working correctly anymore, as it cannot be determined anymore, between which
+    letters the user clicked.
     """
     self.ttf_path = path_to_ttf
 

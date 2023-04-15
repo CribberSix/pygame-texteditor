@@ -5,7 +5,7 @@
 
 ## Introduction & examples
 
-The text editor can be inserted into any existing pygame window. 
+The text editor can be inserted into any existing pygame window.
 A minimal code example of it being activated within an existing pygame window can be found below.
 
 The code editor comes with line numbers and syntax highlighting for python if enabled:
@@ -29,11 +29,11 @@ The texteditor takes 5 obligatory parameters and 3 optional parameters.
 
 ##### Optional Parameters with default values
 
-- ```line_numbers_flag``` - a boolean enabling showing line numbers 
+- ```line_numbers_flag``` - a boolean enabling showing line numbers
     > Default: ```False```
-- ```style``` - a String setting the color scheme of editor and syntax highlighting 
+- ```style``` - a String setting the color scheme of editor and syntax highlighting
     > Default: ```'dark'```
-- ```syntax_highlighting_flag``` - a boolean enabling syntax highlighting for Python code 
+- ```syntax_highlighting_flag``` - a boolean enabling syntax highlighting for Python code
     > Default: ```False```
 
 ## Setup
@@ -64,7 +64,7 @@ textAreaWidth = 800
 
 # Instantiation
 TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
-TX.set_line_numbers(True)  # optional 
+TX.set_line_numbers(True)  # optional
 TX.set_syntax_highlighting(True)  # optional
 
 while True:  # pygame-loop
@@ -78,17 +78,17 @@ while True:  # pygame-loop
     TX.display_editor(pygame_events, pressed_keys, mouse_x, mouse_y, mouse_pressed)
 
     # update pygame window
-    pygame.display.flip()  
+    pygame.display.flip()
 
 
 ```
 
 ##### Retrieving text from the editor
 
-The editor offers the function `get_text_as_string()` to retrieve the entire text 
+The editor offers the function `get_text_as_string()` to retrieve the entire text
 as a String from the editor. Lines are separated by the new line character ```\n```.
 
-The editor offers the function `get_text_as_list()` to retrieve the entire text as a list from the editor. 
+The editor offers the function `get_text_as_list()` to retrieve the entire text as a list from the editor.
 Each String-item in the list represents one line from the editor.
 
 ##### Removing text from the editor
@@ -98,9 +98,9 @@ The editor offers the function `clear_text()` to clear the editor of any text.
 
 ##### Inserting text into the editor
 
-Inserting text can be done by using one of the two available functions: 
+Inserting text can be done by using one of the two available functions:
 1. With a list of strings in which each string represents one line, or
-2. With a string which includes linebreak characters which get parsed. 
+2. With a string which includes linebreak characters which get parsed.
 
 ```
 set_text_from_list(["First line", "Second Line.", "Third Line."]
@@ -109,9 +109,9 @@ set_text_from_string("First line.\nSecond line.\nThird Line")
 
 ## Customization
 
-#### Cursor mode 
+#### Cursor mode
 
-Cursor mode can either be `static` or `blinking` (=default). 
+Cursor mode can either be `static` or `blinking` (=default).
 
 ```python
 set_cursor_mode("static")
@@ -120,39 +120,38 @@ set_cursor_mode("blinking")
 
 #### Key repetition speeds
 
-While a key is being held, multiple key events are being triggered. 
-The delay of the first repetition as well as the interval between all sequential key triggers can be 
-customized by using the function `set_key_repetition(delay=300, intervall=30)`. 
+While a key is being held, multiple key events are being triggered.
+The delay of the first repetition as well as the interval between all sequential key triggers can be
+customized by using the function `set_key_repetition(delay=300, intervall=30)`.
 
-From the [official documentation](http://www.pygame.org/docs/ref/key.html#pygame.key.set_repeat): 
+From the [official documentation](http://www.pygame.org/docs/ref/key.html#pygame.key.set_repeat):
 > The delay parameter is the number of milliseconds before the first repeated pygame.KEYDOWN event will be sent.
 > After that, another pygame.KEYDOWN event will be sent every interval milliseconds.
 
 
 #### Font Customization
 
-The editor uses a ttf file to set the font for the editor. 
+The editor uses a ttf file to set the font for the editor. By default, the Courier monospace font is used.
 
-By default, the Courier default is used
-
-A custom font can be loaded with the following method: 
+A custom font can be loaded with the following method:
 - `set_font_from_ttf("X:\path\to\custom\font.ttf")`
 
+DISCLAIMER: As the width of a letter (space) is only calculated once after setting the font_size, any fonts that are not monospace will lead to the editor not working correctly anymore, as it cannot be determined correctly between which letters the user clicked.
 
 #### Font size
 
-Font size can be customized with the command `set_font_size(size)` - the parameter is an integer 
-with the default value `12` to be able to reset it. 
+Font size can be customized with the command `set_font_size(size)` - the parameter is an integer
+with the default value `12` to be able to reset it.
 
-#### Line Numbers 
-Line numbers can be shown on the left side of the editor. Line numbers begin with 0 as is the Pythonian way. 
+#### Line Numbers
+Line numbers can be shown on the left side of the editor. Line numbers begin with 0 as is the Pythonian way.
 
 Line numbers can be enabled and disabled with ```set_line_numbers(Boolean)```.
 
 
 #### Syntax Highlighting
 
-The editor comes with syntax highlighting for Python code. Tokenization is based on the ```pygment``` package. 
+The editor comes with syntax highlighting for Python code. Tokenization is based on the ```pygment``` package.
 
 Syntax highlighting can be enabled/disabled with ```set_syntax_coloring(boolean_value)```.
 
@@ -161,16 +160,16 @@ The syntax colors being used are also specified in the yml style file.
 
 #### Color-scheme customization
 
-The editor uses a yml file to set the color-scheme for the editor itself and for the syntax coloring. 
+The editor uses a yml file to set the color-scheme for the editor itself and for the syntax coloring.
 
 Two styles are delivered with the editor, they can be activated respectively by:
 - `set_colorscheme("dark")`
 - `set_colorscheme("bright")`
 
-A custom style can be loaded with the following method from a created yml file: 
+A custom style can be loaded with the following method from a created yml file:
 - `set_colorscheme_from_yaml("X:\path\to\custom\filename.yml")`
 
-All keys must be present with values. Acceptable values are 
+All keys must be present with values. Acceptable values are
 RGB colors in the following format: ```(255, 255, 255)``` or ```255, 255, 255```.
 
 The following keys are required in the ```stylename.yml``` file, syntax colors are only used if syntax
@@ -191,4 +190,3 @@ highlighting is enabled, but are still required to be included.
 - `textColor_keywords`
 - `textColor_function`
 - `textColor_builtin`
-
