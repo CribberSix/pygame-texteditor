@@ -115,6 +115,7 @@ class TextEditor:
         set_syntax_highlighting,
         set_colorscheme,
         set_colorscheme_from_yaml,
+        set_font_from_ttf,
         set_font_size,
         set_cursor_mode,
     )
@@ -148,11 +149,14 @@ class TextEditor:
         self.conclusionBarHeight = 18
         self.letter_size_Y = 16
         current_dir = os.path.dirname(__file__)
-        self.courier_font = pygame.font.Font(
-            os.path.join(current_dir, "elements/fonts/Courier.ttf"), self.letter_size_Y
+
+        self.ttf_path = "elements/fonts/Courier.ttf"
+
+        self.editor_font = pygame.font.Font(
+            os.path.join(current_dir, self.ttf_path), self.letter_size_Y
         )
 
-        letter_width = self.courier_font.render(" ", 1, (0, 0, 0)).get_width()
+        letter_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width()
         self.letter_size_X = letter_width
 
         self.trennzeichen_image = pygame.image.load(
