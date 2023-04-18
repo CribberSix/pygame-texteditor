@@ -1,5 +1,6 @@
 import pygame
-from pygame_texteditor.TextEditor import TextEditor
+
+from src.pygame_texteditor import TextEditor
 
 # minimal pygame setup
 pygame.init()
@@ -17,11 +18,13 @@ textAreaHeight = 400
 textAreaWidth = 500
 
 # instantiation
-TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
+TX = TextEditor(
+    offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, line_numbers_flag=True
+)
 TX.set_cursor_mode("blinking")
-TX.set_line_numbers(True)
+# TX.set_line_numbers(True)
 TX.set_syntax_highlighting(True)
-TX.set_font_size(20)
+TX.set_font_size(40)
 
 # TextEditor in the pygame-loop
 while True:

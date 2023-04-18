@@ -1,9 +1,10 @@
-import os
-import re
 import math
+import os
 import pathlib
-import yaml
+import re
+
 import pygame
+import yaml
 
 
 def set_key_repetition(self, delay=300, intervall=30) -> None:
@@ -27,40 +28,42 @@ def set_font_from_ttf(self, path_to_ttf: str) -> None:
     self.ttf_path = path_to_ttf
 
     # force all the font settings to re-render
-    set_font_size(self, self.letter_size_Y)
+    set_font_size(self, self.letter_size_y)
 
 
 def set_font_size(self, size=16) -> None:
     """
     Sets the given size as font size and re-calculates necessary changes.
     """
-    self.letter_size_Y = size
+    self.letter_size_y = size
     current_dir = os.path.dirname(__file__)
 
     self.editor_font = pygame.font.Font(
-        os.path.join(current_dir, self.ttf_path), self.letter_size_Y
+        os.path.join(current_dir, self.ttf_path), self.letter_size_y
     )
     letter_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width()
-    self.letter_size_X = letter_width
-    self.line_gap = 3 + self.letter_size_Y
+    self.letter_size_x = letter_width
+    self.line_height_including_gap = self.letter_size_y + self.line_margin
     self.showable_line_numbers_in_editor = int(
-        math.floor(self.textAreaHeight / self.line_gap)
+        math.floor(self.editor_height / self.line_height_including_gap)
     )
+    # As the font size also influences the size of the line numbers, we need to recalculate some of the vars
+    self.line_number_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width() * 2
+    self.xline_start = self.editor_offset_X + self.line_number_width
+    self.xline = self.editor_offset_X + self.line_number_width
 
 
 def set_line_numbers(self, b) -> None:
     """
     Activates/deactivates showing the line numbers in the editor
     """
-    self.displayLineNumbers = b
-    if self.displayLineNumbers:
-        self.lineNumberWidth = (
-            27  # line number background width and also offset for text!
-        )
-        self.xline_start = self.editor_offset_X + self.xline_start_offset
-        self.xline = self.editor_offset_X + self.xline_start_offset
+    self.display_line_numbers = b
+    if self.display_line_numbers:
+        self.line_number_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width()
+        self.xline_start = self.editor_offset_X + self.line_number_width
+        self.xline = self.editor_offset_X + self.line_number_width
     else:
-        self.lineNumberWidth = 0
+        self.line_number_width = 0
         self.xline_start = self.editor_offset_X
         self.xline = self.editor_offset_X
 

@@ -1,5 +1,6 @@
-from typing import List, Dict, Tuple
 import re as re
+from typing import Dict, List, Tuple
+
 from pygments.lexers import PythonLexer
 
 
@@ -10,7 +11,7 @@ def get_single_color_dicts(self) -> List[List[Dict]]:
     Since only one color is being applied, we create a list with one dict per line.
     """
     rendering_list = []
-    for line in self.line_string_list:
+    for line in self.editor_lines:
         # appends a single-item list
         rendering_list.append(
             [{"chars": line, "type": "normal", "color": self.textColor}]
@@ -26,7 +27,7 @@ def get_syntax_coloring_dicts(self) -> List[List[Dict]]:
     We create a dict for every token of every line and include the characters, a pseudo token-type and the color.
     """
     rendering_list = []
-    for line in self.line_string_list:
+    for line in self.editor_lines:
         line_dict = self.formatter.format(self.lexer.get_tokens(line))
         rendering_list.append(line_dict)
     return rendering_list

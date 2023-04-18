@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "pygame-texteditor"
+version = "0.6.8"
+description = "A WYSIWYG-texteditor based on pygame."
+authors = ["Victor Seifert <seifert.victor@web.de>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "pygame_texteditor", from="src"}]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.6",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Topic :: Software Development",
+]
+keywords=[
+    "pygame",
+    "texteditor",
+    "text",
+    "editor"
+]
+include = [
+    "src/pygame_texteditor/elements/graphics/*.png",
+    "src/pygame_texteditor/elements/fonts/.ttf",
+    "src/pygame_texteditor/elements/colorstyles/*.yml"
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pygame = ">=1.9.6"
+PyYAML = ">=5.3.1"
+Pygments = ">=2.6.1"
+pyperclip = ">=1.8.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+pre-commit = "^3.2.2"
+pytest = "^7.3.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

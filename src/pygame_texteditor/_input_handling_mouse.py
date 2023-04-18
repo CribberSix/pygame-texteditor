@@ -1,5 +1,6 @@
 import pygame
-from ._scrollbar_vertical import scrollbar_up, scrollbar_up
+
+from ._scrollbar_vertical import scrollbar_up
 
 
 def handle_mouse_input(self, pygame_events, mouse_x, mouse_y, mouse_pressed) -> None:
@@ -33,12 +34,13 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y, mouse_pressed) -> 
             mouse_x, mouse_y
         ):
             # ___ MOUSE SCROLLING ___ #
-            if event.button == 4 and self.showStartLine > 0:
+            if event.button == 4 and self.first_showable_line_index > 0:
                 self.scrollbar_up()
             elif (
                 event.button == 5
-                and self.showStartLine + self.showable_line_numbers_in_editor
-                < self.maxLines
+                and self.first_showable_line_index
+                + self.showable_line_numbers_in_editor
+                < len(self.editor_lines)
             ):
                 self.scrollbar_down()
 
@@ -84,23 +86,26 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y, mouse_pressed) -> 
                     self.update_caret_position_by_drag_end()
 
                 else:  # mouse-up outside of editor
-                    if mouse_y < self.editor_offset_Y:
+                    if mouse_y < self.editor_offset_y:
                         # Mouse-up above editor -> set to first visible line
-                        self.drag_chosen_LineIndex_end = self.showStartLine
+                        self.drag_chosen_LineIndex_end = self.first_showable_line_index
                     elif mouse_y > (
-                        self.editor_offset_Y
-                        + self.textAreaHeight
-                        - self.conclusionBarHeight
+                        self.editor_offset_y
+                        + self.editor_height
+                        - self.conclusion_bar_height
                     ):
                         # Mouse-up below the editor -> set to last visible line
-                        if self.maxLines >= self.showable_line_numbers_in_editor:
+                        if (
+                            len(self.editor_lines)
+                            >= self.showable_line_numbers_in_editor
+                        ):
                             self.drag_chosen_LineIndex_end = (
-                                self.showStartLine
+                                self.first_showable_line_index
                                 + self.showable_line_numbers_in_editor
                                 - 1
                             )
                         else:
-                            self.drag_chosen_LineIndex_end = self.maxLines - 1
+                            self.drag_chosen_LineIndex_end = len(self.editor_lines) - 1
                     else:  # mouse left or right of the editor outside
                         self.set_drag_end_line_by_mouse(mouse_y)
                     # Now we can determine the letter based on mouse_x (and selected line within the function)
@@ -139,13 +144,13 @@ def handle_mouse_input(self, pygame_events, mouse_x, mouse_y, mouse_pressed) -> 
     # Scrollbar - Dragging
     if mouse_pressed[0] == 1 and self.scroll_dragging:
         # left mouse is being pressed after click on scrollbar
-        if mouse_y < self.scroll_start_y and self.showStartLine > 0:
+        if mouse_y < self.scroll_start_y and self.first_showable_line_index > 0:
             # dragged higher
             self.scrollbar_up()
         elif (
             mouse_y > self.scroll_start_y
-            and self.showStartLine + self.showable_line_numbers_in_editor
-            < self.maxLines
+            and self.first_showable_line_index + self.showable_line_numbers_in_editor
+            < len(self.editor_lines)
         ):
             # dragged lower
             self.scrollbar_down()
@@ -155,20 +160,20 @@ def mouse_within_texteditor(self, mouse_x, mouse_y) -> bool:
     """
     Returns True if the given coordinates are within the text-editor area of the pygame window, otherwise False.
     """
-    return self.editor_offset_X + self.lineNumberWidth < mouse_x < (
-        self.editor_offset_X + self.textAreaWidth - self.scrollBarWidth
-    ) and self.editor_offset_Y < mouse_y < (
-        self.textAreaHeight + self.editor_offset_Y - self.conclusionBarHeight
+    return self.editor_offset_X + self.line_number_width < mouse_x < (
+        self.editor_offset_X + self.editor_width - self.scrollbar_width
+    ) and self.editor_offset_y < mouse_y < (
+        self.editor_height + self.editor_offset_y - self.conclusion_bar_height
     )
 
 
 def mouse_within_existing_lines(self, mouse_y):
     """
     Returns True if the given Y-coordinate is within the height of the text-editor's existing lines.
-    Returns False if the coordinate is below existing lines or outside of the editor.
+    Returns False if the coordinate is below existing lines or outside the editor.
     """
     return (
-        self.editor_offset_Y
+        self.editor_offset_y
         < mouse_y
-        < self.editor_offset_Y + (self.lineHeight * self.maxLines)
+        < self.editor_offset_y + (self.letter_size_y * len(self.editor_lines))
     )

@@ -72,9 +72,8 @@ def handle_input_with_highlight(self, input_event) -> None:
                         )  # delete left side of new last line
 
                 # join rest of start/end lines into new line in multiline delete
-                self.line_string_list[line_start] = (
-                    self.line_string_list[line_start]
-                    + self.line_string_list[line_start + 1]
+                self.editor_lines[line_start] = (
+                    self.editor_lines[line_start] + self.editor_lines[line_start + 1]
                 )
                 self.delete_entire_line(
                     line_start + 1
@@ -87,7 +86,7 @@ def handle_input_with_highlight(self, input_event) -> None:
             self.chosen_LetterIndex = (
                 letter_start if line_start <= line_end else letter_end
             )
-            self.rerenderLineNumbers = True
+            self.rerender_line_numbers = True
             self.reset_after_highlight()
 
             # insert key unless delete/backspace
@@ -112,42 +111,37 @@ def handle_highlight_and_paste(self):
     paste_string = pyperclip.paste()
     line_split = paste_string.split("\r\n")  # split into lines
     if len(line_split) == 1:  # no linebreaks
-        self.line_string_list[self.chosen_LineIndex] = (
-            self.line_string_list[self.chosen_LineIndex][: self.chosen_LetterIndex]
+        self.editor_lines[self.chosen_LineIndex] = (
+            self.editor_lines[self.chosen_LineIndex][: self.chosen_LetterIndex]
             + line_split[0]
-            + self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex :]
+            + self.editor_lines[self.chosen_LineIndex][self.chosen_LetterIndex :]
         )
 
         self.chosen_LetterIndex = self.chosen_LetterIndex + len(line_split[0])
 
     else:
-        rest_of_line = self.line_string_list[self.chosen_LineIndex][
+        rest_of_line = self.editor_lines[self.chosen_LineIndex][
             self.chosen_LetterIndex :
         ]  # store for later
         for i, line in enumerate(line_split):
             if i == 0:  # first line to insert
-                self.line_string_list[self.chosen_LineIndex] = (
-                    self.line_string_list[self.chosen_LineIndex][
-                        : self.chosen_LetterIndex
-                    ]
+                self.editor_lines[self.chosen_LineIndex] = (
+                    self.editor_lines[self.chosen_LineIndex][: self.chosen_LetterIndex]
                     + line
                 )
             elif i < len(line_split) - 1:  # middle line -> insert new line!
-                self.line_string_list[
+                self.editor_lines[
                     self.chosen_LineIndex + i : self.chosen_LineIndex + i
                 ] = [line]
-                self.maxLines += 1
             else:  # last line
-                self.line_string_list[
+                self.editor_lines[
                     self.chosen_LineIndex + i : self.chosen_LineIndex + i
                 ] = [line + rest_of_line]
-                self.maxLines += 1
-
                 self.chosen_LetterIndex = len(line)
                 self.chosen_LineIndex = self.chosen_LineIndex + i
 
     self.update_caret_position()
-    self.rerenderLineNumbers = True
+    self.rerender_line_numbers = True
 
 
 def handle_highlight_and_copy(self):

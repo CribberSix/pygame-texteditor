@@ -1,11 +1,12 @@
-from pygments import highlight
-from pygments.lexers import PythonLexer
-from pygments.formatter import Formatter
-from pygments.token import Token, is_token_subtype
-from typing import List, Dict, Tuple
 import os
-import yaml
 import re
+from typing import Dict, List, Tuple
+
+import yaml
+from pygments import highlight
+from pygments.formatter import Formatter
+from pygments.lexers import PythonLexer
+from pygments.token import Token, is_token_subtype
 
 
 class ColorFormatter:
