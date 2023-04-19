@@ -4,7 +4,7 @@ def get_line_index(self, mouse_y) -> int:
     how many lines there actually are!
     """
     return int(
-        ((mouse_y - self.editor_offset_y) / self.line_height_including_gap)
+        ((mouse_y - self.editor_offset_y) / self.line_height_including_margin)
         + self.first_showable_line_index
     )
 
@@ -17,7 +17,7 @@ def get_letter_index(self, mouse_x) -> int:
     is bigger than the letters in the line.
     Returns at least 0 to make sure it is possibly a valid index.
     """
-    letter = int((mouse_x - self.xline_start) / self.letter_size_x)
+    letter = int((mouse_x - self.line_start_x) / self.letter_width)
     letter = 0 if letter < 0 else letter
     return letter
 

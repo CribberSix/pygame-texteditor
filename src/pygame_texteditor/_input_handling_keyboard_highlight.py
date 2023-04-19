@@ -10,10 +10,10 @@ def handle_input_with_highlight(self, input_event) -> None:
     with the chosen letter.
     """
     # for readability & maintainability we use shorter variable names
-    line_start = self.drag_chosen_LineIndex_start
-    line_end = self.drag_chosen_LineIndex_end
-    letter_start = self.drag_chosen_LetterIndex_start
-    letter_end = self.drag_chosen_LetterIndex_end
+    line_start = self.drag_chosen_line_index_start
+    line_end = self.drag_chosen_line_index_end
+    letter_start = self.drag_chosen_letter_index_start
+    letter_end = self.drag_chosen_letter_index_end
 
     if self.dragged_finished and self.dragged_active:
         if input_event.key in (
@@ -80,13 +80,13 @@ def handle_input_with_highlight(self, input_event) -> None:
                 )  # after copying contents, we need to delete the other line
 
             # set caret and rerender line_numbers
-            self.chosen_LineIndex = (
+            self.chosen_line_index = (
                 line_start if line_start <= line_end else line_end
             )  # start for single_line
-            self.chosen_LetterIndex = (
+            self.chosen_letter_index = (
                 letter_start if line_start <= line_end else letter_end
             )
-            self.rerender_line_numbers = True
+            self.render_line_numbers_flag = True
             self.reset_after_highlight()
 
             # insert key unless delete/backspace
@@ -111,37 +111,39 @@ def handle_highlight_and_paste(self):
     paste_string = pyperclip.paste()
     line_split = paste_string.split("\r\n")  # split into lines
     if len(line_split) == 1:  # no linebreaks
-        self.editor_lines[self.chosen_LineIndex] = (
-            self.editor_lines[self.chosen_LineIndex][: self.chosen_LetterIndex]
+        self.editor_lines[self.chosen_line_index] = (
+            self.editor_lines[self.chosen_line_index][: self.chosen_letter_index]
             + line_split[0]
-            + self.editor_lines[self.chosen_LineIndex][self.chosen_LetterIndex :]
+            + self.editor_lines[self.chosen_line_index][self.chosen_letter_index :]
         )
 
-        self.chosen_LetterIndex = self.chosen_LetterIndex + len(line_split[0])
+        self.chosen_letter_index = self.chosen_letter_index + len(line_split[0])
 
     else:
-        rest_of_line = self.editor_lines[self.chosen_LineIndex][
-            self.chosen_LetterIndex :
+        rest_of_line = self.editor_lines[self.chosen_line_index][
+            self.chosen_letter_index :
         ]  # store for later
         for i, line in enumerate(line_split):
             if i == 0:  # first line to insert
-                self.editor_lines[self.chosen_LineIndex] = (
-                    self.editor_lines[self.chosen_LineIndex][: self.chosen_LetterIndex]
+                self.editor_lines[self.chosen_line_index] = (
+                    self.editor_lines[self.chosen_line_index][
+                        : self.chosen_letter_index
+                    ]
                     + line
                 )
             elif i < len(line_split) - 1:  # middle line -> insert new line!
                 self.editor_lines[
-                    self.chosen_LineIndex + i : self.chosen_LineIndex + i
+                    self.chosen_line_index + i : self.chosen_line_index + i
                 ] = [line]
             else:  # last line
                 self.editor_lines[
-                    self.chosen_LineIndex + i : self.chosen_LineIndex + i
+                    self.chosen_line_index + i : self.chosen_line_index + i
                 ] = [line + rest_of_line]
-                self.chosen_LetterIndex = len(line)
-                self.chosen_LineIndex = self.chosen_LineIndex + i
+                self.chosen_letter_index = len(line)
+                self.chosen_line_index = self.chosen_line_index + i
 
     self.update_caret_position()
-    self.rerender_line_numbers = True
+    self.render_line_numbers_flag = True
 
 
 def handle_highlight_and_copy(self):
@@ -188,17 +190,17 @@ def get_highlighted_characters(self) -> str:
     Returns the highlighted characters (single- and multiple-line) from the editor (self.line_string_list)
     """
     if self.dragged_finished and self.dragged_active:
-        line_start = self.drag_chosen_LineIndex_start
-        line_end = self.drag_chosen_LineIndex_end
-        letter_start = self.drag_chosen_LetterIndex_start
-        letter_end = self.drag_chosen_LetterIndex_end
+        line_start = self.drag_chosen_line_index_start
+        line_end = self.drag_chosen_line_index_end
+        letter_start = self.drag_chosen_letter_index_start
+        letter_end = self.drag_chosen_letter_index_end
 
-        if self.drag_chosen_LineIndex_start == self.drag_chosen_LineIndex_end:
+        if self.drag_chosen_line_index_start == self.drag_chosen_line_index_end:
             # single-line highlight
             return self.get_line_from_char_to_char(
-                self.drag_chosen_LineIndex_start,
-                self.drag_chosen_LetterIndex_start,
-                self.drag_chosen_LetterIndex_end,
+                self.drag_chosen_line_index_start,
+                self.drag_chosen_letter_index_start,
+                self.drag_chosen_letter_index_end,
             )
 
         else:  # multi-line highlight

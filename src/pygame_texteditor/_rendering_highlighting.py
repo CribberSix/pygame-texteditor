@@ -9,14 +9,14 @@ def render_highlight(self, mouse_x, mouse_y) -> None:
     """
 
     if self.dragged_active:  # some text is highlighted or being highlighted
-        line_start = self.drag_chosen_LineIndex_start
-        letter_start = self.drag_chosen_LetterIndex_start
+        line_start = self.drag_chosen_line_index_start
+        letter_start = self.drag_chosen_letter_index_start
 
         if (
             self.dragged_finished
         ):  # highlighting operation is done, user "clicked-up" with the left mouse button
-            line_end = self.drag_chosen_LineIndex_end
-            letter_end = self.drag_chosen_LetterIndex_end
+            line_end = self.drag_chosen_line_index_end
+            letter_end = self.drag_chosen_letter_index_end
             if letter_end < 0:
                 letter_end = 0
             self.highlight_lines(
@@ -81,7 +81,7 @@ def highlight_from_letter_to_end(self, line, letter) -> None:
         pygame.draw.rect(
             self.screen,
             (0, 0, 0),
-            pygame.Rect(x1, y1, x2 - x1, self.line_height_including_gap),
+            pygame.Rect(x1, y1, x2 - x1, self.line_height_including_margin),
         )
 
 
@@ -95,7 +95,7 @@ def highlight_from_start_to_letter(self, line, letter) -> None:
         pygame.draw.rect(
             self.screen,
             (0, 0, 0),
-            pygame.Rect(x1, y1, x2 - x1, self.line_height_including_gap),
+            pygame.Rect(x1, y1, x2 - x1, self.line_height_including_margin),
         )
 
 
@@ -109,7 +109,7 @@ def highlight_entire_line(self, line) -> None:
         pygame.draw.rect(
             self.screen,
             (0, 0, 0),
-            pygame.Rect(x1, y1, x2 - x1, self.line_height_including_gap),
+            pygame.Rect(x1, y1, x2 - x1, self.line_height_including_margin),
         )
 
 
@@ -123,5 +123,5 @@ def highlight_from_letter_to_letter(self, line, letter_start, letter_end) -> Non
         pygame.draw.rect(
             self.screen,
             (0, 0, 0),
-            pygame.Rect(x1, y1, x2 - x1, self.line_height_including_gap),
+            pygame.Rect(x1, y1, x2 - x1, self.line_height_including_margin),
         )

@@ -1,33 +1,28 @@
-import re as re
-from typing import Dict, List, Tuple
-
-from pygments.lexers import PythonLexer
+from typing import Dict, List
 
 
 def get_single_color_dicts(self) -> List[List[Dict]]:
+    """Convert the editor text into a list of single color tokens which can be used to be rendered.
+
+    Every line is one sublist. Since only one color is applied, an entire line can be a single token.
+
+    :return List[List[Dict]]:
     """
-    Converts the text in the editor based on the line_string_list into a list of lists of dicts.
-    Every line is one sublist.
-    Since only one color is being applied, we create a list with one dict per line.
-    """
-    rendering_list = []
-    for line in self.editor_lines:
-        # appends a single-item list
-        rendering_list.append(
-            [{"chars": line, "type": "normal", "color": self.textColor}]
-        )
-    return rendering_list
+    return [
+        [{"chars": line, "type": "normal", "color": self.color_text}]
+        for line in self.editor_lines
+    ]
 
 
 def get_syntax_coloring_dicts(self) -> List[List[Dict]]:
-    """
-    Converts the text in the editor based on the line_string_list into a list of lists of dicts.
-    Every line is one sublist which contains different dicts based on it's contents.
+    """Convert the editor text into a list of differently colored tokens which can be used to be rendered.
 
+    Every line is one sublist which contains different tokens (dicts) based on its contents.
     We create a dict for every token of every line and include the characters, a pseudo token-type and the color.
+
+    :return List[List[Dict]]: a list containing lines (=a list of tokens (=dicts)).
     """
-    rendering_list = []
-    for line in self.editor_lines:
-        line_dict = self.formatter.format(self.lexer.get_tokens(line))
-        rendering_list.append(line_dict)
-    return rendering_list
+    return [
+        self.color_formatter.format(self.lexer.get_tokens(line))
+        for line in self.editor_lines
+    ]

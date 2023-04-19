@@ -31,22 +31,22 @@ def clear_text(self) -> None:
     """
     # Create lines
     self.editor_lines = [
-        "" for _ in range(int(math.floor(self.editor_height / self.letter_size_y)))
+        "" for _ in range(int(math.floor(self.editor_height / self.letter_height)))
     ]
     self.first_showable_line_index = 0
 
     # reset caret
     self.first_iteration_boolean = True  # redraws background
-    self.rerender_line_numbers = True
-    self.chosen_LineIndex = 0
-    self.chosen_LetterIndex = 0
+    self.render_line_numbers_flag = True
+    self.chosen_line_index = 0
+    self.chosen_letter_index = 0
     self.dragged_active = False
     self.dragged_finished = True
-    self.scroll_dragging = False
-    self.drag_chosen_LineIndex_start = 0
-    self.drag_chosen_LetterIndex_start = 0
-    self.drag_chosen_LineIndex_end = 0
-    self.drag_chosen_LetterIndex_end = 0
+    self.scrollbar_is_being_dragged = False
+    self.drag_chosen_line_index_start = 0
+    self.drag_chosen_letter_index_start = 0
+    self.drag_chosen_line_index_end = 0
+    self.drag_chosen_letter_index_end = 0
     self.last_clickdown_cycle = 0
     self.last_clickup_cycle = 0
     self.cycleCounter = 0
@@ -60,7 +60,7 @@ def set_text_from_list(self, text_list) -> None:
     """
     self.clear_text()
     self.editor_lines = text_list
-    self.rerender_line_numbers = True
+    self.render_line_numbers_flag = True
 
 
 def set_text_from_string(self, string) -> None:
@@ -69,4 +69,4 @@ def set_text_from_string(self, string) -> None:
     """
     self.clear_text()
     self.editor_lines = string.split("\n")
-    self.rerender_line_numbers = True
+    self.render_line_numbers_flag = True

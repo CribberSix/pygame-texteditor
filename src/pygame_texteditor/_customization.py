@@ -6,51 +6,45 @@ import re
 import pygame
 import yaml
 
+current_dir = os.path.dirname(__file__)
 
-def set_key_repetition(self, delay=300, intervall=30) -> None:
+
+def set_key_repetition(self, delay=300, interval=30) -> None:
     """
     The delay parameter is the number of milliseconds before the first repeated pygame.KEYDOWN event will be sent.
     After that, another pygame.KEYDOWN event will be sent every interval milliseconds.
     """
     self.key_initial_delay = delay
-    self.key_continued_intervall = intervall
-    pygame.key.set_repeat(self.key_initial_delay, self.key_continued_intervall)
+    self.key_continued_interval = interval
+    pygame.key.set_repeat(self.key_initial_delay, self.key_continued_interval)
 
 
-def set_font_from_ttf(self, path_to_ttf: str) -> None:
+def set_font_from_ttf(self, absolute_path_to_ttf: str) -> None:
     """
     Sets the font given a ttf file.
 
-    As the width of a letter (space) is only calculated once after setting the font_size, any fonts that are not
+    Disclaimer: As the width of a letter (space) is only calculated once after setting the font_size, any fonts that are not
     monospace will lead to the editor not working correctly anymore, as it cannot be determined anymore, between which
     letters the user clicked.
     """
-    self.ttf_path = path_to_ttf
+    self.ttf_path = absolute_path_to_ttf
 
     # force all the font settings to re-render
-    set_font_size(self, self.letter_size_y)
+    set_font_size(self, self.letter_height)
 
 
 def set_font_size(self, size=16) -> None:
-    """
-    Sets the given size as font size and re-calculates necessary changes.
-    """
-    self.letter_size_y = size
-    current_dir = os.path.dirname(__file__)
-
-    self.editor_font = pygame.font.Font(
-        os.path.join(current_dir, self.ttf_path), self.letter_size_y
-    )
-    letter_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width()
-    self.letter_size_x = letter_width
-    self.line_height_including_gap = self.letter_size_y + self.line_margin
+    """Sets the given size as font size and re-calculates necessary changes."""
+    self.editor_font = pygame.font.Font(self.ttf_path, size=size)
+    self.letter_height = size
+    self.letter_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width()
+    self.line_height_including_margin = self.letter_height + self.line_margin
     self.showable_line_numbers_in_editor = int(
-        math.floor(self.editor_height / self.line_height_including_gap)
+        math.floor(self.editor_height / self.line_height_including_margin)
     )
-    # As the font size also influences the size of the line numbers, we need to recalculate some of the vars
+    # As the font size also influences the size of the line numbers, we need to recalculate some their spacing
     self.line_number_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width() * 2
-    self.xline_start = self.editor_offset_X + self.line_number_width
-    self.xline = self.editor_offset_X + self.line_number_width
+    self.line_start_x = self.editor_offset_x + self.line_number_width
 
 
 def set_line_numbers(self, b) -> None:
@@ -60,12 +54,10 @@ def set_line_numbers(self, b) -> None:
     self.display_line_numbers = b
     if self.display_line_numbers:
         self.line_number_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width()
-        self.xline_start = self.editor_offset_X + self.line_number_width
-        self.xline = self.editor_offset_X + self.line_number_width
+        self.line_start_x = self.editor_offset_x + self.line_number_width
     else:
         self.line_number_width = 0
-        self.xline_start = self.editor_offset_X
-        self.xline = self.editor_offset_X
+        self.line_start_x = self.editor_offset_x
 
 
 def set_syntax_highlighting(self, b) -> None:
@@ -73,7 +65,7 @@ def set_syntax_highlighting(self, b) -> None:
     Activates / deactivates syntax highlighting.
     If activated, creates the lexer and formatter and sets the formatter's style.
     """
-    self.syntax_coloring = b
+    self.syntax_highlighting_python = b
 
 
 def set_colorscheme_from_yaml(self, path_to_yaml) -> None:
@@ -84,37 +76,37 @@ def set_colorscheme_from_yaml(self, path_to_yaml) -> None:
         with open(path_to_yaml) as file:
             color_dict = yaml.load(file, Loader=yaml.FullLoader)
 
-            self.codingBackgroundColor = get_rgb_by_key(
+            self.color_coding_background = get_rgb_by_key(
                 color_dict, "codingBackgroundColor"
             )
-            self.codingScrollBarBackgroundColor = get_rgb_by_key(
+            self.color_scrollbar_background = get_rgb_by_key(
                 color_dict, "codingScrollBarBackgroundColor"
             )
-            self.lineNumberColor = get_rgb_by_key(color_dict, "lineNumberColor")
-            self.lineNumberBackgroundColor = get_rgb_by_key(
+            self.color_line_number_font = get_rgb_by_key(color_dict, "lineNumberColor")
+            self.color_line_number_background = get_rgb_by_key(
                 color_dict, "lineNumberBackgroundColor"
             )
-            self.textColor = get_rgb_by_key(color_dict, "textColor")
+            self.color_text = get_rgb_by_key(color_dict, "textColor")
 
-            self.formatter.textColor_normal = get_rgb_by_key(
+            self.color_formatter.textColor_normal = get_rgb_by_key(
                 color_dict, "textColor_normal"
             )
-            self.formatter.textColor_comments = get_rgb_by_key(
+            self.color_formatter.textColor_comments = get_rgb_by_key(
                 color_dict, "textColor_comments"
             )
-            self.formatter.textColor_quotes = get_rgb_by_key(
+            self.color_formatter.textColor_quotes = get_rgb_by_key(
                 color_dict, "textColor_quotes"
             )
-            self.formatter.textColor_operators = get_rgb_by_key(
+            self.color_formatter.textColor_operators = get_rgb_by_key(
                 color_dict, "textColor_operators"
             )
-            self.formatter.textColor_keywords = get_rgb_by_key(
+            self.color_formatter.textColor_keywords = get_rgb_by_key(
                 color_dict, "textColor_keywords"
             )
-            self.formatter.textColor_function = get_rgb_by_key(
+            self.color_formatter.textColor_function = get_rgb_by_key(
                 color_dict, "textColor_function"
             )
-            self.formatter.textColor_builtin = get_rgb_by_key(
+            self.color_formatter.textColor_builtin = get_rgb_by_key(
                 color_dict, "textColor_builtin"
             )
 

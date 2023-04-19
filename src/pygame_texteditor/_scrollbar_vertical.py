@@ -14,7 +14,7 @@ def display_scrollbar(self):
     # scroll bar is a fraction of the space
     w = self.scrollbar_width
     x = (
-        self.editor_offset_X
+        self.editor_offset_x
         + self.editor_width
         - self.scrollbar_width
         - self.padding_between_edge_and_scrollbar
@@ -47,11 +47,11 @@ def display_scrollbar(self):
 
 def scrollbar_up(self) -> None:
     self.first_showable_line_index -= 1
-    self.caret_y += self.line_height_including_gap
-    self.rerender_line_numbers = True
+    self.caret_y += self.line_height_including_margin
+    self.render_line_numbers_flag = True
 
 
 def scrollbar_down(self) -> None:
     self.first_showable_line_index += 1
-    self.caret_y -= self.line_height_including_gap
-    self.rerender_line_numbers = True
+    self.caret_y -= self.line_height_including_margin
+    self.render_line_numbers_flag = True

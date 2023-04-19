@@ -19,12 +19,12 @@ textAreaWidth = 500
 
 # instantiation
 TX = TextEditor(
-    offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, line_numbers_flag=True
+    offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, display_line_numbers=True
 )
 TX.set_cursor_mode("blinking")
 # TX.set_line_numbers(True)
 TX.set_syntax_highlighting(True)
-TX.set_font_size(40)
+# TX.set_font_size(40)
 
 # TextEditor in the pygame-loop
 while True:
