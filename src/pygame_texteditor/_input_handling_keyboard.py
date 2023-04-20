@@ -1,5 +1,6 @@
-import pygame
 import warnings
+
+import pygame
 
 
 def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
@@ -36,7 +37,7 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
             # ___ SINGLE KEY INPUTS ___
             else:
                 self.reset_text_area_to_caret()  # reset visual area to include line of caret if necessary
-                self.chosen_LetterIndex = int(self.chosen_LetterIndex)
+                self.chosen_letter_index = int(self.chosen_letter_index)
 
                 # Detect tapping/holding of the "DELETE" and "BACKSPACE" key while something is highlighted
                 if (
@@ -118,224 +119,226 @@ def handle_keyboard_input(self, pygame_events, pressed_keys) -> None:
 
 
 def insert_unicode(self, unicode) -> None:
-    self.line_string_list[self.chosen_LineIndex] = (
-        self.line_string_list[self.chosen_LineIndex][: self.chosen_LetterIndex]
+    self.editor_lines[self.chosen_line_index] = (
+        self.editor_lines[self.chosen_line_index][: self.chosen_letter_index]
         + unicode
-        + self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex :]
+        + self.editor_lines[self.chosen_line_index][self.chosen_letter_index :]
     )
-    self.cursor_X += self.letter_size_X
-    self.chosen_LetterIndex += 1
+    self.caret_x += self.letter_width
+    self.chosen_letter_index += 1
 
 
 def handle_keyboard_backspace(self) -> None:
-    if self.chosen_LetterIndex == 0 and self.chosen_LineIndex == 0:
+    if self.chosen_letter_index == 0 and self.chosen_line_index == 0:
         # First position and in the first Line -> nothing happens
         pass
-    elif self.chosen_LetterIndex == 0 and self.chosen_LineIndex > 0:
+    elif self.chosen_letter_index == 0 and self.chosen_line_index > 0:
         # One Line back if at X-Position 0 and not in the first Line
 
         # set letter and line index to newly current line
-        self.chosen_LineIndex -= 1
-        self.chosen_LetterIndex = len(self.line_string_list[self.chosen_LineIndex])
+        self.chosen_line_index -= 1
+        self.chosen_letter_index = len(self.editor_lines[self.chosen_line_index])
         # set visual cursor one line above and at the end of the line
-        self.cursor_Y -= self.line_gap
-        self.cursor_X = self.xline_start + (
-            len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X
+        self.caret_y -= self.line_height_including_margin
+        self.caret_x = self.line_start_x + (
+            len(self.editor_lines[self.chosen_line_index]) * self.letter_width
         )
 
         # take the rest of the former line into the current line
-        self.line_string_list[self.chosen_LineIndex] = (
-            self.line_string_list[self.chosen_LineIndex]
-            + self.line_string_list[self.chosen_LineIndex + 1]
+        self.editor_lines[self.chosen_line_index] = (
+            self.editor_lines[self.chosen_line_index]
+            + self.editor_lines[self.chosen_line_index + 1]
         )
 
         # delete the former line
         # LOGICAL lines
-        self.line_string_list.pop(self.chosen_LineIndex + 1)
-        self.maxLines -= 1
+        self.editor_lines.pop(self.chosen_line_index + 1)
         # VISUAL lines
-        self.rerenderLineNumbers = True
+        self.render_line_numbers_flag = True
 
         # Handling of the resulting scrolling functionality of removing one line
-        if self.showStartLine > 0:
+        if self.first_showable_line_index > 0:
             if (
-                self.showStartLine + self.showable_line_numbers_in_editor
-            ) > self.maxLines:
+                self.first_showable_line_index + self.showable_line_numbers_in_editor
+            ) > len(self.editor_lines):
                 # The scrollbar is all the way down. We delete a line,
                 # so we have to "pull everything one visual line down"
-                self.showStartLine -= 1  # "pull one visual line down" (array-based)
-                self.cursor_Y += (
-                    self.line_gap
+                self.first_showable_line_index -= (
+                    1  # "pull one visual line down" (array-based)
+                )
+                self.caret_y += (
+                    self.line_height_including_margin
                 )  # move the curser one down.  (visually based)
-        if self.chosen_LineIndex == (self.showStartLine - 1):
+        if self.chosen_line_index == (self.first_showable_line_index - 1):
             # Im in the first rendered line (but NOT  the "0" line) and at the beginning of the line.
             # => move one upward, change showstartLine & cursor placement.
-            self.showStartLine -= 1
-            self.cursor_Y += self.line_gap
+            self.first_showable_line_index -= 1
+            self.caret_y += self.line_height_including_margin
 
-    elif self.chosen_LetterIndex > 0:
+    elif self.chosen_letter_index > 0:
         # mid-line or end of the line -> Delete a letter
-        self.line_string_list[self.chosen_LineIndex] = (
-            self.line_string_list[self.chosen_LineIndex][
-                : (self.chosen_LetterIndex - 1)
-            ]
-            + self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex :]
+        self.editor_lines[self.chosen_line_index] = (
+            self.editor_lines[self.chosen_line_index][: (self.chosen_letter_index - 1)]
+            + self.editor_lines[self.chosen_line_index][self.chosen_letter_index :]
         )
 
-        self.cursor_X -= self.letter_size_X
-        self.chosen_LetterIndex -= 1
+        self.caret_x -= self.letter_width
+        self.chosen_letter_index -= 1
     else:
         raise ValueError(
             "INVALID CONSTRUCT: handle_keyboard_backspace. \
                          \nLine:"
-            + str(self.chosen_LineIndex)
+            + str(self.chosen_line_index)
             + "\nLetter: "
-            + str(self.chosen_LetterIndex)
+            + str(self.chosen_letter_index)
         )
 
 
 def handle_keyboard_delete(self) -> None:
 
-    if self.chosen_LetterIndex < (len(self.line_string_list[self.chosen_LineIndex])):
+    if self.chosen_letter_index < (len(self.editor_lines[self.chosen_line_index])):
         # start of the line or mid-line (Cursor stays on point), cut one letter out
-        self.line_string_list[self.chosen_LineIndex] = (
-            self.line_string_list[self.chosen_LineIndex][: self.chosen_LetterIndex]
-            + self.line_string_list[self.chosen_LineIndex][
-                (self.chosen_LetterIndex + 1) :
+        self.editor_lines[self.chosen_line_index] = (
+            self.editor_lines[self.chosen_line_index][: self.chosen_letter_index]
+            + self.editor_lines[self.chosen_line_index][
+                (self.chosen_letter_index + 1) :
             ]
         )
 
-    elif self.chosen_LetterIndex == len(self.line_string_list[self.chosen_LineIndex]):
+    elif self.chosen_letter_index == len(self.editor_lines[self.chosen_line_index]):
         # End of a line  (choose next line)
-        if self.chosen_LineIndex != (
-            self.maxLines - 1
+        if self.chosen_line_index != (
+            len(self.editor_lines) - 1
         ):  # NOT in the last line &(prev) at the end of the line, I cannot delete anything
-            self.line_string_list[self.chosen_LineIndex] += self.line_string_list[
-                self.chosen_LineIndex + 1
+            self.editor_lines[self.chosen_line_index] += self.editor_lines[
+                self.chosen_line_index + 1
             ]  # add the contents of the next line to the current one
-            self.line_string_list.pop(
-                self.chosen_LineIndex + 1
+            self.editor_lines.pop(
+                self.chosen_line_index + 1
             )  # delete the Strings-line in order to move the following lines one upwards
-            self.maxLines -= 1  # Keep the variable aligned
-            self.rerenderLineNumbers = True
-            if self.showStartLine > 0:
+            self.render_line_numbers_flag = True
+            if self.first_showable_line_index > 0:
                 if (
-                    self.showStartLine + self.showable_line_numbers_in_editor
-                ) > self.maxLines:
+                    self.first_showable_line_index
+                    + self.showable_line_numbers_in_editor
+                ) > len(self.editor_lines):
                     # The scrollbar is all the way down.
                     # We delete a line, so we have to "pull everything one visual line down"
-                    self.showStartLine -= 1  # "pull one visual line down" (array-based)
-                    self.cursor_Y += (
-                        self.line_gap
+                    self.first_showable_line_index -= (
+                        1  # "pull one visual line down" (array-based)
+                    )
+                    self.caret_y += (
+                        self.line_height_including_margin
                     )  # move the curser one down.  (visually based)
     else:
         raise ValueError(
             " INVALID CONSTRUCT: handle_keyboard_delete. \
                          \nLine:"
-            + str(self.chosen_LineIndex)
+            + str(self.chosen_line_index)
             + "\nLetter: "
-            + str(self.chosen_LetterIndex)
+            + str(self.chosen_letter_index)
         )
 
 
 def handle_keyboard_arrow_left(self) -> None:
-    if self.chosen_LetterIndex > 0:  # mid-line or end of line
-        self.chosen_LetterIndex -= 1
-        self.cursor_X -= self.letter_size_X
-    elif self.chosen_LetterIndex == 0 and self.chosen_LineIndex == 0:
+    if self.chosen_letter_index > 0:  # mid-line or end of line
+        self.chosen_letter_index -= 1
+        self.caret_x -= self.letter_width
+    elif self.chosen_letter_index == 0 and self.chosen_line_index == 0:
         # first line, first position, nothing happens
         pass
     elif (
-        self.chosen_LetterIndex == 0 and self.chosen_LineIndex > 0
+        self.chosen_letter_index == 0 and self.chosen_line_index > 0
     ):  # Move over into previous Line (if there is any)
-        self.chosen_LineIndex -= 1
-        self.chosen_LetterIndex = len(
-            self.line_string_list[self.chosen_LineIndex]
+        self.chosen_line_index -= 1
+        self.chosen_letter_index = len(
+            self.editor_lines[self.chosen_line_index]
         )  # end of previous line
-        self.cursor_X = self.xline_start + (
-            len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X
+        self.caret_x = self.line_start_x + (
+            len(self.editor_lines[self.chosen_line_index]) * self.letter_width
         )
-        self.cursor_Y -= self.line_gap
-        if self.chosen_LineIndex < self.showStartLine:
+        self.caret_y -= self.line_height_including_margin
+        if self.chosen_line_index < self.first_showable_line_index:
             # handling scroll functionality if necessary (moved above shown lines)
-            self.showStartLine -= 1
-            self.cursor_Y += self.line_gap
-            self.rerenderLineNumbers = True
+            self.first_showable_line_index -= 1
+            self.caret_y += self.line_height_including_margin
+            self.render_line_numbers_flag = True
 
 
 def handle_keyboard_arrow_right(self) -> None:
-    if self.chosen_LetterIndex < (len(self.line_string_list[self.chosen_LineIndex])):
+    if self.chosen_letter_index < (len(self.editor_lines[self.chosen_line_index])):
         # mid-line or start of the line
-        self.chosen_LetterIndex += 1
-        self.cursor_X += self.letter_size_X
-    elif self.chosen_LetterIndex == len(
-        self.line_string_list[self.chosen_LineIndex]
-    ) and not (self.chosen_LineIndex == (self.maxLines - 1)):
+        self.chosen_letter_index += 1
+        self.caret_x += self.letter_width
+    elif self.chosen_letter_index == len(
+        self.editor_lines[self.chosen_line_index]
+    ) and not (self.chosen_line_index == (len(self.editor_lines) - 1)):
         # end of line => move over into the start of the next line
 
-        self.chosen_LetterIndex = 0
-        self.chosen_LineIndex += 1
-        self.cursor_X = self.xline_start
-        self.cursor_Y += self.line_gap
-        if self.chosen_LineIndex > (
-            self.showStartLine + self.showable_line_numbers_in_editor - 1
+        self.chosen_letter_index = 0
+        self.chosen_line_index += 1
+        self.caret_x = self.line_start_x
+        self.caret_y += self.line_height_including_margin
+        if self.chosen_line_index > (
+            self.first_showable_line_index + self.showable_line_numbers_in_editor - 1
         ):
             # handling scroll functionality if necessary (moved below showed lines)
-            self.showStartLine += 1
-            self.cursor_Y -= self.line_gap
-            self.rerenderLineNumbers = True
+            self.first_showable_line_index += 1
+            self.caret_y -= self.line_height_including_margin
+            self.render_line_numbers_flag = True
 
 
 def handle_keyboard_arrow_down(self) -> None:
-    if self.chosen_LineIndex < (self.maxLines - 1):
+    if self.chosen_line_index < (len(self.editor_lines) - 1):
         # Not in the last line, downward movement possible
-        self.chosen_LineIndex += 1
-        self.cursor_Y += self.line_gap
+        self.chosen_line_index += 1
+        self.caret_y += self.line_height_including_margin
 
-        if len(self.line_string_list[self.chosen_LineIndex]) < self.chosen_LetterIndex:
+        if len(self.editor_lines[self.chosen_line_index]) < self.chosen_letter_index:
             # reset letter-index to the end
-            self.chosen_LetterIndex = len(self.line_string_list[self.chosen_LineIndex])
-            self.cursor_X = (
-                len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X
-            ) + self.xline_start
+            self.chosen_letter_index = len(self.editor_lines[self.chosen_line_index])
+            self.caret_x = (
+                len(self.editor_lines[self.chosen_line_index]) * self.letter_width
+            ) + self.line_start_x
 
-        if self.chosen_LineIndex > (
-            self.showStartLine + self.showable_line_numbers_in_editor - 1
+        if self.chosen_line_index > (
+            self.first_showable_line_index + self.showable_line_numbers_in_editor - 1
         ):
             # handle scrolling functionality if necessary (moved below shown lines)
-            self.scrollDown()
+            self.scrollbar_down()
 
-    elif self.chosen_LineIndex == (
-        self.maxLines - 1
-    ):  # im in the last line and want to jump to its end.
-        self.chosen_LetterIndex = len(
-            self.line_string_list[self.chosen_LineIndex]
+    elif self.chosen_line_index == (len(self.editor_lines) - 1):
+        # In the last line and want to jump to its end.
+        self.chosen_letter_index = len(
+            self.editor_lines[self.chosen_line_index]
         )  # end of the line
-        self.cursor_X = self.xline_start + (
-            len(self.line_string_list[self.chosen_LineIndex]) * self.letter_size_X
+        self.caret_x = self.line_start_x + (
+            len(self.editor_lines[self.chosen_line_index]) * self.letter_width
         )
 
 
 def handle_keyboard_arrow_up(self) -> None:
-    if self.chosen_LineIndex == 0:
+    if self.chosen_line_index == 0:
         # first line, cannot go upwards, so we go to the first position
-        self.chosen_LetterIndex = 0
-        self.cursor_X = self.xline_start
+        self.chosen_letter_index = 0
+        self.caret_x = self.line_start_x
 
-    elif self.chosen_LineIndex > 0:
+    elif self.chosen_line_index > 0:
         # subsequent lines, upwards movement possible
-        self.chosen_LineIndex -= 1
-        self.cursor_Y -= self.line_gap
+        self.chosen_line_index -= 1
+        self.caret_y -= self.line_height_including_margin
 
-        if len(self.line_string_list[self.chosen_LineIndex]) < self.chosen_LetterIndex:
+        if len(self.editor_lines[self.chosen_line_index]) < self.chosen_letter_index:
             # less letters in this line, reset toward the end of the line (to the left)
-            self.chosen_LetterIndex = len(self.line_string_list[self.chosen_LineIndex])
-            self.cursor_X = (
-                len(self.line_string_list[self.chosen_LineIndex])
-            ) * self.letter_size_X + self.xline_start
+            self.chosen_letter_index = len(self.editor_lines[self.chosen_line_index])
+            self.caret_x = (
+                len(self.editor_lines[self.chosen_line_index])
+            ) * self.letter_width + self.line_start_x
 
-        if self.chosen_LineIndex < self.showStartLine:  # scroll up one line
-            self.scrollUp()
+        if (
+            self.chosen_line_index < self.first_showable_line_index
+        ):  # scroll up one line
+            self.scrollbar_up()
 
 
 def handle_keyboard_tab(self) -> None:
@@ -345,47 +348,48 @@ def handle_keyboard_tab(self) -> None:
 
 def handle_keyboard_space(self) -> None:
     # insert 1 space
-    self.line_string_list[self.chosen_LineIndex] = (
-        self.line_string_list[self.chosen_LineIndex][: self.chosen_LetterIndex]
+    self.editor_lines[self.chosen_line_index] = (
+        self.editor_lines[self.chosen_line_index][: self.chosen_letter_index]
         + " "
-        + self.line_string_list[self.chosen_LineIndex][self.chosen_LetterIndex :]
+        + self.editor_lines[self.chosen_line_index][self.chosen_letter_index :]
     )
 
-    self.cursor_X += self.letter_size_X
-    self.chosen_LetterIndex += 1
+    self.caret_x += self.letter_width
+    self.chosen_letter_index += 1
 
 
 def handle_keyboard_return(self) -> None:
     # Get "transfer letters" behind cursor up to the end of the line to next line
     # If the cursor is at the end of the line, transferString is an empty String ("")
-    transferString = self.line_string_list[self.chosen_LineIndex][
-        self.chosen_LetterIndex :
+    transferString = self.editor_lines[self.chosen_line_index][
+        self.chosen_letter_index :
     ]
 
     # Remove transfer letters from the current line
-    self.line_string_list[self.chosen_LineIndex] = self.line_string_list[
-        self.chosen_LineIndex
-    ][: self.chosen_LetterIndex]
+    self.editor_lines[self.chosen_line_index] = self.editor_lines[
+        self.chosen_line_index
+    ][: self.chosen_letter_index]
 
     # set logical cursor indizes and add a new line
-    self.chosen_LineIndex += 1
-    self.chosen_LetterIndex = 0
-    self.maxLines += 1
-    self.cursor_X = self.xline_start  # reset cursor to start of the line
+    self.chosen_line_index += 1
+    self.chosen_letter_index = 0
+    self.caret_x = (
+        self.line_start_x + 1
+    )  # reset cursor to start of the line, plus 1 pixel to be visible.
 
     # insert empty line
-    self.line_string_list.insert(self.chosen_LineIndex, "")  # logical line
+    self.editor_lines.insert(self.chosen_line_index, "")  # logical line
 
     # Edit the new line -> append transfer letters
-    self.line_string_list[self.chosen_LineIndex] = (
-        self.line_string_list[self.chosen_LineIndex] + transferString
+    self.editor_lines[self.chosen_line_index] = (
+        self.editor_lines[self.chosen_line_index] + transferString
     )
-    self.rerenderLineNumbers = True
+    self.render_line_numbers_flag = True
 
     # handle scrolling functionality
-    if self.chosen_LineIndex > (
+    if self.chosen_line_index > (
         self.showable_line_numbers_in_editor - 1
     ):  # Last row, visual representation moves down
-        self.showStartLine += 1
+        self.first_showable_line_index += 1
     else:  # not in last row, put courser one line down without changing the shown line numbers
-        self.cursor_Y += self.line_gap
+        self.caret_y += self.line_height_including_margin

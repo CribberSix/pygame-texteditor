@@ -1,6 +1,7 @@
-import pygame
 import math
 from typing import List
+
+import pygame
 
 
 def get_text_as_string(self) -> str:
@@ -10,7 +11,7 @@ def get_text_as_string(self) -> str:
     :param self:  Texteditor-Class
     :return: String
     """
-    return "\n".join(self.line_string_list)
+    return "\n".join(self.editor_lines)
 
 
 def get_text_as_list(self) -> List:
@@ -19,7 +20,7 @@ def get_text_as_list(self) -> List:
     :param self:  Texteditor-Class
     :return: List of lines containing the text. Lines cane be empty Strings.
     """
-    return self.line_string_list
+    return self.editor_lines
 
 
 def clear_text(self) -> None:
@@ -28,24 +29,24 @@ def clear_text(self) -> None:
     :param self: Texteditor-Class
     :return: None
     """
-    self.line_string_list = []  # LOGIC: List of actual Strings for each line
-    self.maxLines = int(math.floor(self.textAreaHeight / self.lineHeight))
-    self.showStartLine = 0
-    for i in range(self.maxLines):  # from 0 to maxLines:
-        self.line_string_list.append("")  # Add a line
+    # Create lines
+    self.editor_lines = [
+        "" for _ in range(int(math.floor(self.editor_height / self.letter_height)))
+    ]
+    self.first_showable_line_index = 0
 
     # reset caret
-    self.firstiteration_boolean = True  # redraws background
-    self.rerenderLineNumbers = True
-    self.chosen_LineIndex = 0
-    self.chosen_LetterIndex = 0
+    self.first_iteration_boolean = True  # redraws background
+    self.render_line_numbers_flag = True
+    self.chosen_line_index = 0
+    self.chosen_letter_index = 0
     self.dragged_active = False
     self.dragged_finished = True
-    self.scroll_dragging = False
-    self.drag_chosen_LineIndex_start = 0
-    self.drag_chosen_LetterIndex_start = 0
-    self.drag_chosen_LineIndex_end = 0
-    self.drag_chosen_LetterIndex_end = 0
+    self.scrollbar_is_being_dragged = False
+    self.drag_chosen_line_index_start = 0
+    self.drag_chosen_letter_index_start = 0
+    self.drag_chosen_line_index_end = 0
+    self.drag_chosen_letter_index_end = 0
     self.last_clickdown_cycle = 0
     self.last_clickup_cycle = 0
     self.cycleCounter = 0
@@ -58,9 +59,8 @@ def set_text_from_list(self, text_list) -> None:
     Sets the text of the editor based on a list of strings. Each item in the list represents one line.
     """
     self.clear_text()
-    self.line_string_list = text_list
-    self.maxLines = len(self.line_string_list)
-    self.rerenderLineNumbers = True
+    self.editor_lines = text_list
+    self.render_line_numbers_flag = True
 
 
 def set_text_from_string(self, string) -> None:
@@ -68,6 +68,5 @@ def set_text_from_string(self, string) -> None:
     Sets the text of the editor based on a string. Linebreak characters are parsed.
     """
     self.clear_text()
-    self.line_string_list = string.split("\n")
-    self.maxLines = len(self.line_string_list)
-    self.rerenderLineNumbers = True
+    self.editor_lines = string.split("\n")
+    self.render_line_numbers_flag = True
