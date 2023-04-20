@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.7.1: Bugfix for displaying line numbers correctly and doc-update
+
+- Minor fix concerning a bug which caused the line number background to have a wrong width when first initialized.
+- Improved documentation concerning README.md and [how-to-use.py](https://github.com/CribberSix/pygame-texteditor/blob/master/how-to-use.py).
+
 ### 0.7.0: QoL update - BREAKING CHANGES
 
 - A lot of internal variables but also some parameters have been renamed to enable easier maintenance of the codebase. This might break existing implementations using the package if you hardcoded parameter names upon function calls or if you called internal variables. Function names have not been changed.

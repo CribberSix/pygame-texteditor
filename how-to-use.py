@@ -1,30 +1,18 @@
 import pygame
 
-from src.pygame_texteditor import TextEditor
+from pygame_texteditor import TextEditor
 
 # minimal pygame setup
 pygame.init()
-screenHeight = 500
-screenWidth = 600
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+screen = pygame.display.set_mode((500, 600))
 pygame.display.set_caption("Pygame")
 pygame.display.get_surface().fill((200, 200, 200))  # background coloring
 
-# parameters
-screen = pygame.display.get_surface()  # get existing pygame window/screen
-offset_X = 50  # offset from the left border of the pygame window
-offset_Y = 50  # offset from the top border of the pygame window
-textAreaHeight = 400
-textAreaWidth = 500
-
-# instantiation
-TX = TextEditor(
-    offset_X, offset_Y, textAreaWidth, textAreaHeight, screen, display_line_numbers=True
-)
-TX.set_cursor_mode("blinking")
-# TX.set_line_numbers(True)
+# Instantiation & customization of the text editor
+TX = TextEditor(offset_x=50, offset_y=50, editor_width=500, editor_height=400, screen=pygame.display.get_surface())
+TX.set_line_numbers(True)
 TX.set_syntax_highlighting(True)
-# TX.set_font_size(40)
+TX.set_font_size(18)
 
 # TextEditor in the pygame-loop
 while True:

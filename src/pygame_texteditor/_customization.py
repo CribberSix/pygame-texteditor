@@ -2,7 +2,6 @@ import math
 import os
 import pathlib
 import re
-
 import pygame
 import yaml
 
@@ -39,12 +38,10 @@ def set_font_size(self, size=16) -> None:
     self.letter_height = size
     self.letter_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width()
     self.line_height_including_margin = self.letter_height + self.line_margin
-    self.showable_line_numbers_in_editor = int(
-        math.floor(self.editor_height / self.line_height_including_margin)
-    )
+    self.showable_line_numbers_in_editor = int(math.floor(self.editor_height / self.line_height_including_margin))
     # As the font size also influences the size of the line numbers, we need to recalculate some their spacing
-    self.line_number_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width() * 2
-    self.line_start_x = self.editor_offset_x + self.line_number_width
+    self.max_line_number_rendered = -1
+    self.update_line_number_display()
 
 
 def set_line_numbers(self, b) -> None:
@@ -53,8 +50,8 @@ def set_line_numbers(self, b) -> None:
     """
     self.display_line_numbers = b
     if self.display_line_numbers:
-        self.line_number_width = self.editor_font.render(" ", 1, (0, 0, 0)).get_width()
-        self.line_start_x = self.editor_offset_x + self.line_number_width
+        self.max_line_number_rendered = -1
+        self.update_line_number_display()
     else:
         self.line_number_width = 0
         self.line_start_x = self.editor_offset_x
@@ -76,39 +73,19 @@ def set_colorscheme_from_yaml(self, path_to_yaml) -> None:
         with open(path_to_yaml) as file:
             color_dict = yaml.load(file, Loader=yaml.FullLoader)
 
-            self.color_coding_background = get_rgb_by_key(
-                color_dict, "codingBackgroundColor"
-            )
-            self.color_scrollbar_background = get_rgb_by_key(
-                color_dict, "codingScrollBarBackgroundColor"
-            )
+            self.color_coding_background = get_rgb_by_key(color_dict, "codingBackgroundColor")
+            self.color_scrollbar_background = get_rgb_by_key(color_dict, "codingScrollBarBackgroundColor")
             self.color_line_number_font = get_rgb_by_key(color_dict, "lineNumberColor")
-            self.color_line_number_background = get_rgb_by_key(
-                color_dict, "lineNumberBackgroundColor"
-            )
+            self.color_line_number_background = get_rgb_by_key(color_dict, "lineNumberBackgroundColor")
             self.color_text = get_rgb_by_key(color_dict, "textColor")
 
-            self.color_formatter.textColor_normal = get_rgb_by_key(
-                color_dict, "textColor_normal"
-            )
-            self.color_formatter.textColor_comments = get_rgb_by_key(
-                color_dict, "textColor_comments"
-            )
-            self.color_formatter.textColor_quotes = get_rgb_by_key(
-                color_dict, "textColor_quotes"
-            )
-            self.color_formatter.textColor_operators = get_rgb_by_key(
-                color_dict, "textColor_operators"
-            )
-            self.color_formatter.textColor_keywords = get_rgb_by_key(
-                color_dict, "textColor_keywords"
-            )
-            self.color_formatter.textColor_function = get_rgb_by_key(
-                color_dict, "textColor_function"
-            )
-            self.color_formatter.textColor_builtin = get_rgb_by_key(
-                color_dict, "textColor_builtin"
-            )
+            self.color_formatter.textColor_normal = get_rgb_by_key(color_dict, "textColor_normal")
+            self.color_formatter.textColor_comments = get_rgb_by_key(color_dict, "textColor_comments")
+            self.color_formatter.textColor_quotes = get_rgb_by_key(color_dict, "textColor_quotes")
+            self.color_formatter.textColor_operators = get_rgb_by_key(color_dict, "textColor_operators")
+            self.color_formatter.textColor_keywords = get_rgb_by_key(color_dict, "textColor_keywords")
+            self.color_formatter.textColor_function = get_rgb_by_key(color_dict, "textColor_function")
+            self.color_formatter.textColor_builtin = get_rgb_by_key(color_dict, "textColor_builtin")
 
     except FileNotFoundError:
         raise FileNotFoundError("Could not find the style file '" + path_to_yaml + "'.")
@@ -152,6 +129,4 @@ def set_cursor_mode(self, mode: str = "blinking"):
     elif mode == "static":
         self.static_cursor = True
     else:
-        raise ValueError(
-            f"Value '{mode}' is not a valid cursor mode. Set either to 'blinking' or 'static'."
-        )
+        raise ValueError(f"Value '{mode}' is not a valid cursor mode. Set either to 'blinking' or 'static'.")

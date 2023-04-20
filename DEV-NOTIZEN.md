@@ -20,12 +20,12 @@ The following variables are used when typing to keep the caret in the correct pl
 
 The variables are set to the END of the mouse drag action (z.b. drag_chosen_LetterIndex_end)
 
-### Cursor
+### Caret
 
-The cursor is solely set via the variables
+The caret is solely set via the variables
 
-- cursor_X
-- cursor_Y
+- caret_x
+- caret_y
 
 ### self.dragged_finished
 
