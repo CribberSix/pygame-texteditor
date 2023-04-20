@@ -18,31 +18,32 @@ Example with default configuration:
 
 ## Usage
 
-The texteditor takes 5 obligatory parameters and 3 optional parameters.
+The texteditor takes 5 obligatory parameters and 4 optional parameters.
 
 ##### Obligatory parameters
 - ```offset_X``` : integer - the offset from the left border of the pygame screen
 - ```offset_y``` : integer - the offset from the top border of the pygame screen
-- ```textAreaWidth``` : integer - the width of texteditor
-- ```textAreaHeight``` : integer - the height of texteditor
+- ```editor_width``` : integer - the width of texteditor
+- ```editor_height``` : integer - the height of texteditor
 - ```screen``` : pygame display surface - on which the texteditor is to be displayed
 
 ##### Optional Parameters with default values
 
-- ```line_numbers_flag``` - a boolean enabling showing line numbers
+- ```display_line_numbers``` - a boolean enabling showing line numbers
     > Default: ```False```
 - ```style``` - a String setting the color scheme of editor and syntax highlighting
     > Default: ```'dark'```
-- ```syntax_highlighting_flag``` - a boolean enabling syntax highlighting for Python code
+- ```syntax_highlighting_python``` - a boolean enabling syntax highlighting for Python code
     > Default: ```False```
+- ```font_size``` - an integer to set for the font size.
+    > Default: ```16```
 
 ## Setup
 
 ##### Minimal pygame setup
 
-```
+```python
 import pygame
-from pygame_texteditor import TextEditor
 
 pygame.init()
 screenHeight = 600
@@ -50,20 +51,24 @@ screenWidth = 900
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("Pygame")
 pygame.display.get_surface().fill((200, 200, 200))  # background coloring
+```
 
-```
 ##### Minimal texteditor setup
-```
+
+```python
+import pygame
+from pygame_texteditor import TextEditor
+
 # parameters
 screen = pygame.display.get_surface()  # get existing pygame window/screen
 offset_X = 50  # offset from the left border of the pygame window
 offset_Y = 50  # offset from the top border of the pygame window
-textAreaHeight = 500
-textAreaWidth = 800
+editor_height = 800
+editor_width = 500
 
 
 # Instantiation
-TX = TextEditor(offset_X, offset_Y, textAreaWidth, textAreaHeight, screen)
+TX = TextEditor(offset_X, offset_Y, editor_width, editor_height, screen)
 TX.set_line_numbers(True)  # optional
 TX.set_syntax_highlighting(True)  # optional
 
@@ -79,8 +84,6 @@ while True:  # pygame-loop
 
     # update pygame window
     pygame.display.flip()
-
-
 ```
 
 ##### Retrieving text from the editor
@@ -94,7 +97,6 @@ Each String-item in the list represents one line from the editor.
 ##### Removing text from the editor
 
 The editor offers the function `clear_text()` to clear the editor of any text.
-
 
 ##### Inserting text into the editor
 
@@ -114,8 +116,9 @@ set_text_from_string("First line.\nSecond line.\nThird Line")
 Cursor mode can either be `static` or `blinking` (=default).
 
 ```python
-set_cursor_mode("static")
-set_cursor_mode("blinking")
+TX = TextEditor(...)
+TX.set_cursor_mode("static")
+TX.set_cursor_mode("blinking")
 ```
 
 #### Key repetition speeds
@@ -133,7 +136,7 @@ From the [official documentation](http://www.pygame.org/docs/ref/key.html#pygame
 
 The editor uses a ttf file to set the font for the editor. By default, the Courier monospace font is used.
 
-A custom font can be loaded with the following method:
+A custom font can be loaded with the following method, passing an *absolute* path:
 - `set_font_from_ttf("X:\path\to\custom\font.ttf")`
 
 DISCLAIMER: As the width of a letter (space) is only calculated once after setting the font_size, any fonts that are not monospace will lead to the editor not working correctly anymore, as it cannot be determined correctly between which letters the user clicked.
@@ -141,7 +144,7 @@ DISCLAIMER: As the width of a letter (space) is only calculated once after setti
 #### Font size
 
 Font size can be customized with the command `set_font_size(size)` - the parameter is an integer
-with the default value `12` to be able to reset it.
+with the default value `16` to be able to reset it.
 
 #### Line Numbers
 Line numbers can be shown on the left side of the editor. Line numbers begin with 0 as is the Pythonian way.
@@ -175,18 +178,20 @@ RGB colors in the following format: ```(255, 255, 255)``` or ```255, 255, 255```
 The following keys are required in the ```stylename.yml``` file, syntax colors are only used if syntax
 highlighting is enabled, but are still required to be included.
 
-*Editor colors*
-- `codingBackgroundColor`
-- `codingScrollBarBackgroundColor`
-- `lineNumberColor`
-- `lineNumberBackgroundColor`
-- `textColor`
+**Editor colors** (source: bright.yml)
 
-*Syntax colors*
-- `textColor_normal`
-- `textColor_comments`
-- `textColor_quotes`
-- `textColor_operators`
-- `textColor_keywords`
-- `textColor_function`
-- `textColor_builtin`
+- `codingBackgroundColor: (255, 255, 255)`
+- `codingScrollBarBackgroundColor: (49, 50, 50)`
+- `lineNumberColor: (255, 255, 255)`
+- `lineNumberBackgroundColor: (60, 61, 61)`
+- `textColor: (255, 255, 255)`
+
+** Syntax colors** (source: bright.yml)
+
+- `textColor_normal: (0, 255, 255)`
+- `textColor_comments: (119, 115, 115)`
+- `textColor_quotes: (227, 215, 115)`
+- `textColor_operators: (237, 36, 36)`
+- `textColor_keywords: (237, 36, 36)`
+- `textColor_function: (50, 150, 36)`
+- `textColor_builtin: (50, 50, 136)`

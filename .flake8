@@ -1,0 +1,21 @@
+[flake8]
+ignore=D100,W503
+per-file-ignores=
+    src/imow_ia01/imow_datamodel/main.py:F401
+    src/imow_ia01/imow_datamodel_custom/main.py:F401
+    src/imow_ia01/imow_transform_basic/steps.py:B023
+    tests/*/*.py:F401,F811
+    tests/testing_util.py:F403,F405,T201
+    src/imow_api/update_swagger/update_swagger_docs.py:T201
+
+max-line-length = 120
+exclude=
+    venv/*
+    src_dev/*
+    tests_manual/*
+    docs/*
+    .idea/*
+    .vscode/*
+    .git/*
+    __pycache__/*
+    */__init__.py
