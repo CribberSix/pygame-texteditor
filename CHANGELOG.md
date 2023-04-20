@@ -7,7 +7,7 @@
 
 ### 0.7.0: QoL update - BREAKING CHANGES
 
-- A lot of internal variables but also some parameters have been renamed to enable easier maintenance of the codebase. This might break existing implementations using the package if you hardcoded parameter names upon function calls or if you called internal variables. Function names have not been changed.
+- A lot of internal variables but also some parameters have been renamed to enable easier maintenance of the codebase. This might break existing implementations using the package if you hardcoded parameter names upon function calls or if you called internal variables.
 - Removed unnecessary class attributes.
 - Fixed a visual bug which caused the end of th escrollbar to be displayed outside the area of the texteditor.
 - Fixed an issue [#11](https://github.com/CribberSix/pygame-texteditor/issues/11) which caused line numbers to be rendered incorrectly if a large font size was set.
