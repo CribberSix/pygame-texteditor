@@ -78,6 +78,7 @@ def set_colorscheme_from_yaml(self, path_to_yaml) -> None:
             self.color_line_number_font = get_rgb_by_key(color_dict, "lineNumberColor")
             self.color_line_number_background = get_rgb_by_key(color_dict, "lineNumberBackgroundColor")
             self.color_text = get_rgb_by_key(color_dict, "textColor")
+            self.color_caret = get_rgb_by_key(color_dict, "caretColor")
 
             self.color_formatter.textColor_normal = get_rgb_by_key(color_dict, "textColor_normal")
             self.color_formatter.textColor_comments = get_rgb_by_key(color_dict, "textColor_comments")

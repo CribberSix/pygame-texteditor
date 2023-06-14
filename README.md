@@ -173,6 +173,7 @@ highlighting is enabled, but are still required to be included.
 - `lineNumberColor: (255, 255, 255)`
 - `lineNumberBackgroundColor: (60, 61, 61)`
 - `textColor: (255, 255, 255)`
+- `caretColor: (255, 255, 255)`
 
 **Syntax colors** (source: bright.yml)
 

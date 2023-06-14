@@ -4,6 +4,7 @@ codingScrollBarBackgroundColor: (50, 51, 45)
 lineNumberColor: (255, 255, 255)
 lineNumberBackgroundColor: (70, 71, 71)
 textColor: (255, 255, 255)
+caretColor: (255, 255, 255)
 # Syntax colors
 textColor_normal: (255, 255, 255)
 textColor_comments: (119, 115, 115)
