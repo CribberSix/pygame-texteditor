@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pygame-texteditor"
-version = "0.7.2"
+version = "0.7.3"
 description = "A WYSIWYG-texteditor based on pygame."
 authors = ["Victor Seifert <seifert.victor@web.de>"]
 license = "MIT"

@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.7.3: Added ability to customize the color of the cursor
+
+The yaml files used to customize the editor now support a field called `caretColor` which can be used to customize the color of the cursor.
+
 ### 0.7.2: Added parameter to usage of pygment lexer
 
 Added the parameter to `PythonLexer(ensurenl=False)` in order to avoid the issue from
