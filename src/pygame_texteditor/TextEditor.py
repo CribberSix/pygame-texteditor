@@ -200,7 +200,7 @@ class TextEditor:
         self.color_text = (255, 255, 255)
         self.color_caret = (255, 255, 255)
 
-        self.lexer = PythonLexer()
+        self.lexer = PythonLexer(ensurenl=False)
         self.color_formatter = ColorFormatter()
         self.set_colorscheme(style)
 
