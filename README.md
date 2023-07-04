@@ -174,7 +174,7 @@ highlighting is enabled, but are still required to be included.
 - `lineNumberBackgroundColor: (60, 61, 61)`
 - `textColor: (255, 255, 255)`
 
-** Syntax colors** (source: bright.yml)
+**Syntax colors** (source: bright.yml)
 
 - `textColor_normal: (0, 255, 255)`
 - `textColor_comments: (119, 115, 115)`
