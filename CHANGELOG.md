@@ -1,5 +1,11 @@
 # Changelog
 
+### 0.7.2: Added parameter to usage of pygment lexer
+
+Added the parameter to `PythonLexer(ensurenl=False)` in order to avoid the issue from
+[pygment](https://github.com/pygments/pygments/issues/610) as identified by [brno32](https://github.com/brno32)!
+
+
 ### 0.7.1: Bugfix for displaying line numbers correctly and doc-update
 
 - Minor fix concerning a bug which caused the line number background to have a wrong width when first initialized.

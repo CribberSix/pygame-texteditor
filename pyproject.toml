@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pygame-texteditor"
-version = "0.7.1"
+version = "0.7.2"
 description = "A WYSIWYG-texteditor based on pygame."
 authors = ["Victor Seifert <seifert.victor@web.de>"]
 license = "MIT"
@@ -21,12 +21,12 @@ keywords=[
     "pygame",
     "texteditor",
     "text",
-    "editor"
+    "editor",
 ]
 include = [
     "src/pygame_texteditor/elements/graphics/*.png",
     "src/pygame_texteditor/elements/fonts/.ttf",
-    "src/pygame_texteditor/elements/colorstyles/*.yml"
+    "src/pygame_texteditor/elements/colorstyles/*.yml",
 ]
 
 
