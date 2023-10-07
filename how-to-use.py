@@ -4,7 +4,7 @@ from pygame_texteditor import TextEditor
 
 # minimal pygame setup
 pygame.init()
-screen = pygame.display.set_mode((500, 600))
+screen = pygame.display.set_mode((600, 600))
 pygame.display.set_caption("Pygame")
 pygame.display.get_surface().fill((200, 200, 200))  # background coloring
 
